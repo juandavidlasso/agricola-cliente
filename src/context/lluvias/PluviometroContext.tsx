@@ -1,0 +1,152 @@
+import { createContext, useState } from 'react';
+import { AlertType } from '@interfaces/alerts';
+import { Lluvia } from '@interfaces/lluvias';
+import { DataType } from '../cultivos/CultivosContext';
+import { Pluviometro } from '@interfaces/pluviometros';
+import { FormDataFilters } from '@modules/pluviometros/constants/constants';
+import { AplicacionLluvia } from '@interfaces/lluvias/aplicacion';
+
+interface PluviometroState {
+    showMessage: boolean;
+    setShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
+    infoMessage: string;
+    setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
+    messageType: AlertType;
+    setMessageType: React.Dispatch<React.SetStateAction<AlertType>>;
+    openModal: boolean;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    openModalReport: boolean;
+    setOpenModalReport: React.Dispatch<React.SetStateAction<boolean>>;
+    formType: FormTypePluviometro;
+    setFormType: React.Dispatch<React.SetStateAction<FormTypePluviometro>>;
+    height: number;
+    setHeight: React.Dispatch<React.SetStateAction<number>>;
+    title: string;
+    setTitle: React.Dispatch<React.SetStateAction<string>>;
+    type: DataType;
+    setType: React.Dispatch<React.SetStateAction<DataType>>;
+    pluviometroId: number;
+    setPluviometroId: React.Dispatch<React.SetStateAction<number>>;
+    lluviaEdit: Lluvia | undefined;
+    setLluviaEdit: React.Dispatch<React.SetStateAction<Lluvia | undefined>>;
+    arrayPluviometros: Pluviometro[];
+    setArrayPluviometros: React.Dispatch<React.SetStateAction<Pluviometro[]>>;
+    filtersLluvia: FormDataFilters | undefined;
+    setFiltersLluvia: React.Dispatch<React.SetStateAction<FormDataFilters>>;
+    reportType: FormTypeReport;
+    setReportType: React.Dispatch<React.SetStateAction<FormTypeReport>>;
+    openModalLluvia: boolean;
+    setOpenModalLluvia: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedLluvias: Lluvia[];
+    setSelectedLluvias: React.Dispatch<React.SetStateAction<Lluvia[]>>;
+    aplicacionLluviaEdit: AplicacionLluvia | undefined;
+    setAplicacionLluviaEdit: React.Dispatch<React.SetStateAction<AplicacionLluvia | undefined>>;
+}
+
+export type FormTypePluviometro = 'pluviometro' | 'lluvia' | '';
+export type FormTypeReport = 'pluviometro' | 'actual' | 'mes' | 'year';
+
+export const PluviometroContext = createContext<PluviometroState>({
+    showMessage: false,
+    setShowMessage: () => false,
+    infoMessage: '',
+    setInfoMessage: () => '',
+    messageType: 'success',
+    setMessageType: () => '',
+    openModal: false,
+    setOpenModal: () => false,
+    openModalReport: false,
+    setOpenModalReport: () => false,
+    formType: '',
+    setFormType: () => '',
+    height: 0,
+    setHeight: () => 0,
+    title: '',
+    setTitle: () => '',
+    type: 'update',
+    setType: () => '',
+    pluviometroId: 0,
+    setPluviometroId: () => 0,
+    lluviaEdit: undefined,
+    setLluviaEdit: () => undefined,
+    arrayPluviometros: [],
+    setArrayPluviometros: () => [],
+    filtersLluvia: undefined,
+    setFiltersLluvia: () => undefined,
+    reportType: 'pluviometro',
+    setReportType: () => '',
+    openModalLluvia: false,
+    setOpenModalLluvia: () => false,
+    selectedLluvias: [],
+    setSelectedLluvias: () => [],
+    aplicacionLluviaEdit: undefined,
+    setAplicacionLluviaEdit: () => undefined
+});
+
+export const PluviometroProvider = ({ children }: { children: JSX.Element }) => {
+    const [showMessage, setShowMessage] = useState<boolean>(false);
+    const [infoMessage, setInfoMessage] = useState<string>('');
+    const [messageType, setMessageType] = useState<AlertType>('success');
+    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [openModalLluvia, setOpenModalLluvia] = useState<boolean>(false);
+    const [openModalReport, setOpenModalReport] = useState<boolean>(false);
+    const [formType, setFormType] = useState<FormTypePluviometro>('');
+    const [height, setHeight] = useState<number>(0);
+    const [title, setTitle] = useState<string>('');
+    const [type, setType] = useState<DataType>('create');
+    const [pluviometroId, setPluviometroId] = useState<number>(0);
+    const [lluviaEdit, setLluviaEdit] = useState<Lluvia>();
+    const [aplicacionLluviaEdit, setAplicacionLluviaEdit] = useState<AplicacionLluvia>();
+    const [arrayPluviometros, setArrayPluviometros] = useState<Pluviometro[]>([]);
+    const [filtersLluvia, setFiltersLluvia] = useState<FormDataFilters>({
+        id_pluviometro: 0,
+        inicial: 0,
+        final: 0,
+        year: 0
+    });
+    const [reportType, setReportType] = useState<FormTypeReport>('pluviometro');
+    const [selectedLluvias, setSelectedLluvias] = useState<Lluvia[]>([]);
+
+    return (
+        <PluviometroContext.Provider
+            value={{
+                showMessage,
+                infoMessage,
+                messageType,
+                openModal,
+                openModalReport,
+                formType,
+                height,
+                title,
+                type,
+                pluviometroId,
+                lluviaEdit,
+                arrayPluviometros,
+                filtersLluvia,
+                reportType,
+                openModalLluvia,
+                selectedLluvias,
+                aplicacionLluviaEdit,
+                setShowMessage,
+                setInfoMessage,
+                setMessageType,
+                setOpenModal,
+                setOpenModalReport,
+                setFormType,
+                setHeight,
+                setTitle,
+                setType,
+                setPluviometroId,
+                setLluviaEdit,
+                setArrayPluviometros,
+                setFiltersLluvia,
+                setReportType,
+                setOpenModalLluvia,
+                setSelectedLluvias,
+                setAplicacionLluviaEdit
+            }}
+        >
+            {children}
+        </PluviometroContext.Provider>
+    );
+};
