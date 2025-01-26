@@ -4,6 +4,7 @@ import {
     GridCallbackDetails,
     GridColDef,
     GridRenderCellParams,
+    GridRowHeightParams,
     GridRowParams,
     GridRowSelectionModel
 } from '@mui/x-data-grid';
@@ -176,6 +177,7 @@ const ListLabores: React.FC<Props> = ({ showButton = false }) => {
                             setSelectedLabores(rowSelectionModel as number[]);
                         }}
                         disableVirtualization
+                        getRowHeight={(params: GridRowHeightParams) => 'auto'}
                         isRowSelectable={(params: GridRowParams<Labores>) => !totalItems.includes(params.row.id_labor)}
                         initialState={{
                             pagination: {

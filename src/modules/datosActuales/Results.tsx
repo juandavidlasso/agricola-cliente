@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 import {
@@ -26,14 +26,23 @@ interface Props {
     filters: {
         nombres: string;
     };
+    setIsValid: (value: React.SetStateAction<boolean>) => void;
 }
 
-const ResultsActuales: React.FC<Props> = ({ filters }) => {
+const ResultsActuales: React.FC<Props> = ({ filters, setIsValid }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { selectedColumns, handleColumnChange, generarPDF, selectAllColumns, deselectAllColumns } = useDatosActuales();
     const { data, loading, error } = useQuery<GetDatosActualesResponse>(OBTENER_DATOS_ACTUALES, {
         variables: { nombres: filters.nombres }
     });
+
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                setIsValid(false);
+            }, 3000);
+        }
+    }, [loading]);
     if (error) return <Alert message={error.message} />;
     if (loading) return <ModalLoading isOpen={loading} />;
 

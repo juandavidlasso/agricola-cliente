@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowHeightParams } from '@mui/x-data-grid';
 import { Box, Button, Grid2 } from '@mui/material';
 import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
 import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
@@ -111,6 +111,7 @@ const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertili
                             setHeight
                         )}
                         disableVirtualization
+                        getRowHeight={(params: GridRowHeightParams) => 'auto'}
                         initialState={{
                             pagination: {
                                 paginationModel: { page: 0, pageSize: 5 }

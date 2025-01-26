@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Button, Grid2, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowHeightParams } from '@mui/x-data-grid';
 import { AplicacionLabores, GetAplicacionLaboresResponse } from '@interfaces/cultivos/labores';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
@@ -122,6 +122,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                             rows={rows}
                             columns={getColumns(setOpenModal, setDeleteData, setHeight, setTitle, setFormType)}
                             disableVirtualization
+                            getRowHeight={(params: GridRowHeightParams) => 'auto'}
                             initialState={{
                                 pagination: {
                                     paginationModel: { page: 0, pageSize: 5 }

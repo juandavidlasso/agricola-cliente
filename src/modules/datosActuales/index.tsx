@@ -31,7 +31,7 @@ const DatosActuales: React.FC<Props> = ({ toogleTheme }) => {
                         </Typography>
                     </Grid2>
                     <InputsFilter submitForm={submitForm} />
-                    {isValid && <ResultsActuales filters={filters} />}
+                    {isValid && <ResultsActuales filters={filters} setIsValid={setIsValid} />}
                 </Grid2>
             </Box>
         </Layout>

@@ -27,7 +27,9 @@ const Main: React.FC<Props> = ({ toogleTheme }) => {
                         <Card className="!p-5">
                             <CardContent>
                                 <Typography className="!text-3xl !mb-2">Caña de azúcar</Typography>
-                                <Typography className="!text-3xl">{data?.obtenerTotalHectareasSuertes.area}</Typography>
+                                <Typography className="!text-3xl">
+                                    {data?.obtenerTotalHectareasSuertes.area?.toFixed(2)}
+                                </Typography>
                             </CardContent>
                             <Divider />
                             <CardActions className="!flex !justify-center">

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, Collapse, Grid2, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowHeightParams } from '@mui/x-data-grid';
 import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import { useQuery } from '@apollo/client';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -116,6 +116,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                 }
                                                 columns={columns}
                                                 disableVirtualization
+                                                getRowHeight={(params: GridRowHeightParams) => 'auto'}
                                                 initialState={{
                                                     pagination: {
                                                         paginationModel: { page: 0, pageSize: 5 }

@@ -15,7 +15,7 @@ interface Props {
 const Cortes: React.FC<Props> = ({ data, user, id_suerte, setOpen, setCorteId }) => {
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell align="center">Nombre</TableCell>

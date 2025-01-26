@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Button, Collapse, Grid2, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowHeightParams } from '@mui/x-data-grid';
 import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -119,6 +119,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                 }
                                                 columns={columns}
                                                 disableVirtualization
+                                                getRowHeight={(params: GridRowHeightParams) => 'auto'}
                                                 initialState={{
                                                     pagination: {
                                                         paginationModel: { page: 0, pageSize: 5 }

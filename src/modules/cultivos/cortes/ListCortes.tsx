@@ -68,7 +68,7 @@ const ListCortes: React.FC<Props> = ({ handleRegisterCorte }) => {
 
             <Grid2 size={12} sx={{ paddingTop: 2 }}>
                 {!loading && !loadingRenovados && (
-                    <div style={{ height: 400, width: '100%' }}>
+                    <div style={{ width: '100%' }}>
                         {dataRenovados?.obtenerCortesRenovados.length === 0 ? (
                             <Typography variant="h4" component="h4" color="text.primary" textAlign="center">
                                 No hay cortes

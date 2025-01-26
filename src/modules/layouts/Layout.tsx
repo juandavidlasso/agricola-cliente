@@ -139,7 +139,7 @@ const Layout: React.FC<Props> = ({ children, toogleTheme, navItems }) => {
                     {drawer}
                 </Drawer>
             </nav>
-            <Box component="main" sx={{ pt: 3, mt: 1, width: '100%', pl: 2, pr: 2 }}>
+            <Box component="main" sx={{ pt: 3, mt: 1, width: '100%', pl: 2, pr: 2, mb: 4 }}>
                 <Toolbar />
                 {children}
             </Box>

@@ -37,7 +37,7 @@ const Prontuario: React.FC<Props> = ({ toogleTheme }) => {
                         </Typography>
                     </Grid2>
                     <InputsFilters submitForm={submitForm} />
-                    {isValid && <Results filters={filters} />}
+                    {isValid && <Results filters={filters} setIsValid={setIsValid} />}
                 </Grid2>
             </Box>
         </Layout>

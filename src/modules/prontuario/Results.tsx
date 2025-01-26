@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
 import {
@@ -24,14 +24,22 @@ import { useProntuario } from './hooks/useProntuario';
 
 interface Props {
     filters: FormDataProntuario & { nombre: string };
+    setIsValid: (value: React.SetStateAction<boolean>) => void;
 }
 
-const Results: React.FC<Props> = ({ filters }) => {
+const Results: React.FC<Props> = ({ filters, setIsValid }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { selectedColumns, handleColumnChange, generarPDF, selectAllColumns, deselectAllColumns } = useProntuario();
     const { data, loading, error } = useQuery<GetProntuarioResponse>(OBTENER_PRONTUARIO, {
         variables: { prontuarioInput: filters }
     });
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                setIsValid(false);
+            }, 3000);
+        }
+    }, [loading]);
     if (error) return <Alert message={error.message} />;
     if (loading) return <ModalLoading isOpen={loading} />;
 

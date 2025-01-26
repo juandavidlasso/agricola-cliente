@@ -127,15 +127,17 @@ const ReporteLluviasActuales: React.FC<Props> = ({}) => {
                 )}
             </Grid2>
 
-            <Grid2 size={12} display={'flex'} justifyContent={'center'} mt={2} mb={3}>
-                <Button
-                    variant="contained"
-                    onClick={() => generarPDF(year, month, getDaysActualMonth, data!, setIsLoading)}
-                    disabled={isLoading}
-                >
-                    Generar Informe
-                </Button>
-            </Grid2>
+            {data?.obtenerLluviasMesActual.length !== 0 && (
+                <Grid2 size={12} display={'flex'} justifyContent={'center'} mt={2} mb={3}>
+                    <Button
+                        variant="contained"
+                        onClick={() => generarPDF(year, month, getDaysActualMonth, data!, setIsLoading)}
+                        disabled={isLoading}
+                    >
+                        Generar Informe
+                    </Button>
+                </Grid2>
+            )}
         </>
     );
 };
