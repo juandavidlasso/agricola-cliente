@@ -27,10 +27,12 @@ const SuertesPopover: React.FC<Props> = ({ handleSubmit }) => {
     const { type, formType, openModal, title, height, dataType, setOpenModal } = useContext(CultivosContext);
     const getComponent = () => {
         if (type === 'labores') {
+            if (dataType === 'suertes') return <LazyListSuertesRenovadas handleSubmit={handleSubmit} />;
             if (formType === 'delete') return <LaborDelete />;
             return <LaborRegister />;
         }
         if (type === 'herbicidas') {
+            if (dataType === 'suertes') return <LazyListSuertesRenovadas handleSubmit={handleSubmit} />;
             if (dataType === 'aplicacion') {
                 if (formType === 'delete') return <AplicacionHerbicidaDelete />;
                 return <AplicacionHerbicidaRegister />;
@@ -41,6 +43,7 @@ const SuertesPopover: React.FC<Props> = ({ handleSubmit }) => {
             }
         }
         if (type === 'fertilizantes') {
+            if (dataType === 'suertes') return <LazyListSuertesRenovadas handleSubmit={handleSubmit} />;
             if (dataType === 'aplicacion') {
                 if (formType === 'delete') return <AplicacionFertilizanteDelete />;
                 return <AplicacionFertilizanteRegister />;
@@ -50,7 +53,7 @@ const SuertesPopover: React.FC<Props> = ({ handleSubmit }) => {
                 return <TratamientoFertilizanteRegister />;
             }
         }
-        return <LazyListSuertesRenovadas handleSubmit={handleSubmit} />;
+        return <></>;
     };
     return (
         <DialogModal isOpen={openModal} handleClose={() => setOpenModal(false)} title={title} height={height}>

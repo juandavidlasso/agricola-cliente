@@ -1,5 +1,6 @@
 import { ApolloError, useMutation } from '@apollo/client';
 import { REGISTRAR_APLICACIONES_HERBICIDAS } from '@graphql/mutations';
+import { OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
 import { GetRegistrarAplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
 import { useContext } from 'react';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
@@ -23,7 +24,8 @@ export const useAplicacionesHerbicidas = () => {
             const data = await agregarAplicacionesHerbicidas({
                 variables: {
                     createAplicacionesHerbicidaInput: aplicacionesHerbicidas
-                }
+                },
+                refetchQueries: [{ query: OBTENER_APLICACIONES_HERBICIDAS_CORTE, variables: { corteId } }]
             });
 
             if (data.data?.agregarAplicacionesHerbicidas.length !== 0) {

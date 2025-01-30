@@ -30,7 +30,9 @@ const ListAplicacionFertilizantes: React.FC<Props> = ({ showButton = false }) =>
         setSelectedAplicacionFertilizantes,
         setDataType,
         setTitle,
-        setHeight
+        setHeight,
+        setType,
+        setDuplicate
     } = useContext(CultivosContext);
     const { totalItems, setMessageType, setInfoMessage, setShowMessage } = useContext(InformationContext);
     const [agregarAplicacionesFertilizantes] = useMutation<GetAplicacionesFertilizantesRegister>(
@@ -133,6 +135,26 @@ const ListAplicacionFertilizantes: React.FC<Props> = ({ showButton = false }) =>
                                           Fecha aplicación: {dayjs(aplicacion.fecha).format('DD-MM-YYYY')} - {aplicacion.tipo}
                                       </Typography>
                                   </Box>
+                                  {selectedAplicacionFertilizantes.length > 0 &&
+                                      selectedAplicacionFertilizantes.includes(aplicacion.id_apfe) && (
+                                          <Button
+                                              variant="outlined"
+                                              color="error"
+                                              onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setAplicacionFertilizanteEdit(aplicacion);
+                                                  setFormType('update');
+                                                  setDataType('aplicacion');
+                                                  setTitle('Duplicar aplicación fertilizante');
+                                                  setHeight(60);
+                                                  setType('fertilizantes');
+                                                  setDuplicate(true);
+                                                  setOpenModal(true);
+                                              }}
+                                          >
+                                              Duplicar Fertilizante
+                                          </Button>
+                                      )}
                                   {!showButton && (
                                       <>
                                           <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
@@ -146,6 +168,8 @@ const ListAplicacionFertilizantes: React.FC<Props> = ({ showButton = false }) =>
                                                       setDataType('tratamiento');
                                                       setTitle('Registrar tratamiento fertilizante');
                                                       setHeight(90);
+                                                      setType('fertilizantes');
+                                                      setDuplicate(false);
                                                       setOpenModal(true);
                                                   }}
                                               >
@@ -161,6 +185,8 @@ const ListAplicacionFertilizantes: React.FC<Props> = ({ showButton = false }) =>
                                                       setDataType('aplicacion');
                                                       setTitle('Actualizar aplicación fertilizante');
                                                       setHeight(60);
+                                                      setType('fertilizantes');
+                                                      setDuplicate(false);
                                                       setOpenModal(true);
                                                   }}
                                               >
@@ -176,6 +202,8 @@ const ListAplicacionFertilizantes: React.FC<Props> = ({ showButton = false }) =>
                                                       setDataType('aplicacion');
                                                       setTitle('Eliminar aplicación fertilizante');
                                                       setHeight(45);
+                                                      setType('fertilizantes');
+                                                      setDuplicate(false);
                                                       setOpenModal(true);
                                                   }}
                                               >

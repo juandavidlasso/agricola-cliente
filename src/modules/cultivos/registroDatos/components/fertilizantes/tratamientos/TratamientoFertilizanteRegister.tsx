@@ -191,7 +191,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
                         type="text"
                         label="Nota"
                         {...register('nota')}
-                        onKeyDown={handleKeyDownLetter}
+                        onKeyDown={handleKeyDownLetterAndNumber}
                     />
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>

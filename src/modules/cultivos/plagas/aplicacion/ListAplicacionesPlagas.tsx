@@ -137,8 +137,12 @@ const ListAplicacionesPlagas: React.FC<Props> = ({ listAplicacionesPlagas, tablo
                     }
                 }}
                 getRowId={(row: AplicacionPlaga) => row.id_apla}
-                pageSizeOptions={[5, 10]}
+                pageSizeOptions={[10, 20]}
                 sx={{
+                    '& .MuiDataGrid-row--borderBottom': {
+                        background: '#154360 !important',
+                        color: '#FFFFFF !important'
+                    },
                     '& .MuiCheckbox-root': {
                         color: '#000000'
                     }

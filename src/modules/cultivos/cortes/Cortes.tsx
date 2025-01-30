@@ -17,13 +17,27 @@ const Cortes: React.FC<Props> = ({ data, user, id_suerte, setOpen, setCorteId })
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
                 <TableHead>
-                    <TableRow>
-                        <TableCell align="center">Nombre</TableCell>
-                        <TableCell align="center">Fecha de siembra</TableCell>
-                        <TableCell align="center">Fecha de inicio</TableCell>
-                        <TableCell align="center">Fecha de corte</TableCell>
-                        <TableCell align="center">Estado</TableCell>
-                        {user.rol === 1 && <TableCell align="center">Acciones</TableCell>}
+                    <TableRow sx={{ background: '#154360' }}>
+                        <TableCell align="center" sx={{ color: '#FFFFFF' }}>
+                            Nombre
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: '#FFFFFF' }}>
+                            Fecha de siembra
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: '#FFFFFF' }}>
+                            Fecha de inicio
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: '#FFFFFF' }}>
+                            Fecha de corte
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: '#FFFFFF' }}>
+                            Estado
+                        </TableCell>
+                        {user.rol === 1 && (
+                            <TableCell align="center" sx={{ color: '#FFFFFF' }}>
+                                Acciones
+                            </TableCell>
+                        )}
                     </TableRow>
                 </TableHead>
                 <TableBody>

@@ -9,7 +9,7 @@ const getColumns = (
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setTratamientoFertilizanteEdit: React.Dispatch<React.SetStateAction<TratamientoFertilizante | undefined>>,
-    setDataType: React.Dispatch<React.SetStateAction<'' | 'aplicacion' | 'tratamiento'>>,
+    setDataType: React.Dispatch<React.SetStateAction<'' | 'aplicacion' | 'tratamiento' | 'suertes'>>,
     setTitle: React.Dispatch<React.SetStateAction<string>>,
     setHeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
@@ -118,9 +118,13 @@ const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertili
                             }
                         }}
                         getRowId={(row: TratamientoFertilizante) => row.id_trafe}
-                        pageSizeOptions={[5, 10]}
+                        pageSizeOptions={[10, 20]}
                         checkboxSelection={false}
                         sx={{
+                            '& .MuiDataGrid-row--borderBottom': {
+                                background: '#154360 !important',
+                                color: '#FFFFFF !important'
+                            },
                             '& .MuiCheckbox-root': {
                                 color: '#000000'
                             }

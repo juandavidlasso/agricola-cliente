@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
@@ -26,17 +26,17 @@ const schema = yup.object({
 interface Props {}
 
 const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
-    const { aplicacionHerbicidaEdit, formType, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
+    const { aplicacionHerbicidaEdit, formType, duplicate, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
     const [agregarAplicacionHerbicida] = useMutation<GetAplicacionHerbicidaRegister>(REGISTAR_APLICACION_HERBICIDA);
     const [actualizarAplicacionHerbicida] = useMutation<GetAplicacionHerbicidaUpdate>(ACTUALIZAR_APLICACION_HERBICIDA);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const {
-        register,
         handleSubmit,
         reset,
         formState: { errors },
-        setValue
+        setValue,
+        control
     } = useForm<FormDataAplicacionHerbicidas>({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -64,7 +64,8 @@ const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
                         updateAplicacionHerbicidaInput: {
                             id_aphe: aplicacionHerbicidaEdit?.id_aphe,
                             tipo: data.tipo,
-                            fecha: data.fecha
+                            fecha: data.fecha,
+                            duplicate
                         }
                     },
                     refetchQueries: [{ query: OBTENER_APLICACIONES_HERBICIDAS }]
@@ -126,16 +127,23 @@ const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
                 <Grid2 size={12}>
                     <FormControl fullWidth>
                         <InputLabel id="tipoApliHer">Tipo de aplicación</InputLabel>
-                        <Select labelId="tipoApliHer" {...register('tipo')} label="Tipo de aplicación">
-                            <MenuItem value={''}></MenuItem>
-                            <MenuItem value={'PRE-EMERGENTE'}>PRE-EMERGENTE</MenuItem>
-                            <MenuItem value={'POST-EMERGENTE'}>POST-EMERGENTE</MenuItem>
-                        </Select>
+                        <Controller
+                            name="tipo"
+                            control={control}
+                            rules={{ required: 'El tipo de aplicación es requerido.' }}
+                            render={({ field }) => (
+                                <Select {...field} label="Tipo de aplicación">
+                                    <MenuItem value={''}></MenuItem>
+                                    <MenuItem value={'PRE-EMERGENTE'}>PRE-EMERGENTE</MenuItem>
+                                    <MenuItem value={'POST-EMERGENTE'}>POST-EMERGENTE</MenuItem>
+                                </Select>
+                            )}
+                        />
                     </FormControl>
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : duplicate ? 'Duplicar' : 'Actualizar'}
                     </Button>
                     <Button
                         color="primary"

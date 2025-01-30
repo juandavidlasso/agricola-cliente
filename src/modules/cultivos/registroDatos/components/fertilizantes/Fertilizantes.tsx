@@ -21,7 +21,8 @@ const Fertilizantes: React.FC<Props> = ({}) => {
         setDataType,
         setTitle,
         setHeight,
-        setType
+        setType,
+        setDuplicate
     } = useContext(CultivosContext);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -71,6 +72,7 @@ const Fertilizantes: React.FC<Props> = ({}) => {
                             setHeight(60);
                             setType('fertilizantes');
                             setAplicacionFertilizanteEdit(undefined);
+                            setDuplicate(false);
                             setOpenModal(true);
                         }}
                     >
@@ -85,6 +87,8 @@ const Fertilizantes: React.FC<Props> = ({}) => {
                                 setType('fertilizantes');
                                 setTitle('Selecciona la suerte y el corte');
                                 setHeight(80);
+                                setDataType('suertes');
+                                setDuplicate(false);
                                 setOpenModal(true);
                             }}
                         >

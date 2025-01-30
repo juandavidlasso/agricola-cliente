@@ -26,7 +26,7 @@ const schema = yup.object({
 interface Props {}
 
 const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
-    const { aplicacionFertilizanteEdit, formType, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
+    const { aplicacionFertilizanteEdit, formType, duplicate, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
     const [agregarAplicacionFertilizante] = useMutation<GetAplicacionFertilizanteRegister>(REGISTRAR_APLICACION_FERTILIZANTE);
     const [actualizarAplicacionFertilizante] = useMutation<GetAplicacionFertilizanteUpdate>(ACTUALIZAR_APLICACION_FERTILIZANTE);
@@ -64,7 +64,8 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
                         updateAplicacionFertilizanteInput: {
                             id_apfe: aplicacionFertilizanteEdit?.id_apfe,
                             tipo: data.tipo,
-                            fecha: data.fecha
+                            fecha: data.fecha,
+                            duplicate
                         }
                     },
                     refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
@@ -139,7 +140,7 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : duplicate ? 'Duplicar' : 'Actualizar'}
                     </Button>
                     <Button
                         color="primary"

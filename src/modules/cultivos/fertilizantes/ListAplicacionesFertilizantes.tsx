@@ -15,12 +15,12 @@ import { GetAplicacionesFertilizantesCorteResponse } from '@interfaces/cultivos/
 import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
 
 const columns: GridColDef[] = [
-    { field: 'producto', headerName: 'Fecha', flex: 1 },
-    { field: 'dosis', headerName: 'Labor', flex: 1 },
-    { field: 'presentacion', headerName: 'Equipo', flex: 1 },
-    { field: 'valor', headerName: 'Estado', flex: 1 },
-    { field: 'aplico', headerName: 'No. de Pases', flex: 1 },
-    { field: 'nota', headerName: 'Realizado Por', flex: 1 }
+    { field: 'producto', headerName: 'Producto', flex: 1 },
+    { field: 'dosis', headerName: 'Dosis x Hta', flex: 1 },
+    { field: 'presentacion', headerName: 'Presentación', flex: 1 },
+    { field: 'valor', headerName: 'Valor x Hta', flex: 1 },
+    { field: 'aplico', headerName: 'Aplicado por', flex: 1 },
+    { field: 'nota', headerName: 'Nota', flex: 1 }
 ];
 
 interface Props {}
@@ -126,9 +126,13 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                     }
                                                 }}
                                                 getRowId={(row: TratamientoFertilizante) => row.id_trafe}
-                                                pageSizeOptions={[5, 10]}
+                                                pageSizeOptions={[10, 20]}
                                                 checkboxSelection={false}
                                                 sx={{
+                                                    '& .MuiDataGrid-row--borderBottom': {
+                                                        background: '#154360 !important',
+                                                        color: '#FFFFFF !important'
+                                                    },
                                                     '& .MuiCheckbox-root': {
                                                         color: '#000000'
                                                     }

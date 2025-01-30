@@ -58,6 +58,8 @@ interface CultivosState {
     setRiegoEdit: React.Dispatch<React.SetStateAction<Riego | undefined>>;
     cosechaEdit: Cosecha | undefined;
     setCosechaEdit: React.Dispatch<React.SetStateAction<Cosecha | undefined>>;
+    duplicate: boolean;
+    setDuplicate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CultivosContext = createContext<CultivosState>({
@@ -109,12 +111,15 @@ export const CultivosContext = createContext<CultivosState>({
     setRiegoEdit: () => undefined,
     // Cosecha
     cosechaEdit: undefined,
-    setCosechaEdit: () => undefined
+    setCosechaEdit: () => undefined,
+    // Duplicate
+    duplicate: false,
+    setDuplicate: () => false
 });
 
 export type DataType = 'create' | 'update' | 'delete' | 'aplicar';
 type ModalDataType = '' | 'labores' | 'herbicidas' | 'fertilizantes';
-export type DataTypeApplication = 'aplicacion' | 'tratamiento' | '';
+export type DataTypeApplication = 'aplicacion' | 'tratamiento' | 'suertes' | '';
 
 export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
     //Globals
@@ -146,6 +151,8 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
     const [riegoEdit, setRiegoEdit] = useState<Riego>();
     // Cosecha
     const [cosechaEdit, setCosechaEdit] = useState<Cosecha>();
+    // Duplicate
+    const [duplicate, setDuplicate] = useState<boolean>(false);
 
     return (
         <CultivosContext.Provider
@@ -171,6 +178,7 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 type,
                 riegoEdit,
                 cosechaEdit,
+                duplicate,
                 setShowMessage,
                 setInfoMessage,
                 setMessageType,
@@ -191,7 +199,8 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 setAplicacionPlagaEdit,
                 setType,
                 setRiegoEdit,
-                setCosechaEdit
+                setCosechaEdit,
+                setDuplicate
             }}
         >
             {children}

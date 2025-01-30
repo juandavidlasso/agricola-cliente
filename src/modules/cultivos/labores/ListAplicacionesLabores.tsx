@@ -129,9 +129,13 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                                 }
                             }}
                             getRowId={(row: AplicacionLabores) => row.id_aplicacion_labores}
-                            pageSizeOptions={[5, 10]}
+                            pageSizeOptions={[10, 20]}
                             checkboxSelection={false}
                             sx={{
+                                '& .MuiDataGrid-row--borderBottom': {
+                                    background: '#154360 !important',
+                                    color: '#FFFFFF !important'
+                                },
                                 '& .MuiCheckbox-root': {
                                     color: '#000000'
                                 }

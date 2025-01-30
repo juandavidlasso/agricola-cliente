@@ -30,7 +30,9 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
         setSelectedAplicacionHerbicidas,
         setTitle,
         setHeight,
-        setDataType
+        setDataType,
+        setType,
+        setDuplicate
     } = useContext(CultivosContext);
     const { totalItems, setMessageType, setInfoMessage, setShowMessage } = useContext(InformationContext);
     const [agregarAplicacionesHerbicidas] = useMutation<GetRegistrarAplicacionesHerbicidas>(REGISTRAR_APLICACIONES_HERBICIDAS);
@@ -131,6 +133,26 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
                                           Fecha aplicación: {dayjs(aplicacion.fecha).format('DD-MM-YYYY')} - {aplicacion.tipo}
                                       </Typography>
                                   </Box>
+                                  {selectedAplicacionHerbicidas.length > 0 &&
+                                      selectedAplicacionHerbicidas.includes(aplicacion.id_aphe) && (
+                                          <Button
+                                              variant="outlined"
+                                              color="error"
+                                              onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setAplicacionHerbicidaEdit(aplicacion);
+                                                  setFormType('update');
+                                                  setDataType('aplicacion');
+                                                  setTitle('Duplicar aplicación herbicida');
+                                                  setHeight(60);
+                                                  setType('herbicidas');
+                                                  setDuplicate(true);
+                                                  setOpenModal(true);
+                                              }}
+                                          >
+                                              Duplicar Herbicida
+                                          </Button>
+                                      )}
                                   {!showButton && (
                                       <>
                                           <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
@@ -144,6 +166,8 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
                                                       setDataType('tratamiento');
                                                       setTitle('Registrar tratamiento herbicida');
                                                       setHeight(90);
+                                                      setType('herbicidas');
+                                                      setDuplicate(false);
                                                       setOpenModal(true);
                                                   }}
                                               >
@@ -159,6 +183,8 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
                                                       setDataType('aplicacion');
                                                       setTitle('Actualizar aplicación herbicida');
                                                       setHeight(60);
+                                                      setType('herbicidas');
+                                                      setDuplicate(false);
                                                       setOpenModal(true);
                                                   }}
                                               >
@@ -174,6 +200,8 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
                                                       setDataType('aplicacion');
                                                       setTitle('Eliminar aplicación herbicida');
                                                       setHeight(45);
+                                                      setType('herbicidas');
+                                                      setDuplicate(false);
                                                       setOpenModal(true);
                                                   }}
                                               >

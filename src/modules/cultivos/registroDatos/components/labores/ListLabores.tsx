@@ -26,7 +26,8 @@ const getColumns = (
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setEditLabor: React.Dispatch<React.SetStateAction<Labores | undefined>>,
     setTitle: React.Dispatch<React.SetStateAction<string>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>
+    setHeight: React.Dispatch<React.SetStateAction<number>>,
+    setDuplicate: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'fecha', headerName: 'Fecha', flex: 1 },
@@ -58,6 +59,7 @@ const getColumns = (
                             setFormType('delete');
                             setTitle('Eliminar labor');
                             setHeight(40);
+                            setDuplicate(false);
                             setOpenModal(true);
                         }}
                         variant="outlined"
@@ -83,6 +85,7 @@ const getColumns = (
                             setFormType('update');
                             setTitle('Actualizar labor');
                             setHeight(90);
+                            setDuplicate(false);
                             setOpenModal(true);
                         }}
                         variant="outlined"
@@ -118,7 +121,7 @@ interface Props {
 const ListLabores: React.FC<Props> = ({ showButton = false }) => {
     const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const { data, error, loading } = useQuery<GetLaboresResponse>(OBTENER_LABORES);
-    const { selectedLabores, setOpenModal, setFormType, setEditLabor, setSelectedLabores, setTitle, setHeight } =
+    const { selectedLabores, setOpenModal, setFormType, setEditLabor, setSelectedLabores, setTitle, setHeight, setDuplicate } =
         useContext(CultivosContext);
     const { setMessageType, setInfoMessage, setShowMessage, totalItems } = useContext(InformationContext);
     const [agregarAplicacionLabores] = useMutation<GetRegisterAplicacionLabor>(REGISTRAR_LABORES_CORTES);
@@ -172,7 +175,15 @@ const ListLabores: React.FC<Props> = ({ showButton = false }) => {
                 <div style={{ height: 'auto', width: '100%' }}>
                     <DataGrid
                         rows={data === undefined ? [] : data.obtenerLabores}
-                        columns={getColumns(showButton, setOpenModal, setFormType, setEditLabor, setTitle, setHeight)}
+                        columns={getColumns(
+                            showButton,
+                            setOpenModal,
+                            setFormType,
+                            setEditLabor,
+                            setTitle,
+                            setHeight,
+                            setDuplicate
+                        )}
                         onRowSelectionModelChange={(rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
                             setSelectedLabores(rowSelectionModel as number[]);
                         }}
@@ -185,9 +196,13 @@ const ListLabores: React.FC<Props> = ({ showButton = false }) => {
                             }
                         }}
                         getRowId={(row: Labores) => row.id_labor}
-                        pageSizeOptions={[5, 10]}
+                        pageSizeOptions={[10, 20]}
                         checkboxSelection
                         sx={{
+                            '& .MuiDataGrid-row--borderBottom': {
+                                background: '#154360 !important',
+                                color: '#FFFFFF !important'
+                            },
                             '& .MuiCheckbox-root': {
                                 color: '#000000'
                             }

@@ -13,7 +13,7 @@ const LazyListLabores = dynamic(() => import('./ListLabores'), {
 interface Props {}
 
 const Labores: React.FC<Props> = ({}) => {
-    const { selectedLabores, setFormType, setOpenModal, setEditLabor, setType, setHeight, setTitle } =
+    const { selectedLabores, setFormType, setOpenModal, setEditLabor, setType, setHeight, setTitle, setDataType, setDuplicate } =
         useContext(CultivosContext);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -55,6 +55,7 @@ const Labores: React.FC<Props> = ({}) => {
                             setTitle('Registrar labor');
                             setType('labores');
                             setEditLabor(undefined);
+                            setDuplicate(false);
                             setOpenModal(true);
                         }}
                     >
@@ -69,6 +70,8 @@ const Labores: React.FC<Props> = ({}) => {
                                 setType('labores');
                                 setTitle('Selecciona la suerte y el corte');
                                 setHeight(80);
+                                setDataType('suertes');
+                                setDuplicate(false);
                                 setOpenModal(true);
                             }}
                         >

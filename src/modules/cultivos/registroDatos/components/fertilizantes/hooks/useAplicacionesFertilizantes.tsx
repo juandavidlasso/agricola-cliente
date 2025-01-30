@@ -3,6 +3,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { REGISTRAR_APLICACIONES_FERTILIZANTES } from '@graphql/mutations';
 import { GetAplicacionesFertilizantesRegister } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 
 export const useAplicacionesFertilizantes = () => {
     const { selectedAplicacionFertilizantes, setInfoMessage, setMessageType, setShowMessage } = useContext(CultivosContext);
@@ -25,7 +26,8 @@ export const useAplicacionesFertilizantes = () => {
             const data = await agregarAplicacionesFertilizantes({
                 variables: {
                     createAplicacionesFertilizanteInput: aplicacionesFertilizantes
-                }
+                },
+                refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE, variables: { corteId } }]
             });
 
             if (data.data?.agregarAplicacionesFertilizantes.length !== 0) {

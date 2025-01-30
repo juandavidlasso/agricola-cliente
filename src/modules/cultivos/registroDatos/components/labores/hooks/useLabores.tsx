@@ -3,6 +3,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { REGISTRAR_LABORES_CORTES } from '@graphql/mutations';
 import { GetRegisterAplicacionLabor } from '@interfaces/cultivos/labores';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { OBTENER_APLICACIONES_LABORES } from '@graphql/queries';
 
 export const useLabores = () => {
     const { selectedLabores, setInfoMessage, setMessageType, setShowMessage } = useContext(CultivosContext);
@@ -23,7 +24,8 @@ export const useLabores = () => {
             const data = await agregarAplicacionLabores({
                 variables: {
                     createAplicacionLaboresInput: aplicacionesLabores
-                }
+                },
+                refetchQueries: [{ query: OBTENER_APLICACIONES_LABORES, variables: { corteId } }]
             });
             for (let index = 0; index < selectedLabores.length; index++) {
                 if (data.data?.agregarAplicacionLabores.includes(selectedLabores[index])) {

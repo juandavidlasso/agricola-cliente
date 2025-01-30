@@ -22,7 +22,8 @@ const Herbicidas: React.FC<Props> = ({}) => {
         setHeight,
         setDataType,
         setOpenModal: setOpenModalSuertes,
-        setType
+        setType,
+        setDuplicate
     } = useContext(CultivosContext);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -72,6 +73,7 @@ const Herbicidas: React.FC<Props> = ({}) => {
                             setHeight(60);
                             setType('herbicidas');
                             setAplicacionHerbicidaEdit(undefined);
+                            setDuplicate(false);
                             setOpenModal(true);
                         }}
                     >
@@ -86,6 +88,8 @@ const Herbicidas: React.FC<Props> = ({}) => {
                                 setType('herbicidas');
                                 setTitle('Selecciona la suerte y el corte');
                                 setHeight(80);
+                                setDataType('suertes');
+                                setDuplicate(false);
                                 setOpenModalSuertes(true);
                             }}
                         >
