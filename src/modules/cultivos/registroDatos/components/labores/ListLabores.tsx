@@ -30,18 +30,18 @@ const getColumns = (
     setDuplicate: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     const columns: GridColDef[] = [
-        { field: 'fecha', headerName: 'Fecha', flex: 1 },
-        { field: 'actividad', headerName: 'Labor', flex: 1 },
-        { field: 'equipo', headerName: 'Equipo', flex: 1 },
-        { field: 'estado', headerName: 'Estado', flex: 1 },
-        { field: 'pases', headerName: 'No. de Pases', flex: 1 },
-        { field: 'aplico', headerName: 'Realizado Por', flex: 1 },
-        { field: 'costo', headerName: 'Costo x Hta', flex: 1 },
-        { field: 'nota', headerName: 'Nota', flex: 1 },
+        { field: 'fecha', headerName: 'Fecha', flex: 0.1 },
+        { field: 'actividad', headerName: 'Labor', flex: 0.1 },
+        { field: 'equipo', headerName: 'Equipo', flex: 0.1 },
+        { field: 'estado', headerName: 'Estado', flex: 0.08 },
+        { field: 'pases', headerName: 'No. de Pases', flex: 0.1 },
+        { field: 'aplico', headerName: 'Realizado Por', flex: 0.1 },
+        { field: 'costo', headerName: 'Costo x Hta', flex: 0.1 },
+        { field: 'nota', headerName: 'Nota', flex: 0.24 },
         {
             field: '',
             headerName: 'Acciones',
-            flex: 1,
+            flex: 0.08,
             renderCell: (param: GridRenderCellParams) => (
                 <Box
                     sx={{
@@ -192,7 +192,7 @@ const ListLabores: React.FC<Props> = ({ showButton = false }) => {
                         isRowSelectable={(params: GridRowParams<Labores>) => !totalItems.includes(params.row.id_labor)}
                         initialState={{
                             pagination: {
-                                paginationModel: { page: 0, pageSize: 5 }
+                                paginationModel: { page: 0, pageSize: 10 }
                             }
                         }}
                         getRowId={(row: Labores) => row.id_labor}

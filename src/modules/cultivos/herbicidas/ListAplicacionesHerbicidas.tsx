@@ -15,12 +15,12 @@ import { InformationContext } from 'src/context/cultivos/information/Information
 import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
 
 const columns: GridColDef[] = [
-    { field: 'producto', headerName: 'Producto', flex: 1 },
-    { field: 'dosis', headerName: 'Dosis x Hta', flex: 1 },
-    { field: 'presentacion', headerName: 'Presentación', flex: 1 },
-    { field: 'valor', headerName: 'Valor x Hta', flex: 1 },
-    { field: 'aplico', headerName: 'Aplicado por', flex: 1 },
-    { field: 'nota', headerName: 'Nota', flex: 1 }
+    { field: 'producto', headerName: 'Producto', flex: 0.12 },
+    { field: 'dosis', headerName: 'Dosis x Hta', flex: 0.1 },
+    { field: 'presentacion', headerName: 'Presentación', flex: 0.12 },
+    { field: 'valor', headerName: 'Valor x Hta', flex: 0.11 },
+    { field: 'aplico', headerName: 'Aplicado por', flex: 0.12 },
+    { field: 'nota', headerName: 'Nota', flex: 0.43 }
 ];
 
 interface Props {}
@@ -33,6 +33,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
     });
     const { setOpenModal, setDeleteData, setHeight, setTitle, setTotalItems, setFormType } = useContext(InformationContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
+    const [totals, setTotals] = useState<{ [key: number]: number }>({});
 
     useEffect(() => {
         if (data !== undefined && data?.obtenerAplicacionesHerbicidasCorte?.length !== 0) {
@@ -41,8 +42,27 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
 
         return () => {
             setTotalItems([]);
+            setTotals({});
         };
     }, [data]);
+
+    useEffect(() => {
+        const trueKey = Object.keys(openStates).filter((key) => openStates[parseInt(key)] === true);
+        if (trueKey.length !== 0) {
+            for (let index = 0; index < trueKey.length; index++) {
+                const tratamientos = data?.obtenerAplicacionesHerbicidasCorte.find(
+                    (data) => data.id_aplicaciones_herbicidas === Number(trueKey[index])
+                );
+                const total =
+                    tratamientos?.aplicacionHerbicida.listTratamientoHerbicida?.reduce((acc, cr) => acc + (cr?.valor ?? 0), 0) ??
+                    0;
+                setTotals((prevTotals) => ({
+                    ...prevTotals,
+                    [trueKey[index]]: total.toLocaleString()
+                }));
+            }
+        }
+    }, [openStates]);
 
     if (error) return <Alert message={error.message} />;
 
@@ -119,7 +139,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                 getRowHeight={(params: GridRowHeightParams) => 'auto'}
                                                 initialState={{
                                                     pagination: {
-                                                        paginationModel: { page: 0, pageSize: 5 }
+                                                        paginationModel: { page: 0, pageSize: 10 }
                                                     }
                                                 }}
                                                 getRowId={(row: TratamientoHerbicidas) => row.id_trahe}
@@ -142,6 +162,11 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                 }}
                                             />
                                         </List>
+                                        <Typography className="!text-lg !font-bold !mt-2 !mb-2 !ml-2">
+                                            {openStates[aplicaciones.id_aplicaciones_herbicidas]
+                                                ? `Valor total: ${totals[aplicaciones.id_aplicaciones_herbicidas]}`
+                                                : ''}
+                                        </Typography>
                                     </Collapse>
                                 </div>
                             ))}

@@ -99,7 +99,7 @@ const ReporteLluviasYear: React.FC<Props> = ({}) => {
                                                           lluvia.pluviometro_id === row.id_pluviometro &&
                                                           Number(lluvia.fecha) === mes.id ? (
                                                               <div
-                                                                  className="!text-white !bg-blue-600 !text-center !rounded-lg !p-2 !w-[70%] !m-auto"
+                                                                  className="!text-white !bg-blue-600 !text-center !rounded-lg !p-2 !w-[90%] !m-auto"
                                                                   key={index}
                                                               >
                                                                   <span>{lluvia?.cantidad?.toFixed(1)}</span>
@@ -115,7 +115,7 @@ const ReporteLluviasYear: React.FC<Props> = ({}) => {
                                                       total.pluviometro_id === row.id_pluviometro ? (
                                                           <div
                                                               key={index}
-                                                              className="!text-white !bg-blue-600 !rounded-lg !text-center !p-2 !w-[70%] !m-auto"
+                                                              className="!text-white !bg-blue-600 !rounded-lg !text-center !p-2 !w-[90%] !m-auto"
                                                           >
                                                               <span>{total?.cantidad?.toFixed(0)}</span>
                                                           </div>

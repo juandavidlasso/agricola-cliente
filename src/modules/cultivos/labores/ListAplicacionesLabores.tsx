@@ -125,7 +125,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                             getRowHeight={(params: GridRowHeightParams) => 'auto'}
                             initialState={{
                                 pagination: {
-                                    paginationModel: { page: 0, pageSize: 5 }
+                                    paginationModel: { page: 0, pageSize: 10 }
                                 }
                             }}
                             getRowId={(row: AplicacionLabores) => row.id_aplicacion_labores}

@@ -108,7 +108,7 @@ const ListLluvias: React.FC<Props> = ({ lluvias }) => {
                     disableVirtualization
                     initialState={{
                         pagination: {
-                            paginationModel: { page: 0, pageSize: 5 }
+                            paginationModel: { page: 0, pageSize: 10 }
                         }
                     }}
                     getRowId={(row: AplicacionLluvia) => row.id_aplicacion_lluvia}

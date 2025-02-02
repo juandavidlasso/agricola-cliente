@@ -185,14 +185,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
                     />
                 </Grid2>
                 <Grid2 size={12}>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        type="text"
-                        label="Nota"
-                        {...register('nota')}
-                        onKeyDown={handleKeyDownLetterAndNumber}
-                    />
+                    <TextField fullWidth size="small" type="text" label="Nota" {...register('nota')} />
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>

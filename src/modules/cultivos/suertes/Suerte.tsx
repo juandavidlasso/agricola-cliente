@@ -20,7 +20,7 @@ const SuerteComponent: React.FC<Props> = ({ suerte }) => {
                 justifyContent: 'center',
                 alignItems: 'center'
             }}
-            className="!m-1 rounded-xl !pl-2 !pr-2 !pt-2 !pb-2"
+            className="!m-1 rounded-xl !px-0 !py-2"
         >
             <Button
                 color="primary"

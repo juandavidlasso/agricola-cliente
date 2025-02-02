@@ -133,7 +133,7 @@ const ListAplicacionesPlagas: React.FC<Props> = ({ listAplicacionesPlagas, tablo
                 disableColumnSelector
                 initialState={{
                     pagination: {
-                        paginationModel: { page: 0, pageSize: 5 }
+                        paginationModel: { page: 0, pageSize: 10 }
                     }
                 }}
                 getRowId={(row: AplicacionPlaga) => row.id_apla}

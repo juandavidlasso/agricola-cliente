@@ -143,7 +143,7 @@ const ListTratamientoPlagas: React.FC<Props> = ({}) => {
                         disableVirtualization
                         initialState={{
                             pagination: {
-                                paginationModel: { page: 0, pageSize: 5 }
+                                paginationModel: { page: 0, pageSize: 10 }
                             }
                         }}
                         getRowId={(row: TratamientoPlaga) => row.id_trapl}

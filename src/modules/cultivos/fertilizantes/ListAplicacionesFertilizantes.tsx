@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Button, Collapse, Grid2, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRowHeightParams } from '@mui/x-data-grid';
@@ -15,12 +15,12 @@ import { GetAplicacionesFertilizantesCorteResponse } from '@interfaces/cultivos/
 import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
 
 const columns: GridColDef[] = [
-    { field: 'producto', headerName: 'Producto', flex: 1 },
-    { field: 'dosis', headerName: 'Dosis x Hta', flex: 1 },
-    { field: 'presentacion', headerName: 'Presentación', flex: 1 },
-    { field: 'valor', headerName: 'Valor x Hta', flex: 1 },
-    { field: 'aplico', headerName: 'Aplicado por', flex: 1 },
-    { field: 'nota', headerName: 'Nota', flex: 1 }
+    { field: 'producto', headerName: 'Producto', flex: 0.12 },
+    { field: 'dosis', headerName: 'Dosis x Hta', flex: 0.1 },
+    { field: 'presentacion', headerName: 'Presentación', flex: 0.12 },
+    { field: 'valor', headerName: 'Valor x Hta', flex: 0.11 },
+    { field: 'aplico', headerName: 'Aplicado por', flex: 0.12 },
+    { field: 'nota', headerName: 'Nota', flex: 0.43 }
 ];
 
 interface Props {}
@@ -36,6 +36,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
     );
     const { setOpenModal, setDeleteData, setHeight, setTitle, setTotalItems, setFormType } = useContext(InformationContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
+    const [totals, setTotals] = useState<{ [key: number]: number }>({});
 
     useEffect(() => {
         if (data !== undefined && data?.obtenerAplicacionesFertilizantesCorte?.length !== 0) {
@@ -44,8 +45,29 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
 
         return () => {
             setTotalItems([]);
+            setTotals({});
         };
     }, [data]);
+
+    useEffect(() => {
+        const trueKey = Object.keys(openStates).filter((key) => openStates[parseInt(key)] === true);
+        if (trueKey.length !== 0) {
+            for (let index = 0; index < trueKey.length; index++) {
+                const tratamientos = data?.obtenerAplicacionesFertilizantesCorte.find(
+                    (data) => data.id_aplicaciones_fertilizantes === Number(trueKey[index])
+                );
+                const total =
+                    tratamientos?.aplicacionFertilizante.listTratamientoFertilizante?.reduce(
+                        (acc, cr) => acc + (cr?.valor ?? 0),
+                        0
+                    ) ?? 0;
+                setTotals((prevTotals) => ({
+                    ...prevTotals,
+                    [trueKey[index]]: total.toLocaleString()
+                }));
+            }
+        }
+    }, [openStates]);
 
     if (error) return <Alert message={error.message} />;
 
@@ -57,6 +79,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
             [id]: !prevState[id]
         }));
     };
+
     return (
         <Grid2 container>
             <Grid2 size={12}>
@@ -122,7 +145,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                 getRowHeight={(params: GridRowHeightParams) => 'auto'}
                                                 initialState={{
                                                     pagination: {
-                                                        paginationModel: { page: 0, pageSize: 5 }
+                                                        paginationModel: { page: 0, pageSize: 10 }
                                                     }
                                                 }}
                                                 getRowId={(row: TratamientoFertilizante) => row.id_trafe}
@@ -145,6 +168,11 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                 }}
                                             />
                                         </List>
+                                        <Typography className="!text-lg !font-bold !mt-2 !mb-2 !ml-2">
+                                            {openStates[aplicaciones.id_aplicaciones_fertilizantes]
+                                                ? `Valor total: ${totals[aplicaciones.id_aplicaciones_fertilizantes]}`
+                                                : ''}
+                                        </Typography>
                                     </Collapse>
                                 </div>
                             ))}

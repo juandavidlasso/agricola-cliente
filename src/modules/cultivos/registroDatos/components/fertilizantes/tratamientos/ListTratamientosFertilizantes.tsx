@@ -14,16 +14,16 @@ const getColumns = (
     setHeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
     const columns: GridColDef[] = [
-        { field: 'producto', headerName: 'Producto', flex: 1 },
-        { field: 'dosis', headerName: 'Dosis x Hta', flex: 1 },
-        { field: 'presentacion', headerName: 'Presentación', flex: 1 },
-        { field: 'valor', headerName: 'Valor x Hta', flex: 1 },
-        { field: 'aplico', headerName: 'Aplicado por', flex: 1 },
-        { field: 'nota', headerName: 'Nota', flex: 1 },
+        { field: 'producto', headerName: 'Producto', flex: 0.12 },
+        { field: 'dosis', headerName: 'Dosis x Hta', flex: 0.1 },
+        { field: 'presentacion', headerName: 'Presentación', flex: 0.12 },
+        { field: 'valor', headerName: 'Valor x Hta', flex: 0.11 },
+        { field: 'aplico', headerName: 'Aplicado por', flex: 0.12 },
+        { field: 'nota', headerName: 'Nota', flex: 0.33 },
         {
             field: '',
             headerName: 'Acciones',
-            flex: 1,
+            flex: 0.1,
             renderCell: (param: GridRenderCellParams) => (
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
                     <Button
@@ -114,7 +114,7 @@ const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertili
                         getRowHeight={(params: GridRowHeightParams) => 'auto'}
                         initialState={{
                             pagination: {
-                                paginationModel: { page: 0, pageSize: 5 }
+                                paginationModel: { page: 0, pageSize: 10 }
                             }
                         }}
                         getRowId={(row: TratamientoFertilizante) => row.id_trafe}
