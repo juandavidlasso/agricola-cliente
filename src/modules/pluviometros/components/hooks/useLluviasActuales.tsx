@@ -3,6 +3,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 import { GetLluviasActualesReportResponse } from '@interfaces/lluvias';
+import { GetPluviometrosYLuviasResponse } from '@interfaces/pluviometros';
 
 pdfMake.vfs = pdfFonts.vfs;
 
@@ -32,7 +33,7 @@ export const useLluviasActuales = () => {
         year: number,
         month: string,
         getDaysActualMonth: () => number,
-        data: GetLluviasActualesReportResponse,
+        data: GetPluviometrosYLuviasResponse,
         setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
     ) => {
         setIsLoading(true);
@@ -40,9 +41,10 @@ export const useLluviasActuales = () => {
         const daysInMonth = getDaysActualMonth();
         const dataBody: any[] = [];
 
-        for (let index = 0; index < data.obtenerLluviasMesActual.length; index++) {
+        for (let index = 0; index < data.obtenerPluviometrosYLluvias.length; index++) {
             // Total del mes
-            const totalMes = Number(data.obtenerLluviasMesActual[index].suertesAsociadas).toFixed(0);
+            // const totalMes = Number(data.obtenerPluviometrosYLluvias[index].suertesAsociadas).toFixed(0);
+            const totalMes = 0;
 
             // Creo array de dias para cantidad
             const daysQuantity: any[] = [];
@@ -50,9 +52,9 @@ export const useLluviasActuales = () => {
                 daysQuantity.push({ text: '' });
             }
 
-            if (data.obtenerLluviasMesActual[index].listAplicacionesLluvias!.length > 0) {
-                for (let i = 0; i < data.obtenerLluviasMesActual[index].listAplicacionesLluvias!.length; i++) {
-                    const { fecha, cantidad } = data.obtenerLluviasMesActual[index].listAplicacionesLluvias![i].lluviaPadre!;
+            if (data.obtenerPluviometrosYLluvias[index].listAplicacionesLluvias!.length > 0) {
+                for (let i = 0; i < data.obtenerPluviometrosYLluvias[index].listAplicacionesLluvias!.length; i++) {
+                    const { fecha, cantidad } = data.obtenerPluviometrosYLluvias[index].listAplicacionesLluvias![i].lluviaPadre!;
                     const fechaAplicacion = fecha!.split('-')[2];
                     daysQuantity[Number(fechaAplicacion) - 1].text = `${cantidad}`;
                 }
@@ -62,13 +64,13 @@ export const useLluviasActuales = () => {
             dataBody.push([
                 {
                     stack: [
-                        `${data.obtenerLluviasMesActual[index].nombre}`,
+                        `${data.obtenerPluviometrosYLluvias[index].nombre}`,
                         {
                             ul: [
                                 arrayPluviometros.length === 0
                                     ? ''
                                     : arrayPluviometros.map((asociadas) =>
-                                          asociadas.nombre === data.obtenerLluviasMesActual[index].nombre
+                                          asociadas.nombre === data.obtenerPluviometrosYLluvias[index].nombre
                                               ? asociadas.suertesAsociadas === ''
                                                   ? ''
                                                   : `Suerte ${asociadas.suertesAsociadas}`

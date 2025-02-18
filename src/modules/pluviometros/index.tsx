@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Grid2, Typography } from '@mui/material';
 import { ThemeProps } from '@interfaces/theme';
@@ -9,7 +9,6 @@ import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 import PluviometroPopover from './pluviometro/PluviometroPopover';
 import InputFilters from './components/InputFilters';
 import Alert from '@components/Alert';
-import LluviasPopover from './lluvias/LluviasPopover';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 
@@ -34,13 +33,20 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
         setTitle,
         setType,
         setReportType,
-        setOpenModalReport
+        setOpenModalReport,
+        setIsEnabled,
+        setArrayLluvias
     } = useContext(PluviometroContext);
+    useEffect(() => {
+        return () => {
+            setIsEnabled(false);
+            setArrayLluvias([]);
+        };
+    }, []);
     return (
         <>
             {showError && <Alert message={errorMessage} />}
             <PluviometroPopover />
-            <LluviasPopover />
             {openModalReport && <LazyReporteLluviasPopover />}
             <Layout toogleTheme={toogleTheme} navItems={routesCultivos}>
                 <Box display="flex" justifyContent="center" alignItems="center">
@@ -68,7 +74,7 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                 </Button>
                             </Grid2>
                         )}
-                        <Grid2 size={{ xs: 12, sm: 3.4 }}>
+                        {/* <Grid2 size={{ xs: 12, sm: 3.4 }}>
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -81,7 +87,7 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                             >
                                 Resumen pluviómetros mes actual
                             </Button>
-                        </Grid2>
+                        </Grid2> */}
                         <Grid2 size={{ xs: 12, sm: 3.2 }}>
                             <Button
                                 variant="contained"
@@ -126,10 +132,9 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                     variant="contained"
                                     color="primary"
                                     onClick={() => {
-                                        setFormType('lluvia');
+                                        setFormType('');
                                         setTitle('Listado de lluvias');
                                         setHeight(80);
-                                        setType('create');
                                         setOpenModal(true);
                                     }}
                                     sx={{ width: { xs: '100%' } }}

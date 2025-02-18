@@ -238,13 +238,13 @@ const ResultsActuales: React.FC<Props> = ({ filters, setIsValid }) => {
 
                                     // // Calcular TCH
                                     const peso = row.area ? row.area : 0;
-                                    const areaCorte = Number(row.renovada);
-                                    const TCH = Number((peso! / areaCorte!).toFixed(1));
+                                    const TCH =
+                                        Number(row.renovada) === 0 ? null : Number((peso! / Number(row.renovada)).toFixed(1));
 
                                     return (
                                         <TableRow key={row.id_suerte}>
                                             <TableCell align="left">{row.nombre}</TableCell>
-                                            <TableCell align="left">{areaActual}</TableCell>
+                                            <TableCell align="left">{areaActual?.toFixed(2)}</TableCell>
                                             <TableCell align="left">{row.variedad}</TableCell>
                                             <TableCell align="left">{row.zona}</TableCell>
                                             <TableCell align="left">{row.createdAt}</TableCell>

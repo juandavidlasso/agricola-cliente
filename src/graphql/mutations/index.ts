@@ -370,12 +370,8 @@ export const REGISTRAR_PLUVIOMETRO = gql`
 `;
 
 export const REGISTRAR_LLUVIA = gql`
-    mutation Mutation($createLluviaInput: CreateLluviaInput!) {
-        agregarLluvia(createLluviaInput: $createLluviaInput) {
-            id_lluvia
-            cantidad
-            fecha
-        }
+    mutation AgregarLluvia($createLluviaInput: [CreateLluviaInput!]!) {
+        agregarLluvia(createLluviaInput: $createLluviaInput)
     }
 `;
 
@@ -534,8 +530,12 @@ export const ACTUALIZAR_COSECHA = gql`
 /** APLICACIONES LLUVIAS */
 
 export const REGISTRAR_APLICACION_LLUVIA = gql`
-    mutation AgregarAplicacionLluvia($createAplicacionLluviaInput: [CreateAplicacionLluviaInput!]!) {
-        agregarAplicacionLluvia(createAplicacionLluviaInput: $createAplicacionLluviaInput)
+    mutation Mutation($createAplicacionLluviaInput: CreateAplicacionLluviaInput!) {
+        agregarAplicacionLluvia(createAplicacionLluviaInput: $createAplicacionLluviaInput) {
+            id_aplicacion_lluvia
+            pluviometro_id
+            lluvia_id
+        }
     }
 `;
 

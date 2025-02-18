@@ -8,13 +8,8 @@ export interface Lluvia {
     listAplicacionesLluvias?: AplicacionLluvia[];
 }
 
-export interface FormLluvia {
-    fecha: string;
-    cantidad: number;
-}
-
 export interface GetLluviaRegister {
-    agregarLluvia: Lluvia;
+    agregarLluvia: number[];
 }
 
 export interface GetLluviaUpdate {
@@ -39,4 +34,11 @@ export interface GetLluviasMesYearReportResponse {
 
 export interface GetTotalPromedioLluviasYearResponse {
     obtenerPromedioLluvias: Lluvia[];
+}
+
+export interface LluviasYAplicacion {
+    cantidad: number;
+    fecha: string;
+    pluviometro_id: number;
+    lluvia_id: number;
 }

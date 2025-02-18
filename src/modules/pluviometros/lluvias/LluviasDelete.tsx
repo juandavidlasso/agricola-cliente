@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { Button, Grid2, Typography } from '@mui/material';
-import { ELIMINAR_LLUVIA } from '@graphql/mutations';
+import { ELIMINAR_APLICACION_LLUVIA, ELIMINAR_LLUVIA } from '@graphql/mutations';
 import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 import { OBTENER_LLUVIAS, OBTENER_PLUVIOMETROS_Y_LLUVIAS } from '@graphql/queries';
 import Loading from '@components/Loading';
@@ -11,15 +11,23 @@ interface Props {}
 
 const LluviasDelete: React.FC<Props> = ({}) => {
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const { lluviaEdit, setOpenModalLluvia } = useContext(PluviometroContext);
+    const { lluviaEdit, setFormType, setHeight } = useContext(PluviometroContext);
     const { setMessageType, setShowMessage, setInfoMessage } = useContext(CultivosContext);
     const [eliminarLluvia] = useMutation<boolean>(ELIMINAR_LLUVIA);
+    const [eliminarAplicacionLluvia] = useMutation<boolean>(ELIMINAR_APLICACION_LLUVIA);
 
     const submitForm = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setSubmitting(true);
 
         try {
+            await eliminarAplicacionLluvia({
+                variables: {
+                    idAplicacionLluvia: lluviaEdit?.id_lluvia
+                },
+                refetchQueries: [{ query: OBTENER_PLUVIOMETROS_Y_LLUVIAS }]
+            });
+
             await eliminarLluvia({
                 variables: {
                     idLluvia: lluviaEdit?.id_lluvia
@@ -31,7 +39,8 @@ const LluviasDelete: React.FC<Props> = ({}) => {
             setInfoMessage('La lluvia se eliminó exitosamente.');
             setShowMessage(true);
             setSubmitting(false);
-            setOpenModalLluvia(false);
+            setHeight(80);
+            setFormType('');
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -63,7 +72,14 @@ const LluviasDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModalLluvia(false)}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setHeight(80);
+                        setFormType('');
+                    }}
+                >
                     Cancelar
                 </Button>
             </Grid2>

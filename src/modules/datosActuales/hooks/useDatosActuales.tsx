@@ -97,7 +97,7 @@ export const useDatosActuales = () => {
                     row.listcortes?.[0].listTablones?.length === 0
                         ? 0
                         : row.listcortes?.[0].listTablones?.reduce((acc: any, rc: any) => acc + rc.area, 0);
-                rowData.push(areaActual);
+                rowData.push(areaActual?.toFixed(2));
             }
             if (selectedColumns.variedad) rowData.push(row.variedad);
             if (selectedColumns.zona) rowData.push(row.zona);
