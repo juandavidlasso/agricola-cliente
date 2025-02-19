@@ -2,7 +2,6 @@ import { createContext, useState } from 'react';
 import { AlertType } from '@interfaces/alerts';
 import { Lluvia, LluviasYAplicacion } from '@interfaces/lluvias';
 import { DataType } from '../cultivos/CultivosContext';
-import { Pluviometro } from '@interfaces/pluviometros';
 import { FormDataFilters } from '@modules/pluviometros/constants/constants';
 import { AplicacionLluvia } from '@interfaces/lluvias/aplicacion';
 
@@ -29,8 +28,6 @@ interface PluviometroState {
     setPluviometroId: React.Dispatch<React.SetStateAction<number>>;
     lluviaEdit: Lluvia | undefined;
     setLluviaEdit: React.Dispatch<React.SetStateAction<Lluvia | undefined>>;
-    arrayPluviometros: Pluviometro[];
-    setArrayPluviometros: React.Dispatch<React.SetStateAction<Pluviometro[]>>;
     filtersLluvia: FormDataFilters | undefined;
     setFiltersLluvia: React.Dispatch<React.SetStateAction<FormDataFilters>>;
     reportType: FormTypeReport;
@@ -44,7 +41,7 @@ interface PluviometroState {
 }
 
 export type FormTypePluviometro = 'pluviometro' | 'lluvia' | '';
-export type FormTypeReport = 'pluviometro' | 'actual' | 'mes' | 'year';
+export type FormTypeReport = 'mes' | 'year';
 
 export const PluviometroContext = createContext<PluviometroState>({
     showMessage: false,
@@ -69,11 +66,9 @@ export const PluviometroContext = createContext<PluviometroState>({
     setPluviometroId: () => 0,
     lluviaEdit: undefined,
     setLluviaEdit: () => undefined,
-    arrayPluviometros: [],
-    setArrayPluviometros: () => [],
     filtersLluvia: undefined,
     setFiltersLluvia: () => undefined,
-    reportType: 'pluviometro',
+    reportType: 'mes',
     setReportType: () => '',
     aplicacionLluviaEdit: undefined,
     setAplicacionLluviaEdit: () => undefined,
@@ -96,14 +91,11 @@ export const PluviometroProvider = ({ children }: { children: JSX.Element }) => 
     const [pluviometroId, setPluviometroId] = useState<number>(0);
     const [lluviaEdit, setLluviaEdit] = useState<Lluvia>();
     const [aplicacionLluviaEdit, setAplicacionLluviaEdit] = useState<AplicacionLluvia>();
-    const [arrayPluviometros, setArrayPluviometros] = useState<Pluviometro[]>([]);
     const [filtersLluvia, setFiltersLluvia] = useState<FormDataFilters>({
-        id_pluviometro: 0,
-        inicial: 0,
-        final: 0,
+        month: 0,
         year: 0
     });
-    const [reportType, setReportType] = useState<FormTypeReport>('pluviometro');
+    const [reportType, setReportType] = useState<FormTypeReport>('mes');
     const [arrayLluvias, setArrayLluvias] = useState<LluviasYAplicacion[]>([]);
     const [isEnabled, setIsEnabled] = useState<boolean>(false);
 
@@ -121,7 +113,6 @@ export const PluviometroProvider = ({ children }: { children: JSX.Element }) => 
                 type,
                 pluviometroId,
                 lluviaEdit,
-                arrayPluviometros,
                 filtersLluvia,
                 reportType,
                 aplicacionLluviaEdit,
@@ -138,7 +129,6 @@ export const PluviometroProvider = ({ children }: { children: JSX.Element }) => 
                 setType,
                 setPluviometroId,
                 setLluviaEdit,
-                setArrayPluviometros,
                 setFiltersLluvia,
                 setReportType,
                 setAplicacionLluviaEdit,

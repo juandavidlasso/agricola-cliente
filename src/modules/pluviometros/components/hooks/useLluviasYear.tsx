@@ -9,7 +9,6 @@ pdfMake.vfs = pdfFonts.vfs;
 
 export const useLluviasYear = () => {
     const [imageBase64, setImageBase64] = useState<string>('');
-    // const { arrayPluviometros } = useContext(PluviometroContext);
 
     useEffect(() => {
         const loadImage = async () => {

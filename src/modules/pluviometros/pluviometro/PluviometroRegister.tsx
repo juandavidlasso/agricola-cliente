@@ -39,7 +39,7 @@ const PluviometroRegister: React.FC<Props> = ({}) => {
     const [suerteNames, setSuerteNames] = useState<string[]>([]);
     const [errorSuertes, setErrorSuertes] = useState<boolean>(false);
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const { arrayPluviometros, setOpenModal, setArrayPluviometros } = useContext(PluviometroContext);
+    const { setOpenModal } = useContext(PluviometroContext);
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const { data, loading, error } = useQuery<GetSuertesRenovadasResponse>(OBTENER_SUERTES_RENOVADAS);
     const [agregarPluviometro] = useMutation<GetPluviometroRegister>(REGISTRAR_PLUVIOMETRO);
@@ -84,14 +84,6 @@ const PluviometroRegister: React.FC<Props> = ({}) => {
                 },
                 refetchQueries: [{ query: OBTENER_PLUVIOMETROS_Y_LLUVIAS }]
             });
-            setArrayPluviometros([
-                ...arrayPluviometros,
-                {
-                    id_pluviometro: data?.agregarPluviometro.id_pluviometro!,
-                    nombre: data?.agregarPluviometro.nombre!,
-                    suertesAsociadas: data?.agregarPluviometro.suertesAsociadas
-                }
-            ]);
 
             setMessageType('success');
             setInfoMessage('El pluviómetro se registro exitosamente.');

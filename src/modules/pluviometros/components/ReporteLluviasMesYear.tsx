@@ -14,22 +14,22 @@ import {
 } from '@mui/material';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
-import { OBTENER_LLUVIAS_MES_YEAR } from '@graphql/queries';
-import { GetLluviasMesYearReportResponse } from '@interfaces/lluvias';
 import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 import { meses } from '../constants/constants';
-import { useLluviasMesYear } from './hooks/useLluviasMesYear';
+import { OBTENER_PLUVIOMETROS_Y_LLUVIAS } from '@graphql/queries';
+import { GetPluviometrosYLuviasResponse } from '@interfaces/pluviometros';
+import { useLluviasActuales } from './hooks/useLluviasActuales';
 
 interface Props {}
 
 const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { generarPDF } = useLluviasMesYear();
-    const { arrayPluviometros, filtersLluvia } = useContext(PluviometroContext);
-    const { data, loading, error, refetch } = useQuery<GetLluviasMesYearReportResponse>(OBTENER_LLUVIAS_MES_YEAR, {
+    const { generarPDF } = useLluviasActuales();
+    const { filtersLluvia } = useContext(PluviometroContext);
+    const { data, loading, error, refetch } = useQuery<GetPluviometrosYLuviasResponse>(OBTENER_PLUVIOMETROS_Y_LLUVIAS, {
         variables: {
-            filterLluviaMesYearInput: {
-                month: filtersLluvia?.inicial,
+            filterLluviasInput: {
+                month: filtersLluvia?.month,
                 year: filtersLluvia?.year
             }
         }
@@ -42,16 +42,13 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
     if (loading) return <ModalLoading isOpen={loading} />;
 
     function getDaysActualMonth(): number {
-        const actualDate = new Date();
-        const year = actualDate.getFullYear();
-        const month = actualDate.getMonth();
-        const lastDay = new Date(year, month + 1, 0);
-        return lastDay.getDate();
+        const actualDate = new Date(filtersLluvia!.year, filtersLluvia!.month!, 0);
+        return actualDate.getDate();
     }
     return (
         <>
             <Grid2 size={12}>
-                {data?.obtenerLluviasMesYear.length === 0 ? (
+                {data?.obtenerPluviometrosYLluvias.length === 0 ? (
                     <Typography>No hay lluvias registradas en el mes y año seleccionados</Typography>
                 ) : (
                     <TableContainer component={Paper}>
@@ -66,7 +63,7 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
                                         className="!capitalize !font-bold !text-lg !bg-blue-200"
                                         colSpan={getDaysActualMonth()}
                                     >
-                                        {meses[filtersLluvia?.inicial! - 1].label} - {filtersLluvia?.year}
+                                        {meses[filtersLluvia?.month! - 1].label} - {filtersLluvia?.year}
                                     </TableCell>
                                     <TableCell align="left" rowSpan={2} className="!border-l-[0.5px] !bg-blue-200">
                                         Total mes
@@ -81,26 +78,14 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {data?.obtenerLluviasMesYear.map((row) => (
-                                    <TableRow key={row.id_pluviometro}>
-                                        <TableCell component="th" scope="row" align="left">
+                                {data?.obtenerPluviometrosYLluvias.map((row) => (
+                                    <TableRow key={row.id_pluviometro} sx={{ height: '30px !important' }}>
+                                        <TableCell component="th" scope="row" className="!p-0 !text-center !border-r-[0.5px]">
                                             <span style={{ fontSize: '.9rem' }}>{row.nombre}</span>
                                             <br />
-                                            {arrayPluviometros.length === 0
-                                                ? 'No hay suertes Asociadas'
-                                                : arrayPluviometros.map((asociadas) =>
-                                                      asociadas.nombre === row.nombre ? (
-                                                          asociadas.suertesAsociadas === '' ? null : (
-                                                              <span
-                                                                  key={asociadas.id_pluviometro}
-                                                                  className="!font-bold"
-                                                                  style={{ fontSize: '.8rem' }}
-                                                              >
-                                                                  <i>Suerte {asociadas.suertesAsociadas}</i>
-                                                              </span>
-                                                          )
-                                                      ) : null
-                                                  )}
+                                            <span className="!font-bold !text-[11px] !text-left">
+                                                Suerte {row.suertesAsociadas}
+                                            </span>
                                         </TableCell>
                                         {Array.from({ length: getDaysActualMonth() }).map((_, day) => (
                                             <TableCell key={day + 1} align="left" className="!border-l-[0.5px] !border-r-[0.5px]">
@@ -123,7 +108,7 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
                                                       })}
                                             </TableCell>
                                         ))}
-                                        <TableCell align="left">{Number(row.suertesAsociadas).toFixed(0)}</TableCell>
+                                        <TableCell align="left">{row.totalMes?.toFixed(0) ?? ''}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -132,11 +117,19 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
                 )}
             </Grid2>
 
-            {data?.obtenerLluviasMesYear.length !== 0 && (
+            {data?.obtenerPluviometrosYLluvias.length !== 0 && (
                 <Grid2 size={12} display={'flex'} justifyContent={'center'} mt={2} mb={3}>
                     <Button
                         variant="contained"
-                        onClick={() => generarPDF(filtersLluvia, getDaysActualMonth, data!, setIsLoading)}
+                        onClick={() =>
+                            generarPDF(
+                                filtersLluvia!.year,
+                                meses[filtersLluvia!.month! - 1].label,
+                                getDaysActualMonth,
+                                data!,
+                                setIsLoading
+                            )
+                        }
                         disabled={isLoading}
                     >
                         Generar Informe

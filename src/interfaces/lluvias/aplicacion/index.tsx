@@ -16,7 +16,3 @@ export interface GetAplicacionLluviaRegister {
 export interface GetLluviasYearReportResponse {
     obtenerResumenLluviasYear: AplicacionLluvia[];
 }
-
-export interface GetTotalPluviometroResponse {
-    obtenerResumenPluviometroYear: AplicacionLluvia[];
-}

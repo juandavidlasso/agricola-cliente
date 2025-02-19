@@ -74,27 +74,13 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                 </Button>
                             </Grid2>
                         )}
-                        {/* <Grid2 size={{ xs: 12, sm: 3.4 }}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => {
-                                    setReportType('actual');
-                                    setTitle('Listado de lluvias del mes actual');
-                                    setOpenModalReport(true);
-                                }}
-                                sx={{ width: { xs: '100%' } }}
-                            >
-                                Resumen pluviómetros mes actual
-                            </Button>
-                        </Grid2> */}
                         <Grid2 size={{ xs: 12, sm: 3.2 }}>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={() => {
-                                    if (filtersLluvia?.inicial === 0 && filtersLluvia?.year === 0) {
-                                        setErrorMessage('Debe seleccionar el mes inicial y el año');
+                                    if (filtersLluvia?.month === 0 && filtersLluvia?.year === 0) {
+                                        setErrorMessage('Debe seleccionar el mes y el año');
                                         setShowError(true);
                                     } else {
                                         setReportType('mes');

@@ -4,6 +4,7 @@ export interface Pluviometro {
     id_pluviometro: number;
     nombre: number;
     suertesAsociadas?: string;
+    totalMes?: number;
     listAplicacionesLluvias?: AplicacionLluvia[];
 }
 
@@ -18,4 +19,8 @@ export interface GetPluviometrosYLuviasResponse {
 
 export interface GetPluviometroRegister {
     agregarPluviometro: Pluviometro;
+}
+
+export interface GetLluviasYearResponse {
+    obtenerLluviasYear: [Pluviometro];
 }

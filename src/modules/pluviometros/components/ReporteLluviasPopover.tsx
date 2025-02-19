@@ -3,8 +3,6 @@ import { Button, Grid2, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SideModal from '@components/Side';
 import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
-import ReporteLluviasPluviometro from './ReporteLluviasPluviometro';
-import ReporteLluviasActuales from './ReporteLluviasActuales';
 import ReporteLluviasMesYear from './ReporteLluviasMesYear';
 import ReporteLluviasYear from './ReporteLluviasYear';
 
@@ -13,8 +11,6 @@ interface Props {}
 const ReporteLluviasPopover: React.FC<Props> = ({}) => {
     const { openModalReport, reportType, title, setOpenModalReport } = useContext(PluviometroContext);
     const getComponent = () => {
-        if (reportType === 'pluviometro') return <ReporteLluviasPluviometro />;
-        if (reportType === 'actual') return <ReporteLluviasActuales />;
         if (reportType === 'mes') return <ReporteLluviasMesYear />;
         if (reportType === 'year') return <ReporteLluviasYear />;
         return <></>;

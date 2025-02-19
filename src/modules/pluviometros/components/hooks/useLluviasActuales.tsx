@@ -1,15 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
-import { GetLluviasActualesReportResponse } from '@interfaces/lluvias';
 import { GetPluviometrosYLuviasResponse } from '@interfaces/pluviometros';
 
 pdfMake.vfs = pdfFonts.vfs;
 
 export const useLluviasActuales = () => {
     const [imageBase64, setImageBase64] = useState<string>('');
-    const { arrayPluviometros } = useContext(PluviometroContext);
 
     useEffect(() => {
         const loadImage = async () => {
@@ -43,8 +40,7 @@ export const useLluviasActuales = () => {
 
         for (let index = 0; index < data.obtenerPluviometrosYLluvias.length; index++) {
             // Total del mes
-            // const totalMes = Number(data.obtenerPluviometrosYLluvias[index].suertesAsociadas).toFixed(0);
-            const totalMes = 0;
+            const totalMes = data?.obtenerPluviometrosYLluvias?.[index].totalMes?.toFixed(0) ?? '';
 
             // Creo array de dias para cantidad
             const daysQuantity: any[] = [];
@@ -66,28 +62,18 @@ export const useLluviasActuales = () => {
                     stack: [
                         `${data.obtenerPluviometrosYLluvias[index].nombre}`,
                         {
-                            ul: [
-                                arrayPluviometros.length === 0
-                                    ? ''
-                                    : arrayPluviometros.map((asociadas) =>
-                                          asociadas.nombre === data.obtenerPluviometrosYLluvias[index].nombre
-                                              ? asociadas.suertesAsociadas === ''
-                                                  ? ''
-                                                  : `Suerte ${asociadas.suertesAsociadas}`
-                                              : ''
-                                      )
-                            ]
+                            ul: [`Suerte ${data.obtenerPluviometrosYLluvias[index].suertesAsociadas}`]
                         }
                     ]
                 },
                 ...daysQuantity,
-                { text: `${totalMes}` }
+                { text: `${totalMes}`, bold: true, color: '#a93226', fontSize: 16 }
             ]);
         }
 
         let result: any = [
-            { text: 'Pluviómetro', rowSpan: 2, alignment: 'center' },
-            { text: `${month} - ${year}`, alignment: 'center', colSpan: daysInMonth }
+            { text: 'Pluviómetro', rowSpan: 2, alignment: 'center', bold: true, fontSize: 15, color: '#a93226' },
+            { text: `${month} - ${year}`, alignment: 'center', colSpan: daysInMonth, bold: true, fontSize: 15, color: '#a93226' }
         ];
         let days = [{}];
 
@@ -97,11 +83,11 @@ export const useLluviasActuales = () => {
         }
         for (let i = 1; i <= daysInMonth; i++) {
             widths.push('auto');
-            days.push({ text: i });
+            days.push({ text: i, bold: true, color: '#a93226' });
         }
 
         // Agregar el total del mes
-        result.push({ text: 'Total mes', rowSpan: 2, alignment: 'center' });
+        result.push({ text: 'Total mes', rowSpan: 2, alignment: 'center', bold: true, fontSize: 15, color: '#a93226' });
         widths.push('auto');
         days.push({});
 

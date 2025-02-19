@@ -302,11 +302,33 @@ export const OBTENER_APLICACIONES_FERTILIZANTES_CORTE = gql`
 /** PLUVIOMETROS Y LLUVIAS */
 
 export const OBTENER_PLUVIOMETROS_Y_LLUVIAS = gql`
-    query ObtenerPluviometrosYLluvias {
-        obtenerPluviometrosYLluvias {
+    query ObtenerPluviometrosYLluvias($filterLluviasInput: FilterLluviasInput!) {
+        obtenerPluviometrosYLluvias(filterLluviasInput: $filterLluviasInput) {
             id_pluviometro
             nombre
             suertesAsociadas
+            totalMes
+            listAplicacionesLluvias {
+                id_aplicacion_lluvia
+                pluviometro_id
+                lluvia_id
+                lluviaPadre {
+                    id_lluvia
+                    fecha
+                    cantidad
+                }
+            }
+        }
+    }
+`;
+
+export const OBTENER_LLUVIAS_YEAR = gql`
+    query ObtenerLluviasYear($year: Float!) {
+        obtenerLluviasYear(year: $year) {
+            id_pluviometro
+            nombre
+            suertesAsociadas
+            totalMes
             listAplicacionesLluvias {
                 id_aplicacion_lluvia
                 pluviometro_id
@@ -422,71 +444,12 @@ export const OBTENER_LLUVIAS = gql`
 
 /** REPORTES LLUVIAS */
 
-export const OBTENER_LLUVIAS_POR_PLUVIOMETRO = gql`
-    query ObtenerLluviasPorPluviometro($filterLluviaInput: FilterLluviaInput!) {
-        obtenerLluviasPorPluviometro(filterLluviaInput: $filterLluviaInput) {
-            id_lluvia
-            fecha
-            cantidad
-        }
-    }
-`;
-
-export const OBTENER_LLUVIAS_MES_ACTUAL = gql`
-    query ObtenerLluviasMesActual {
-        obtenerLluviasMesActual {
-            id_pluviometro
-            nombre
-            suertesAsociadas
-            listAplicacionesLluvias {
-                id_aplicacion_lluvia
-                pluviometro_id
-                lluvia_id
-                lluviaPadre {
-                    id_lluvia
-                    fecha
-                    cantidad
-                }
-            }
-        }
-    }
-`;
-
-export const OBTENER_LLUVIAS_MES_YEAR = gql`
-    query ObtenerLluviasMesYear($filterLluviaMesYearInput: FilterLluviaMesYearInput!) {
-        obtenerLluviasMesYear(filterLluviaMesYearInput: $filterLluviaMesYearInput) {
-            id_pluviometro
-            nombre
-            suertesAsociadas
-            listAplicacionesLluvias {
-                id_aplicacion_lluvia
-                pluviometro_id
-                lluvia_id
-                lluviaPadre {
-                    id_lluvia
-                    fecha
-                    cantidad
-                }
-            }
-        }
-    }
-`;
-
 export const OBTENER_RESUMEN_LLUVIAS_YEAR = gql`
     query ObtenerResumenLluviasYear($year: Int!) {
         obtenerResumenLluviasYear(year: $year) {
             pluviometro_id
             fecha
             cantidad
-        }
-    }
-`;
-
-export const OBTENER_TOTAL_YEAR = gql`
-    query ObtenerResumenPluviometroYear($year: Int!) {
-        obtenerResumenPluviometroYear(year: $year) {
-            cantidad
-            pluviometro_id
         }
     }
 `;

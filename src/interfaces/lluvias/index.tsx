@@ -1,4 +1,3 @@
-import { Pluviometro } from '@interfaces/pluviometros';
 import { AplicacionLluvia } from './aplicacion';
 
 export interface Lluvia {
@@ -18,18 +17,6 @@ export interface GetLluviaUpdate {
 
 export interface GetLluviasResponse {
     obtenerLluvias: Lluvia[];
-}
-
-export interface GetLluviaReportResponse {
-    obtenerLluviasPorPluviometro: Lluvia[];
-}
-
-export interface GetLluviasActualesReportResponse {
-    obtenerLluviasMesActual: Pluviometro[];
-}
-
-export interface GetLluviasMesYearReportResponse {
-    obtenerLluviasMesYear: Pluviometro[];
 }
 
 export interface GetTotalPromedioLluviasYearResponse {

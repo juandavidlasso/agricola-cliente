@@ -106,7 +106,7 @@ const Pluviometros: React.FC<Props> = ({ pluviometro }) => {
                 );
             })}
             <TableCell align="left" className="!border-r-[0.5px] !p-0 !text-center">
-                0
+                {pluviometro.totalMes?.toFixed(0) ?? ''}
             </TableCell>
         </TableRow>
     );

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import {
     Button,
@@ -30,15 +30,16 @@ const ListPluviometros: React.FC<Props> = ({}) => {
     const { submitting, submitLluvia } = usePluviometro();
     const { generarPDF } = useLluviasActuales();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { isEnabled, arrayLluvias, setArrayPluviometros, setIsEnabled, setArrayLluvias } = useContext(PluviometroContext);
+    const { isEnabled, arrayLluvias, setIsEnabled, setArrayLluvias } = useContext(PluviometroContext);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
-    const { data, error, loading } = useQuery<GetPluviometrosYLuviasResponse>(OBTENER_PLUVIOMETROS_Y_LLUVIAS);
-
-    useEffect(() => {
-        if (!error) {
-            setArrayPluviometros(data?.obtenerPluviometrosYLluvias ?? []);
+    const { data, error, loading } = useQuery<GetPluviometrosYLuviasResponse>(OBTENER_PLUVIOMETROS_Y_LLUVIAS, {
+        variables: {
+            filterLluviasInput: {
+                month: 0,
+                year: 0
+            }
         }
-    }, [loading]);
+    });
 
     if (error) return <Alert message={error.message} />;
 

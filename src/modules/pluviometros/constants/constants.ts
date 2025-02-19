@@ -1,7 +1,5 @@
 export interface FormDataFilters {
-    id_pluviometro: number;
-    inicial?: number;
-    final?: number;
+    month?: number;
     year: number;
 }
 
