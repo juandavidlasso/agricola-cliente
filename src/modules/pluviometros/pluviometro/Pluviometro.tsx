@@ -3,16 +3,13 @@ import { TableCell, TableRow, TextField } from '@mui/material';
 import { Pluviometro } from '@interfaces/pluviometros';
 import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 
-const today = new Date();
-const currentYear = today.getFullYear();
-const currentMonth = today.getMonth() + 1;
-const formattedMonth = currentMonth < 10 ? `0${currentMonth}` : currentMonth;
-
 interface Props {
     pluviometro: Pluviometro;
+    year: number;
+    month: number;
 }
 
-const Pluviometros: React.FC<Props> = ({ pluviometro }) => {
+const Pluviometros: React.FC<Props> = ({ pluviometro, year, month }) => {
     const { arrayLluvias, isEnabled, setArrayLluvias } = useContext(PluviometroContext);
     function getDaysActualMonth(): number {
         const actualDate = new Date();
@@ -23,7 +20,7 @@ const Pluviometros: React.FC<Props> = ({ pluviometro }) => {
     }
 
     const handleChange = (day: number, value: number, id_pluviometro: number) => {
-        const fecha = `${currentYear}-${formattedMonth}-${day + 1}`;
+        const fecha = `${year}-${month < 10 ? `0${month}` : month}-${day + 1}`;
 
         setArrayLluvias((prevAplicaciones) => {
             if (value === 0) {
@@ -58,7 +55,7 @@ const Pluviometros: React.FC<Props> = ({ pluviometro }) => {
                 <span className="!font-bold !text-[11px] !text-left">Suerte {pluviometro.suertesAsociadas}</span>
             </TableCell>
             {Array.from({ length: getDaysActualMonth() }).map((_, day) => {
-                const fecha = `${currentYear}-${formattedMonth}-${day + 1}`;
+                const fecha = `${year}-${month < 10 ? `0${month}` : month}-${day + 1}`;
 
                 return (
                     <TableCell key={day + 1} align="left" className="!border-r-[0.5px] !p-0 !text-center">

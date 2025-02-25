@@ -12,7 +12,7 @@ export const usePluviometro = () => {
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [agregarLluvia] = useMutation<GetLluviaRegister>(REGISTRAR_LLUVIA);
 
-    const submitLluvia = async () => {
+    const submitLluvia = async (year: number, month: number) => {
         setSubmitting(true);
 
         try {
@@ -20,7 +20,18 @@ export const usePluviometro = () => {
                 variables: {
                     createLluviaInput: arrayLluvias
                 },
-                refetchQueries: [{ query: OBTENER_LLUVIAS }, { query: OBTENER_PLUVIOMETROS_Y_LLUVIAS }]
+                refetchQueries: [
+                    { query: OBTENER_LLUVIAS },
+                    {
+                        query: OBTENER_PLUVIOMETROS_Y_LLUVIAS,
+                        variables: {
+                            filterLluviasInput: {
+                                month,
+                                year
+                            }
+                        }
+                    }
+                ]
             });
             if (data?.agregarLluvia?.length !== 0) {
                 setMessageType('success');

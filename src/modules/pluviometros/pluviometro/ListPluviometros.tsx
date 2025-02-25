@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import {
+    Box,
     Button,
     Grid2,
     Paper,
@@ -12,6 +13,8 @@ import {
     TableRow,
     Typography
 } from '@mui/material';
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { OBTENER_PLUVIOMETROS_Y_LLUVIAS } from '@graphql/queries';
 import { GetPluviometrosYLuviasResponse } from '@interfaces/pluviometros';
 import Alert from '@components/Alert';
@@ -23,6 +26,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import Loading from '@components/Loading';
 import { useLluviasActuales } from '../components/hooks/useLluviasActuales';
+import { meses } from '../constants/constants';
 
 interface Props {}
 
@@ -30,13 +34,17 @@ const ListPluviometros: React.FC<Props> = ({}) => {
     const { submitting, submitLluvia } = usePluviometro();
     const { generarPDF } = useLluviasActuales();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [filtersDate, setFiltersDate] = useState({
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear()
+    });
     const { isEnabled, arrayLluvias, setIsEnabled, setArrayLluvias } = useContext(PluviometroContext);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, error, loading } = useQuery<GetPluviometrosYLuviasResponse>(OBTENER_PLUVIOMETROS_Y_LLUVIAS, {
         variables: {
             filterLluviasInput: {
-                month: 0,
-                year: 0
+                month: filtersDate.month,
+                year: filtersDate.year
             }
         }
     });
@@ -52,8 +60,18 @@ const ListPluviometros: React.FC<Props> = ({}) => {
         const lastDay = new Date(year, month + 1, 0);
         return lastDay.getDate();
     }
-    const year = new Date().getFullYear();
-    const month = new Date().toLocaleString('es-ES', { month: 'long' });
+    const handleBack = () => {
+        setFiltersDate((prevState) => ({
+            ...prevState,
+            month: prevState.month - 1 === 0 ? 12 : prevState.month - 1
+        }));
+    };
+    const handleNext = () => {
+        setFiltersDate((prevState) => ({
+            ...prevState,
+            month: prevState.month + 1
+        }));
+    };
 
     return (
         <>
@@ -91,10 +109,22 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                                                     Registrar lluvias
                                                 </Button>
                                             )}
+                                            <Box className="!flex">
+                                                <Button className="!mt-2" onClick={handleBack} disabled={filtersDate.month === 1}>
+                                                    <ArrowBackIosNewOutlinedIcon />
+                                                </Button>
+                                                <Button
+                                                    className="!mt-2"
+                                                    onClick={handleNext}
+                                                    disabled={filtersDate.month === new Date().getMonth() + 1}
+                                                >
+                                                    <ArrowForwardIosOutlinedIcon />
+                                                </Button>
+                                            </Box>
                                         </TableCell>
                                     )}
                                     <TableCell colSpan={getDaysActualMonth()} className="!text-center !font-bold !text-2xl">
-                                        Lluvias de {month} - {year}
+                                        Lluvias de {meses[filtersDate.month - 1].label} - {filtersDate.year}
                                     </TableCell>
                                     <TableCell rowSpan={2} className="!text-center !font-bold !text-xl">
                                         Total mes
@@ -115,7 +145,12 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                             </TableHead>
                             <TableBody>
                                 {data?.obtenerPluviometrosYLluvias.map((pluviometro) => (
-                                    <Pluviometro key={pluviometro.id_pluviometro} pluviometro={pluviometro} />
+                                    <Pluviometro
+                                        key={pluviometro.id_pluviometro}
+                                        pluviometro={pluviometro}
+                                        year={filtersDate.year}
+                                        month={filtersDate.month}
+                                    />
                                 ))}
                             </TableBody>
                         </Table>
@@ -127,7 +162,7 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                     <Button
                         variant="contained"
                         disabled={submitting || arrayLluvias.length === 0 || !isEnabled}
-                        onClick={submitLluvia}
+                        onClick={() => submitLluvia(filtersDate.year, filtersDate.month)}
                         className="!h-10 !w-48"
                     >
                         {submitting ? <Loading /> : 'Registrar lluvias'}
@@ -138,7 +173,15 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                 <Grid2 size={12} display={'flex'} justifyContent={'center'} mt={2} mb={2}>
                     <Button
                         variant="contained"
-                        onClick={() => generarPDF(year, month, getDaysActualMonth, data!, setIsLoading)}
+                        onClick={() =>
+                            generarPDF(
+                                filtersDate.year,
+                                meses[filtersDate.month - 1].label,
+                                getDaysActualMonth,
+                                data!,
+                                setIsLoading
+                            )
+                        }
                         disabled={isLoading}
                     >
                         Generar Informe

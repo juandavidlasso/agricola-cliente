@@ -3,7 +3,6 @@ import DialogModal from '@components/Dialog';
 import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 import PluviometroRegister from './PluviometroRegister';
 import Lluvias from './Lluvias';
-// import AplicacionLluviaDelete from '../lluvias/AplicacionLluviaDelete';
 import LluviasDelete from '../lluvias/LluviasDelete';
 
 interface Props {}

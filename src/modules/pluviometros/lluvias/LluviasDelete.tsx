@@ -24,15 +24,25 @@ const LluviasDelete: React.FC<Props> = ({}) => {
             await eliminarAplicacionLluvia({
                 variables: {
                     idAplicacionLluvia: lluviaEdit?.id_lluvia
-                },
-                refetchQueries: [{ query: OBTENER_PLUVIOMETROS_Y_LLUVIAS }]
+                }
             });
 
             await eliminarLluvia({
                 variables: {
                     idLluvia: lluviaEdit?.id_lluvia
                 },
-                refetchQueries: [{ query: OBTENER_LLUVIAS }, { query: OBTENER_PLUVIOMETROS_Y_LLUVIAS }]
+                refetchQueries: [
+                    { query: OBTENER_LLUVIAS },
+                    {
+                        query: OBTENER_PLUVIOMETROS_Y_LLUVIAS,
+                        variables: {
+                            filterLluviasInput: {
+                                month: Number(lluviaEdit?.fecha.split('-')[1]),
+                                year: Number(lluviaEdit?.fecha.split('-')[0])
+                            }
+                        }
+                    }
+                ]
             });
 
             setMessageType('success');

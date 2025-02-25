@@ -75,14 +75,24 @@ const PluviometroRegister: React.FC<Props> = ({}) => {
         const listSuertes = suerteNames.join('-');
 
         try {
-            const { data } = await agregarPluviometro({
+            await agregarPluviometro({
                 variables: {
                     createPluviometroInput: {
                         nombre: dataForm.nombre,
                         suertesAsociadas: listSuertes
                     }
                 },
-                refetchQueries: [{ query: OBTENER_PLUVIOMETROS_Y_LLUVIAS }]
+                refetchQueries: [
+                    {
+                        query: OBTENER_PLUVIOMETROS_Y_LLUVIAS,
+                        variables: {
+                            filterLluviasInput: {
+                                month: new Date().getFullYear(),
+                                year: new Date().getMonth() + 1
+                            }
+                        }
+                    }
+                ]
             });
 
             setMessageType('success');
