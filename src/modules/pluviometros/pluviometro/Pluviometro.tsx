@@ -7,17 +7,11 @@ interface Props {
     pluviometro: Pluviometro;
     year: number;
     month: number;
+    DAYS_MONTH: number;
 }
 
-const Pluviometros: React.FC<Props> = ({ pluviometro, year, month }) => {
+const Pluviometros: React.FC<Props> = ({ pluviometro, year, month, DAYS_MONTH }) => {
     const { arrayLluvias, isEnabled, setArrayLluvias } = useContext(PluviometroContext);
-    function getDaysActualMonth(): number {
-        const actualDate = new Date();
-        const year = actualDate.getFullYear();
-        const month = actualDate.getMonth();
-        const lastDay = new Date(year, month + 1, 0);
-        return lastDay.getDate();
-    }
 
     const handleChange = (day: number, value: number, id_pluviometro: number) => {
         const fecha = `${year}-${month < 10 ? `0${month}` : month}-${day + 1}`;
@@ -54,7 +48,7 @@ const Pluviometros: React.FC<Props> = ({ pluviometro, year, month }) => {
                 <br />
                 <span className="!font-bold !text-[11px] !text-left">Suerte {pluviometro.suertesAsociadas}</span>
             </TableCell>
-            {Array.from({ length: getDaysActualMonth() }).map((_, day) => {
+            {Array.from({ length: DAYS_MONTH }).map((_, day) => {
                 const fecha = `${year}-${month < 10 ? `0${month}` : month}-${day + 1}`;
 
                 return (

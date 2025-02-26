@@ -125,7 +125,7 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
                             generarPDF(
                                 filtersLluvia!.year,
                                 meses[filtersLluvia!.month! - 1].label,
-                                getDaysActualMonth,
+                                getDaysActualMonth(),
                                 data!,
                                 setIsLoading
                             )

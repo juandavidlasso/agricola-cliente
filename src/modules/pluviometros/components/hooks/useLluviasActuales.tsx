@@ -29,13 +29,13 @@ export const useLluviasActuales = () => {
     const generarPDF = (
         year: number,
         month: string,
-        getDaysActualMonth: () => number,
+        DAYS_MONTH: number,
         data: GetPluviometrosYLuviasResponse,
         setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
     ) => {
         setIsLoading(true);
         const widths: string[] = ['auto'];
-        const daysInMonth = getDaysActualMonth();
+        const daysInMonth = DAYS_MONTH;
         const dataBody: any[] = [];
 
         for (let index = 0; index < data.obtenerPluviometrosYLluvias.length; index++) {

@@ -48,18 +48,12 @@ const ListPluviometros: React.FC<Props> = ({}) => {
             }
         }
     });
+    const DAYS_MONTH = new Date(filtersDate.year, filtersDate.month, 0).getDate();
 
     if (error) return <Alert message={error.message} />;
 
     if (loading) return <ModalLoading isOpen={loading} />;
 
-    function getDaysActualMonth(): number {
-        const actualDate = new Date();
-        const year = actualDate.getFullYear();
-        const month = actualDate.getMonth();
-        const lastDay = new Date(year, month + 1, 0);
-        return lastDay.getDate();
-    }
     const handleBack = () => {
         setFiltersDate((prevState) => ({
             ...prevState,
@@ -123,7 +117,7 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                                             </Box>
                                         </TableCell>
                                     )}
-                                    <TableCell colSpan={getDaysActualMonth()} className="!text-center !font-bold !text-2xl">
+                                    <TableCell colSpan={DAYS_MONTH} className="!text-center !font-bold !text-2xl">
                                         Lluvias de {meses[filtersDate.month - 1].label} - {filtersDate.year}
                                     </TableCell>
                                     <TableCell rowSpan={2} className="!text-center !font-bold !text-xl">
@@ -132,7 +126,7 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Pluviómetro</TableCell>
-                                    {Array.from({ length: getDaysActualMonth() }).map((_, day) => (
+                                    {Array.from({ length: DAYS_MONTH }).map((_, day) => (
                                         <TableCell
                                             key={day + 1}
                                             align="left"
@@ -150,6 +144,7 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                                         pluviometro={pluviometro}
                                         year={filtersDate.year}
                                         month={filtersDate.month}
+                                        DAYS_MONTH={DAYS_MONTH}
                                     />
                                 ))}
                             </TableBody>
@@ -174,13 +169,7 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                     <Button
                         variant="contained"
                         onClick={() =>
-                            generarPDF(
-                                filtersDate.year,
-                                meses[filtersDate.month - 1].label,
-                                getDaysActualMonth,
-                                data!,
-                                setIsLoading
-                            )
+                            generarPDF(filtersDate.year, meses[filtersDate.month - 1].label, DAYS_MONTH, data!, setIsLoading)
                         }
                         disabled={isLoading}
                     >
