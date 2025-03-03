@@ -81,21 +81,21 @@ const ReporteLluviasYear: React.FC<Props> = ({}) => {
                         </TableHead>
                         <TableBody>
                             {data?.obtenerLluviasYear.map((pluviometro) => (
-                                <TableRow key={pluviometro.id_pluviometro}>
-                                    <TableCell component="th" scope="row" align="left">
+                                <TableRow key={pluviometro.id_pluviometro} sx={{ height: '30px !important' }}>
+                                    <TableCell component="th" scope="row" align="left" className="!p-0 !text-center">
                                         <span style={{ fontSize: '.9rem' }}>{pluviometro.nombre}</span>
                                         <br />
-                                        <span className="!font-bold">Suerte {pluviometro.suertesAsociadas}</span>
+                                        <span className="!font-bold !text-left">Suerte {pluviometro.suertesAsociadas}</span>
                                     </TableCell>
                                     {meses.map((mes) => (
-                                        <TableCell key={mes.id} align="left" className="!border-l-[0.5px] !border-r-[0.5px]">
+                                        <TableCell key={mes.id} align="left" className="!border-l-[0.5px] !border-r-[0.5px] !p-1">
                                             {data1?.obtenerResumenLluviasYear.length === 0
                                                 ? null
                                                 : data1?.obtenerResumenLluviasYear.map((lluvia, index) =>
                                                       lluvia.pluviometro_id === pluviometro.id_pluviometro &&
                                                       Number(lluvia.fecha) === mes.id ? (
                                                           <div
-                                                              className="!text-white !bg-blue-600 !text-center !rounded-lg !p-2 !w-[90%] !m-auto"
+                                                              className="!text-white !bg-blue-600 !p-1 !rounded-lg !w-[60%] !mx-auto !text-center"
                                                               key={index}
                                                           >
                                                               <span>{lluvia?.cantidad?.toFixed(1)}</span>

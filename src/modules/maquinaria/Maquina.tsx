@@ -29,7 +29,7 @@ const Maquina: React.FC<Props> = ({ maquinaria }) => {
             >
                 <CardContent>
                     <Typography className="!text-center !text-2xl !font-bold">
-                        {maquinaria.marca} {maquinaria.modelo}
+                        {maquinaria.marca} {maquinaria.serie}
                     </Typography>
                 </CardContent>
             </Card>
