@@ -15,12 +15,12 @@ import { InformationContext } from 'src/context/cultivos/information/Information
 import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
 
 const columns: GridColDef[] = [
-    { field: 'producto', headerName: 'Producto', flex: 0.12 },
-    { field: 'dosis', headerName: 'Dosis x Hta', flex: 0.1 },
-    { field: 'presentacion', headerName: 'Presentación', flex: 0.12 },
-    { field: 'valor', headerName: 'Valor x Hta', flex: 0.11 },
-    { field: 'aplico', headerName: 'Aplicado por', flex: 0.12 },
-    { field: 'nota', headerName: 'Nota', flex: 0.43 }
+    { field: 'producto', headerName: 'Producto', flex: 0.1, headerAlign: 'center' },
+    { field: 'dosis', headerName: 'Dosis x Hta', flex: 0.09, headerAlign: 'center', align: 'center' },
+    { field: 'presentacion', headerName: 'Presentación', flex: 0.1, headerAlign: 'center', align: 'center' },
+    { field: 'valor', headerName: 'Valor x Hta', flex: 0.09, headerAlign: 'center', align: 'center' },
+    { field: 'aplico', headerName: 'Aplicado por', flex: 0.1, headerAlign: 'center', align: 'center' },
+    { field: 'nota', headerName: 'Nota', flex: 0.52 }
 ];
 
 interface Props {}

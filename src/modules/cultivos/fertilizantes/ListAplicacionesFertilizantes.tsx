@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Button, Collapse, Grid2, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRowHeightParams } from '@mui/x-data-grid';
@@ -15,12 +15,12 @@ import { GetAplicacionesFertilizantesCorteResponse } from '@interfaces/cultivos/
 import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
 
 const columns: GridColDef[] = [
-    { field: 'producto', headerName: 'Producto', flex: 0.12 },
-    { field: 'dosis', headerName: 'Dosis x Hta', flex: 0.1 },
-    { field: 'presentacion', headerName: 'Presentación', flex: 0.12 },
-    { field: 'valor', headerName: 'Valor x Hta', flex: 0.11 },
-    { field: 'aplico', headerName: 'Aplicado por', flex: 0.12 },
-    { field: 'nota', headerName: 'Nota', flex: 0.43 }
+    { field: 'producto', headerName: 'Producto', flex: 0.13, headerAlign: 'center' },
+    { field: 'dosis', headerName: 'Dosis x Hta', flex: 0.09, headerAlign: 'center', align: 'center' },
+    { field: 'presentacion', headerName: 'Presentación', flex: 0.1, headerAlign: 'center', align: 'center' },
+    { field: 'valor', headerName: 'Valor x Hta', flex: 0.09, headerAlign: 'center', align: 'center' },
+    { field: 'aplico', headerName: 'Aplicado por', flex: 0.1, headerAlign: 'center', align: 'center' },
+    { field: 'nota', headerName: 'Nota', flex: 0.49, headerAlign: 'center' }
 ];
 
 interface Props {}

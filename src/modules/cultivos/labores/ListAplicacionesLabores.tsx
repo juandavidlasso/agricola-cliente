@@ -18,14 +18,14 @@ const getColumns = (
     setFormType: React.Dispatch<React.SetStateAction<'' | 'labores' | 'herbicidas' | 'fertilizantes'>>
 ) => {
     const columns: GridColDef[] = [
-        { field: 'fecha', headerName: 'Fecha', flex: 1 },
-        { field: 'actividad', headerName: 'Labor', flex: 1 },
-        { field: 'equipo', headerName: 'Equipo', flex: 1 },
-        { field: 'estado', headerName: 'Estado', flex: 1 },
-        { field: 'pases', headerName: 'No. de Pases', flex: 1 },
-        { field: 'aplico', headerName: 'Realizado Por', flex: 1 },
-        { field: 'costo', headerName: 'Costo x Hta', flex: 1 },
-        { field: 'nota', headerName: 'Nota', flex: 1 },
+        { field: 'fecha', headerName: 'Fecha', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'actividad', headerName: 'Labor', flex: 1, headerAlign: 'center' },
+        { field: 'equipo', headerName: 'Equipo', flex: 1, headerAlign: 'center' },
+        { field: 'estado', headerName: 'Estado', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'pases', headerName: 'No. de Pases', flex: 1, headerAlign: 'center', align: 'center' },
+        { field: 'aplico', headerName: 'Realizado Por', flex: 1, headerAlign: 'center' },
+        { field: 'costo', headerName: 'Costo x Hta', flex: 1, headerAlign: 'center' },
+        { field: 'nota', headerName: 'Nota', flex: 1, headerAlign: 'center' },
         {
             field: '',
             headerName: 'Acciones',
@@ -132,6 +132,9 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                             pageSizeOptions={[10, 20]}
                             checkboxSelection={false}
                             sx={{
+                                '& .MuiDataGrid-row': {
+                                    fontSize: '12px'
+                                },
                                 '& .MuiDataGrid-row--borderBottom': {
                                     background: '#154360 !important',
                                     color: '#FFFFFF !important'
