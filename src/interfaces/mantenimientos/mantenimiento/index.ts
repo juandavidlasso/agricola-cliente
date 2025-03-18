@@ -2,7 +2,7 @@ export interface Mantenimiento {
     idMantenimiento: number;
     detalle: string;
     horaCambio: string;
-    cantidad: number;
+    cantidad: string;
     insumoId: number;
     tipoCambio: boolean;
     proximoCambio: number;
@@ -11,7 +11,7 @@ export interface Mantenimiento {
 
 export interface FormDataMantenimiento {
     insumoId: number;
-    cantidad: number;
+    cantidad: string;
     tipoCambio: boolean;
     horaCambio: string;
     proximoCambio: number;

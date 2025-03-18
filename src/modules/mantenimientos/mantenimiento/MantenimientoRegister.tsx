@@ -25,7 +25,7 @@ const schema = yup.object({
     mantenimientos: yup.array().of(
         yup.object({
             insumoId: yup.number().required('El insumo es requerido.'),
-            cantidad: yup.number().required('La cantidad es requerida.'),
+            cantidad: yup.string().required('La cantidad es requerida.'),
             tipoCambio: yup.boolean().required('Debe seleccionar un tipo de cambio.'),
             horaCambio: yup.string().required('La hora o fecha de cambio es requerida.'),
             proximoCambio: yup.number().required('El próximo cambio es requerido.'),

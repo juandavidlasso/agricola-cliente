@@ -62,7 +62,7 @@ const LoginView: React.FC = () => {
         <form onSubmit={handleSubmit(submitForm)}>
             <Box className="flex justify-center items-center w-full min-h-screen">
                 <Grid2 container spacing={2} className="!w-full !flex !justify-center">
-                    <Grid2 size={12} display="flex" justifyContent="center" alignItems="center" className="!w-1/3">
+                    <Grid2 size={12} display="flex" justifyContent="center" alignItems="center" className="!w-1/3 max-lg:!w-[90%]">
                         <Card className="p-2 w-full text-center rounded-2xl" style={{ boxShadow: '1px 1px 5px 3px #cbd5e1' }}>
                             <CardContent sx={{ mt: 0 }}>
                                 <Grid2 size={12}>
