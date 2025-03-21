@@ -17,9 +17,9 @@ interface Props {
 
 const ModalActions: React.FC<Props> = ({ title, handleClose, isOpen, type, width }) => {
     const getComponent = () => {
-        if (type === 'labores') return <ListLabores showButton={true} />;
-        if (type === 'herbicidas') return <ListAplicacionHerbicidas showButton={true} />;
-        if (type === 'fertilizantes') return <ListAplicacionFertilizantes showButton={true} />;
+        if (type === 'labores') return <ListLabores />;
+        if (type === 'herbicidas') return <ListAplicacionHerbicidas />;
+        if (type === 'fertilizantes') return <ListAplicacionFertilizantes />;
         if (type === 'plagas') return <ListTratamientoPlagas />;
         if (type === 'riegos') return <RiegoRegister handleClose={handleClose} />;
         if (type === 'cosecha') return <CosechaRegister handleClose={handleClose} />;

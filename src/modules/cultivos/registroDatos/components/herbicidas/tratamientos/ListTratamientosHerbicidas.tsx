@@ -5,7 +5,6 @@ import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamien
 import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    showButton: boolean,
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setTratamientoHerbicidaEdit: React.Dispatch<React.SetStateAction<TratamientoHerbicidas | undefined>>,
@@ -81,18 +80,14 @@ const getColumns = (
             )
         }
     ];
-    if (showButton) {
-        columns.pop();
-    }
     return columns;
 };
 
 interface Props {
     listTratamientoHerbicida?: TratamientoHerbicidas[];
-    showButton?: boolean;
 }
 
-const ListTratamientosHerbicidas: React.FC<Props> = ({ listTratamientoHerbicida, showButton = false }) => {
+const ListTratamientosHerbicidas: React.FC<Props> = ({ listTratamientoHerbicida }) => {
     const { setOpenModal, setFormType, setTratamientoHerbicidaEdit, setDataType, setTitle, setHeight } =
         useContext(CultivosContext);
     return (
@@ -102,7 +97,6 @@ const ListTratamientosHerbicidas: React.FC<Props> = ({ listTratamientoHerbicida,
                     <DataGrid
                         rows={listTratamientoHerbicida}
                         columns={getColumns(
-                            showButton,
                             setOpenModal,
                             setFormType,
                             setTratamientoHerbicidaEdit,
@@ -121,6 +115,9 @@ const ListTratamientosHerbicidas: React.FC<Props> = ({ listTratamientoHerbicida,
                         pageSizeOptions={[10, 20]}
                         checkboxSelection={false}
                         sx={{
+                            '& .MuiDataGrid-row': {
+                                fontSize: '12px'
+                            },
                             '& .MuiDataGrid-row--borderBottom': {
                                 background: '#154360 !important',
                                 color: '#FFFFFF !important'

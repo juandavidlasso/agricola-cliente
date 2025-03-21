@@ -6,7 +6,6 @@ import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import ThunderstormOutlinedIcon from '@mui/icons-material/ThunderstormOutlined';
 import TableViewOutlinedIcon from '@mui/icons-material/TableViewOutlined';
 import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import { RoutesProps } from '@modules/layouts/Layout';
 
 export const routesCultivos: RoutesProps[] = [
@@ -17,7 +16,6 @@ export const routesCultivos: RoutesProps[] = [
     { name: 'Prontuario', url: '/prontuario', icon: <FormatListBulletedOutlinedIcon /> },
     { name: 'Suertes', url: '/suerte', icon: <GrassOutlinedIcon /> },
     { name: 'Lluvias', url: '/pluviometros', icon: <ThunderstormOutlinedIcon /> },
-    { name: 'Datos Actuales', url: '/datos-actuales', icon: <TableViewOutlinedIcon /> },
-    { name: 'Registro de Datos', url: '/informacion', icon: <EditNoteOutlinedIcon /> }
+    { name: 'Datos Actuales', url: '/datos-actuales', icon: <TableViewOutlinedIcon /> }
     // { name: 'Alertas', url: '/', icon: <NotificationsActiveOutlinedIcon /> }
 ];

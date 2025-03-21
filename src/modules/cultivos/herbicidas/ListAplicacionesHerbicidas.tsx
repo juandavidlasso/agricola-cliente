@@ -114,7 +114,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                                 setOpenModal(true);
                                                             }}
                                                         >
-                                                            Eliminar
+                                                            Eliminar aplicación herbicida
                                                         </Button>
                                                     )}
                                                 </Box>

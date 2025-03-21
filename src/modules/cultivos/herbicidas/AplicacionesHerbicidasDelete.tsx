@@ -8,7 +8,7 @@ import {
     AplicacionesHerbicidas,
     GetDeleteAplicacionesHerbicidasResponse
 } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 interface Props {
     handleClose: () => void;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const AplicacionesHerbicidasDelete: React.FC<Props> = ({ handleClose, data }) => {
-    const { setMessageType, setInfoMessage, setShowMessage } = useContext(InformationContext);
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [eliminarAplicacionesHerbicidasService] =
         useMutation<GetDeleteAplicacionesHerbicidasResponse>(ELIMINAR_APLICACIONES_HERBICIDAS);
     const [submitting, setSubmitting] = useState<boolean>(false);

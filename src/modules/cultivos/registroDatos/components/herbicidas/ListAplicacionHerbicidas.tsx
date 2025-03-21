@@ -1,26 +1,20 @@
-import React, { useContext } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Checkbox, Grid2, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ApolloError, useMutation, useQuery } from '@apollo/client';
+import React, { useContext, useState } from 'react';
+import { Box, Button, Checkbox, Collapse, Grid2, List, ListItemButton, ListItemText } from '@mui/material';
+import { useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import Alert from '@components/Alert';
-import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
+import { OBTENER_APLICACIONES_HERBICIDAS } from '@graphql/queries';
 import { GetAplicacionHerbicidaCorteResponse } from '@interfaces/cultivos/herbicidas/aplicacion';
 import ModalLoading from '@components/Modal';
 import ListTratamientosHerbicidas from './tratamientos/ListTratamientosHerbicidas';
 import { InformationContext } from 'src/context/cultivos/information/InformationContext';
-import { REGISTRAR_APLICACIONES_HERBICIDAS } from '@graphql/mutations';
-import { GetRegistrarAplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
-import useAppSelector from '@hooks/useAppSelector';
-import { IRootState } from '@interfaces/store';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {
-    showButton?: boolean;
-}
+interface Props {}
 
-const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
-    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
+const ListAplicacionHerbicidas: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetAplicacionHerbicidaCorteResponse>(OBTENER_APLICACIONES_HERBICIDAS);
     const {
         selectedAplicacionHerbicidas,
@@ -34,8 +28,15 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
         setType,
         setDuplicate
     } = useContext(CultivosContext);
-    const { totalItems, setMessageType, setInfoMessage, setShowMessage } = useContext(InformationContext);
-    const [agregarAplicacionesHerbicidas] = useMutation<GetRegistrarAplicacionesHerbicidas>(REGISTRAR_APLICACIONES_HERBICIDAS);
+    const { totalItems } = useContext(InformationContext);
+    const [openItems, setOpenItems] = useState<any>({});
+
+    const handleClick = (id: any) => {
+        setOpenItems((prev: any) => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
         event.stopPropagation();
@@ -50,89 +51,67 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
 
     if (loading) return <ModalLoading isOpen={loading} />;
 
-    const handleSubmitAplicacionesHerbicidas = async () => {
-        let aplicacionesHerbicidas = [];
-
-        for (let index = 0; index < selectedAplicacionHerbicidas.length; index++) {
-            const obj = {
-                corte_id: id_corte,
-                aphe_id: selectedAplicacionHerbicidas[index]
-            };
-            aplicacionesHerbicidas.push(obj);
-        }
-
-        try {
-            const data = await agregarAplicacionesHerbicidas({
-                variables: {
-                    createAplicacionesHerbicidaInput: aplicacionesHerbicidas
-                },
-                refetchQueries: [{ query: OBTENER_APLICACIONES_HERBICIDAS_CORTE, variables: { corteId: id_corte } }]
-            });
-            if (data.data?.agregarAplicacionesHerbicidas?.length !== 0) {
-                setMessageType('success');
-                setInfoMessage(`La herbicida se aplico exitosamente.`);
-                setShowMessage(true);
-            }
-        } catch (error) {
-            if (error instanceof ApolloError) {
-                setMessageType('error');
-                setInfoMessage(error.message.replace('Error:', ''));
-                setShowMessage(true);
-                return;
-            }
-            setMessageType('error');
-            setInfoMessage(error as string);
-            setShowMessage(true);
-            return;
-        }
-    };
-
     return (
         <Grid2 container>
+            <Button
+                className="!fixed !z-50"
+                variant="contained"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setFormType('create');
+                    setDataType('aplicacion');
+                    setTitle('Registrar aplicación herbicida');
+                    setHeight(60);
+                    setType('herbicidas');
+                    setAplicacionHerbicidaEdit(undefined);
+                    setDuplicate(false);
+                    setOpenModal(true);
+                }}
+            >
+                Agregar aplicación herbicida
+            </Button>
+            {selectedAplicacionHerbicidas.length > 0 && (
+                <Button
+                    className="!fixed !ml-72 !z-50"
+                    variant="contained"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setType('herbicidas');
+                        setTitle('Selecciona la suerte y el corte');
+                        setHeight(80);
+                        setDataType('suertes');
+                        setDuplicate(false);
+                        setOpenModal(true);
+                    }}
+                >
+                    Aplicar herbicida
+                </Button>
+            )}
             <Grid2 size={12} sx={{ p: 1 }}>
                 {data?.obtenerAplicacionesHerbicidas.length === 0
                     ? 'No hay aplicaciones registradas'
                     : data?.obtenerAplicacionesHerbicidas.map((aplicacion) => (
-                          <Accordion
+                          <List
                               key={aplicacion.id_aphe}
-                              sx={{
-                                  minWidth: '100%',
-                                  height: 'fit-content !important',
-                                  mt: 1,
-                                  mb: 2,
-                                  borderRadius: '5px !important'
-                              }}
-                              onChange={() => setAplicacionHerbicidaEdit(aplicacion)}
+                              sx={{ width: '100%', border: '1px solid gray', mb: 2, borderRadius: 3, mt: 7 }}
+                              component="nav"
                           >
-                              <AccordionSummary
-                                  expandIcon={<ExpandMoreIcon />}
-                                  aria-controls={`panel${aplicacion.id_aphe}-content`}
-                                  id={`panel${aplicacion.id_aphe}-header`}
-                                  sx={{
-                                      '& .MuiAccordionSummary-content': {
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'space-between'
-                                      }
-                                  }}
-                              >
-                                  <Box display={'flex'} alignItems={'center'}>
-                                      <Box>
-                                          <Checkbox
-                                              sx={{
-                                                  color: '#000000'
-                                              }}
-                                              checked={selectedAplicacionHerbicidas.includes(aplicacion.id_aphe)}
-                                              onChange={(e) => handleCheckboxChange(e, aplicacion.id_aphe)}
-                                              onClick={(e) => e.stopPropagation()}
-                                              inputProps={{ 'aria-label': 'controlled' }}
-                                              disabled={showButton ? totalItems.includes(aplicacion.id_aphe) : false}
-                                          />
-                                      </Box>
-                                      <Typography>
-                                          Fecha aplicación: {dayjs(aplicacion.fecha).format('DD-MM-YYYY')} - {aplicacion.tipo}
-                                      </Typography>
-                                  </Box>
+                              <ListItemButton onClick={() => handleClick(aplicacion.id_aphe)}>
+                                  <Checkbox
+                                      sx={{
+                                          color: '#000000'
+                                      }}
+                                      checked={selectedAplicacionHerbicidas.includes(aplicacion.id_aphe)}
+                                      onChange={(e) => handleCheckboxChange(e, aplicacion.id_aphe)}
+                                      onClick={(e) => e.stopPropagation()}
+                                      inputProps={{ 'aria-label': 'controlled' }}
+                                      disabled={totalItems.includes(aplicacion.id_aphe)}
+                                  />
+                                  <ListItemText
+                                      primary={`Fecha aplicación: ${dayjs(aplicacion.fecha).format('DD-MM-YYYY')} - ${
+                                          aplicacion.tipo
+                                      }`}
+                                  />
                                   {selectedAplicacionHerbicidas.length > 0 &&
                                       selectedAplicacionHerbicidas.includes(aplicacion.id_aphe) && (
                                           <Button
@@ -153,80 +132,71 @@ const ListAplicacionHerbicidas: React.FC<Props> = ({ showButton = false }) => {
                                               Duplicar Herbicida
                                           </Button>
                                       )}
-                                  {!showButton && (
-                                      <>
-                                          <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
-                                              <Button
-                                                  variant="outlined"
-                                                  color="info"
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      setAplicacionHerbicidaEdit(aplicacion);
-                                                      setFormType('create');
-                                                      setDataType('tratamiento');
-                                                      setTitle('Registrar tratamiento herbicida');
-                                                      setHeight(90);
-                                                      setType('herbicidas');
-                                                      setDuplicate(false);
-                                                      setOpenModal(true);
-                                                  }}
-                                              >
-                                                  Agregar tratamiento
-                                              </Button>
-                                              <Button
-                                                  variant="outlined"
-                                                  color="warning"
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      setAplicacionHerbicidaEdit(aplicacion);
-                                                      setFormType('update');
-                                                      setDataType('aplicacion');
-                                                      setTitle('Actualizar aplicación herbicida');
-                                                      setHeight(60);
-                                                      setType('herbicidas');
-                                                      setDuplicate(false);
-                                                      setOpenModal(true);
-                                                  }}
-                                              >
-                                                  Editar
-                                              </Button>
-                                              <Button
-                                                  variant="outlined"
-                                                  color="error"
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      setAplicacionHerbicidaEdit(aplicacion);
-                                                      setFormType('delete');
-                                                      setDataType('aplicacion');
-                                                      setTitle('Eliminar aplicación herbicida');
-                                                      setHeight(45);
-                                                      setType('herbicidas');
-                                                      setDuplicate(false);
-                                                      setOpenModal(true);
-                                                  }}
-                                              >
-                                                  Eliminar
-                                              </Button>
-                                          </Box>
-                                      </>
-                                  )}
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                  <ListTratamientosHerbicidas
-                                      listTratamientoHerbicida={aplicacion.listTratamientoHerbicida}
-                                      showButton={showButton}
-                                  />
-                              </AccordionDetails>
-                          </Accordion>
+                                  <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
+                                      <Button
+                                          variant="outlined"
+                                          color="info"
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              setAplicacionHerbicidaEdit(aplicacion);
+                                              setFormType('create');
+                                              setDataType('tratamiento');
+                                              setTitle('Registrar tratamiento herbicida');
+                                              setHeight(90);
+                                              setType('herbicidas');
+                                              setDuplicate(false);
+                                              setOpenModal(true);
+                                          }}
+                                      >
+                                          Agregar tratamiento
+                                      </Button>
+                                      <Button
+                                          variant="outlined"
+                                          color="warning"
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              setAplicacionHerbicidaEdit(aplicacion);
+                                              setFormType('update');
+                                              setDataType('aplicacion');
+                                              setTitle('Actualizar aplicación herbicida');
+                                              setHeight(60);
+                                              setType('herbicidas');
+                                              setDuplicate(false);
+                                              setOpenModal(true);
+                                          }}
+                                      >
+                                          Editar
+                                      </Button>
+                                      <Button
+                                          variant="outlined"
+                                          color="error"
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              setAplicacionHerbicidaEdit(aplicacion);
+                                              setFormType('delete');
+                                              setDataType('aplicacion');
+                                              setTitle('Eliminar aplicación herbicida');
+                                              setHeight(45);
+                                              setType('herbicidas');
+                                              setDuplicate(false);
+                                              setOpenModal(true);
+                                          }}
+                                      >
+                                          Eliminar
+                                      </Button>
+                                  </Box>
+                                  {openItems[aplicacion.id_aphe] ? <ExpandLess /> : <ExpandMore />}
+                              </ListItemButton>
+                              <Collapse in={openItems[aplicacion.id_aphe]} timeout="auto" unmountOnExit>
+                                  <List component="div" disablePadding>
+                                      <ListTratamientosHerbicidas
+                                          listTratamientoHerbicida={aplicacion.listTratamientoHerbicida}
+                                      />
+                                  </List>
+                              </Collapse>
+                          </List>
                       ))}
             </Grid2>
-            {showButton && selectedAplicacionHerbicidas.length > 0 && (
-                <Grid2 size={12} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                    <Button variant="contained" sx={{ mt: 5 }} onClick={handleSubmitAplicacionesHerbicidas}>
-                        Aplicar {selectedAplicacionHerbicidas.length} herbicidas
-                    </Button>
-                </Grid2>
-            )}
         </Grid2>
     );
 };

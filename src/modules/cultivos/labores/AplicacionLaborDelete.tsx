@@ -4,8 +4,8 @@ import { Button, Grid2, Typography } from '@mui/material';
 import Loading from '@components/Loading';
 import { AplicacionLabores, GetDeleteAplicacionLaboresResponse } from '@interfaces/cultivos/labores';
 import { ELIMINAR_APLICACION_LABOR } from '@graphql/mutations';
-import { InformationContext, TypeData } from 'src/context/cultivos/information/InformationContext';
 import { OBTENER_APLICACIONES_LABORES } from '@graphql/queries';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 interface Props {
     handleClose: () => void;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const AplicacionLaborDelete: React.FC<Props> = ({ handleClose, data }) => {
-    const { setMessageType, setInfoMessage, setShowMessage } = useContext(InformationContext);
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [eliminarAplicacionLabores] = useMutation<GetDeleteAplicacionLaboresResponse>(ELIMINAR_APLICACION_LABOR);
     const [submitting, setSubmitting] = useState<boolean>(false);
 

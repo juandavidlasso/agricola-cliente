@@ -9,25 +9,23 @@ import {
     GridRowSelectionModel
 } from '@mui/x-data-grid';
 import { Box, Button, Grid2 } from '@mui/material';
-import { ApolloError, useMutation, useQuery } from '@apollo/client';
-import { OBTENER_APLICACIONES_LABORES, OBTENER_LABORES } from '@graphql/queries';
-import { GetLaboresResponse, GetRegisterAplicacionLabor, Labores } from '@interfaces/cultivos/labores';
+import { useQuery } from '@apollo/client';
+import { OBTENER_LABORES } from '@graphql/queries';
+import { GetLaboresResponse, Labores } from '@interfaces/cultivos/labores';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
-import { REGISTRAR_LABORES_CORTES } from '@graphql/mutations';
 import { InformationContext } from 'src/context/cultivos/information/InformationContext';
-import useAppSelector from '@hooks/useAppSelector';
-import { IRootState } from '@interfaces/store';
-import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext, DataType, DataTypeApplication, ModalDataType } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    showButton: boolean,
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setEditLabor: React.Dispatch<React.SetStateAction<Labores | undefined>>,
     setTitle: React.Dispatch<React.SetStateAction<string>>,
     setHeight: React.Dispatch<React.SetStateAction<number>>,
-    setDuplicate: React.Dispatch<React.SetStateAction<boolean>>
+    setDuplicate: React.Dispatch<React.SetStateAction<boolean>>,
+    setType: React.Dispatch<React.SetStateAction<ModalDataType>>,
+    setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'fecha', headerName: 'Fecha', flex: 0.1 },
@@ -58,6 +56,8 @@ const getColumns = (
                             setEditLabor(param.row);
                             setFormType('delete');
                             setTitle('Eliminar labor');
+                            setType('labores');
+                            setDataType('');
                             setHeight(40);
                             setDuplicate(false);
                             setOpenModal(true);
@@ -84,6 +84,8 @@ const getColumns = (
                             setEditLabor(restData);
                             setFormType('update');
                             setTitle('Actualizar labor');
+                            setType('labores');
+                            setDataType('');
                             setHeight(90);
                             setDuplicate(false);
                             setOpenModal(true);
@@ -108,81 +110,80 @@ const getColumns = (
             )
         }
     ];
-    if (showButton) {
-        columns.pop();
-    }
     return columns;
 };
 
-interface Props {
-    showButton?: boolean;
-}
+interface Props {}
 
-const ListLabores: React.FC<Props> = ({ showButton = false }) => {
-    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
+const ListLabores: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetLaboresResponse>(OBTENER_LABORES);
-    const { selectedLabores, setOpenModal, setFormType, setEditLabor, setSelectedLabores, setTitle, setHeight, setDuplicate } =
-        useContext(CultivosContext);
-    const { setMessageType, setInfoMessage, setShowMessage, totalItems } = useContext(InformationContext);
-    const [agregarAplicacionLabores] = useMutation<GetRegisterAplicacionLabor>(REGISTRAR_LABORES_CORTES);
+    const {
+        selectedLabores,
+        setOpenModal,
+        setFormType,
+        setEditLabor,
+        setSelectedLabores,
+        setTitle,
+        setHeight,
+        setDuplicate,
+        setType,
+        setDataType
+    } = useContext(CultivosContext);
+    const { totalItems } = useContext(InformationContext);
 
     if (error) return <Alert message={error.message} />;
 
     if (loading) return <ModalLoading isOpen={loading} />;
 
-    const handleSubmitLabor = async () => {
-        let aplicacionesLabores = [];
-
-        for (let index = 0; index < selectedLabores.length; index++) {
-            const obj = {
-                corte_id: id_corte,
-                labor_id: selectedLabores[index]
-            };
-            aplicacionesLabores.push(obj);
-        }
-
-        try {
-            const data = await agregarAplicacionLabores({
-                variables: {
-                    createAplicacionLaboresInput: aplicacionesLabores
-                },
-                refetchQueries: [{ query: OBTENER_APLICACIONES_LABORES, variables: { corteId: id_corte } }]
-            });
-            for (let index = 0; index < selectedLabores.length; index++) {
-                if (data.data?.agregarAplicacionLabores.includes(selectedLabores[index])) {
-                    setMessageType('success');
-                    setInfoMessage(`La labor se aplico exitosamente.`);
-                    setShowMessage(true);
-                }
-            }
-        } catch (error) {
-            if (error instanceof ApolloError) {
-                setMessageType('error');
-                setInfoMessage(error.message.replace('Error:', ''));
-                setShowMessage(true);
-                return;
-            }
-            setMessageType('error');
-            setInfoMessage(error as string);
-            setShowMessage(true);
-            return;
-        }
-    };
-
     return (
         <Grid2 container>
+            {selectedLabores.length > 0 && (
+                <Button
+                    variant="contained"
+                    onClick={() => {
+                        setType('labores');
+                        setTitle('Selecciona la suerte y el corte');
+                        setHeight(80);
+                        setDataType('suertes');
+                        setDuplicate(false);
+                        setOpenModal(true);
+                    }}
+                    className="!fixed !z-50"
+                    sx={{
+                        ml: 25
+                    }}
+                >
+                    Aplicar {selectedLabores.length} labores
+                </Button>
+            )}
+            <Button
+                variant="contained"
+                onClick={() => {
+                    setFormType('create');
+                    setHeight(90);
+                    setTitle('Registrar labor');
+                    setType('labores');
+                    setEditLabor(undefined);
+                    setDuplicate(false);
+                    setOpenModal(true);
+                }}
+                className="!fixed !z-50"
+            >
+                Registrar labor
+            </Button>
             <Grid2 size={12}>
-                <div style={{ height: 'auto', width: '100%' }}>
+                <div style={{ height: 'auto', width: '100%', marginTop: 60 }}>
                     <DataGrid
                         rows={data === undefined ? [] : data.obtenerLabores}
                         columns={getColumns(
-                            showButton,
                             setOpenModal,
                             setFormType,
                             setEditLabor,
                             setTitle,
                             setHeight,
-                            setDuplicate
+                            setDuplicate,
+                            setType,
+                            setDataType
                         )}
                         onRowSelectionModelChange={(rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
                             setSelectedLabores(rowSelectionModel as number[]);
@@ -216,13 +217,6 @@ const ListLabores: React.FC<Props> = ({ showButton = false }) => {
                     />
                 </div>
             </Grid2>
-            {showButton && selectedLabores.length > 0 && (
-                <Grid2 size={12} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                    <Button variant="contained" sx={{ mt: 5 }} onClick={handleSubmitLabor}>
-                        Aplicar {selectedLabores.length} labores
-                    </Button>
-                </Grid2>
-            )}
         </Grid2>
     );
 };

@@ -19,6 +19,11 @@ import ListButtons from './ListButtons';
 import { InformationContext } from 'src/context/cultivos/information/InformationContext';
 import CortePopover from './CortePopover';
 import DeleteInformationPopover from './DeleteInformationPopover';
+import SuertesPopover from '../registroDatos/components/suertes/SuertesPopover';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { useLabores } from '../registroDatos/components/labores/hooks/useLabores';
+import { useAplicacionesHerbicidas } from '../registroDatos/components/herbicidas/hooks/useAplicacionesHerbicidas';
+import { useAplicacionesFertilizantes } from '../registroDatos/components/fertilizantes/hooks/useAplicacionesFertilizantes';
 
 const LazyTablonPopover = dynamic(() => import('../tablones/TablonPopover'), {
     ssr: false
@@ -55,10 +60,14 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
         handleCloseModalActions
     } = useActions();
     const { openModal: openModalInformation, setOpenModal, title, height, deleteData, width } = useContext(InformationContext);
+    const { type } = useContext(CultivosContext);
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
     const { data, loading, error } = useQuery<GetCorteResponse>(OBTENER_CORTE, { variables: { idCorte: corte.id_corte } });
     const [titleListWorks, setTitleListWorks] = useState<string>('');
     const [nameButton, setNameButton] = useState<string>('');
+    const { handleSubmitLabor } = useLabores();
+    const { handleSubmitAplicacionesHerbicidas } = useAplicacionesHerbicidas();
+    const { handleSubmitAplicacionesFertilizantes } = useAplicacionesFertilizantes();
 
     if (error) return <Alert message={error.message} />;
 
@@ -88,6 +97,15 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
                 title={title}
                 height={height}
                 data={deleteData}
+            />
+            <SuertesPopover
+                handleSubmit={
+                    type === 'labores'
+                        ? handleSubmitLabor
+                        : type === 'herbicidas'
+                        ? handleSubmitAplicacionesHerbicidas
+                        : handleSubmitAplicacionesFertilizantes
+                }
             />
             <LazyTablonPopover isOpen={openSide} handleClose={handleCloseSide} direction="right" />
             <CortePopover isOpen={openModal} handleClose={handleClose} title={header} formType={formType} />

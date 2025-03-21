@@ -118,7 +118,7 @@ export const CultivosContext = createContext<CultivosState>({
 });
 
 export type DataType = 'create' | 'update' | 'delete' | 'aplicar';
-type ModalDataType = '' | 'labores' | 'herbicidas' | 'fertilizantes';
+export type ModalDataType = '' | 'labores' | 'herbicidas' | 'fertilizantes';
 export type DataTypeApplication = 'aplicacion' | 'tratamiento' | 'suertes' | '';
 
 export const CultivosProvider = ({ children }: { children: JSX.Element }) => {

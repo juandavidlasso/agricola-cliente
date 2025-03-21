@@ -9,10 +9,19 @@ interface Props {
 const ModalLoading: React.FC<Props> = ({ isOpen }) => {
     return (
         <div>
-            <Dialog open={isOpen} onClose={() => {}}>
+            <Dialog
+                open={isOpen}
+                onClose={() => {}}
+                sx={{
+                    width: '100%',
+                    '& .MuiPaper-root': {
+                        width: { xs: '70%', sm: '25vw' }
+                    }
+                }}
+            >
                 <Box
                     sx={{
-                        width: '25vw',
+                        width: { xs: '100%', sm: '25vw' },
                         padding: 8,
                         display: 'flex',
                         justifyContent: 'center',

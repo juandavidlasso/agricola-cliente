@@ -5,7 +5,6 @@ import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/trat
 import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    showButton: boolean,
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setTratamientoFertilizanteEdit: React.Dispatch<React.SetStateAction<TratamientoFertilizante | undefined>>,
@@ -81,18 +80,14 @@ const getColumns = (
             )
         }
     ];
-    if (showButton) {
-        columns.pop();
-    }
     return columns;
 };
 
 interface Props {
     listTratamientoFertilizante?: TratamientoFertilizante[];
-    showButton?: boolean;
 }
 
-const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertilizante, showButton = false }) => {
+const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertilizante }) => {
     const { setOpenModal, setFormType, setTratamientoFertilizanteEdit, setDataType, setTitle, setHeight } =
         useContext(CultivosContext);
     return (
@@ -102,7 +97,6 @@ const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertili
                     <DataGrid
                         rows={listTratamientoFertilizante}
                         columns={getColumns(
-                            showButton,
                             setOpenModal,
                             setFormType,
                             setTratamientoFertilizanteEdit,
@@ -121,6 +115,9 @@ const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertili
                         pageSizeOptions={[10, 20]}
                         checkboxSelection={false}
                         sx={{
+                            '& .MuiDataGrid-row': {
+                                fontSize: '12px'
+                            },
                             '& .MuiDataGrid-row--borderBottom': {
                                 background: '#154360 !important',
                                 color: '#FFFFFF !important'

@@ -119,7 +119,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                                 setOpenModal(true);
                                                             }}
                                                         >
-                                                            Eliminar
+                                                            Eliminar aplicación fertilizante
                                                         </Button>
                                                     )}
                                                 </Box>
