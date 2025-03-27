@@ -23,7 +23,7 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                         setTitleListWorks('Listado de Labores');
                         setTypeWork('labores');
                         setNameButton('Aplicar labor');
-                        setWidth('95%');
+                        setWidth('98%');
                         handleOpenListWorks();
                     }}
                     sx={{ width: { xs: '100%' } }}
@@ -39,7 +39,7 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                         setTitleListWorks('Listado de Herbicidas');
                         setTypeWork('herbicidas');
                         setNameButton('Aplicar herbicida');
-                        setWidth('95%');
+                        setWidth('98%');
                         handleOpenListWorks();
                     }}
                     sx={{ width: { xs: '100%' } }}
@@ -55,7 +55,7 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                         setTitleListWorks('Listado de  Fertilizantes');
                         setTypeWork('fertilizantes');
                         setNameButton('Aplicar fertilizante');
-                        setWidth('95%');
+                        setWidth('98%');
                         handleOpenListWorks();
                     }}
                     sx={{ width: { xs: '100%' } }}

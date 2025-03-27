@@ -117,7 +117,7 @@ export const CultivosContext = createContext<CultivosState>({
     setDuplicate: () => false
 });
 
-export type DataType = 'create' | 'update' | 'delete' | 'aplicar';
+export type DataType = 'create' | 'update' | 'delete' | 'aplicar' | 'duplicar';
 export type ModalDataType = '' | 'labores' | 'herbicidas' | 'fertilizantes';
 export type DataTypeApplication = 'aplicacion' | 'tratamiento' | 'suertes' | '';
 

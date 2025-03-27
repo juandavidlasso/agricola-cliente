@@ -66,8 +66,8 @@ const getColumns = (
                         color="error"
                         sx={{
                             fontSize: 8,
-                            minWidth: 70,
-                            maxWidth: 80,
+                            minWidth: 60,
+                            maxWidth: 70,
                             border: '1px solid #922B21 !important',
                             ':hover': {
                                 background: '#922B21 !important',
@@ -94,8 +94,8 @@ const getColumns = (
                         color="error"
                         sx={{
                             fontSize: 8,
-                            minWidth: 70,
-                            maxWidth: 80,
+                            minWidth: 60,
+                            maxWidth: 70,
                             border: '1px solid #D4AC0D !important',
                             ':hover': {
                                 background: '#D4AC0D !important',
@@ -105,6 +105,34 @@ const getColumns = (
                         }}
                     >
                         Editar
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            const { __typename, ...restData } = param.row;
+                            setEditLabor(restData);
+                            setFormType('duplicar');
+                            setTitle('Duplicar labor');
+                            setType('labores');
+                            setDataType('');
+                            setHeight(90);
+                            setDuplicate(false);
+                            setOpenModal(true);
+                        }}
+                        variant="outlined"
+                        color="primary"
+                        sx={{
+                            fontSize: 8,
+                            minWidth: 60,
+                            maxWidth: 70,
+                            border: '1px solid #1f618d !important',
+                            ':hover': {
+                                background: '#1f618d !important',
+                                border: '1px solid #1f618d !important',
+                                color: '#FFFFFF !important'
+                            }
+                        }}
+                    >
+                        Duplicar
                     </Button>
                 </Box>
             )
@@ -200,6 +228,13 @@ const ListLabores: React.FC<Props> = () => {
                         pageSizeOptions={[10, 20]}
                         checkboxSelection
                         sx={{
+                            '&.MuiDataGrid-root': {
+                                width: '95% !important',
+                                margin: '0 auto'
+                            },
+                            '& .MuiDataGrid-row': {
+                                fontSize: '10px'
+                            },
                             '& .MuiDataGrid-row--borderBottom': {
                                 background: '#154360 !important',
                                 color: '#FFFFFF !important'

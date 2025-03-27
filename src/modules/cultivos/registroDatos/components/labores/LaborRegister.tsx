@@ -53,12 +53,13 @@ const LaborRegister: React.FC<Props> = ({}) => {
 
     const submitForm = async (formData: FormDataLabores) => {
         setSubmitting(true);
+        const { id_labor, ...newObject } = formData as any;
 
         try {
-            if (formType === 'create') {
+            if (formType === 'create' || formType === 'duplicar') {
                 await agregarLabor({
                     variables: {
-                        createLaboresInput: formData
+                        createLaboresInput: formType === 'create' ? formData : newObject
                     },
                     refetchQueries: [{ query: OBTENER_LABORES }]
                 });
@@ -76,7 +77,11 @@ const LaborRegister: React.FC<Props> = ({}) => {
             }
 
             setMessageType('success');
-            setInfoMessage(`La labor se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(
+                `La labor se ${
+                    formType === 'create' ? 'registro' : formType === 'duplicar' ? 'duplico' : 'actualizo'
+                } exitosamente.`
+            );
             setShowMessage(true);
             setOpenModal(false);
         } catch (error) {
@@ -107,7 +112,11 @@ const LaborRegister: React.FC<Props> = ({}) => {
                                 setValue('fecha', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={formType === 'update' ? dayjs(editLabor?.fecha, 'YYYY-MM-DD') : undefined}
+                            defaultValue={
+                                formType === 'update' || formType === 'duplicar'
+                                    ? dayjs(editLabor?.fecha, 'YYYY-MM-DD')
+                                    : undefined
+                            }
                         />
                         {!!errors.fecha && (
                             <Typography
@@ -155,7 +164,15 @@ const LaborRegister: React.FC<Props> = ({}) => {
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting ? (
+                            <Loading />
+                        ) : formType === 'create' ? (
+                            'Registrar'
+                        ) : formType === 'duplicar' ? (
+                            'Duplicar'
+                        ) : (
+                            'Actualizar'
+                        )}
                     </Button>
                     <Button
                         color="primary"
