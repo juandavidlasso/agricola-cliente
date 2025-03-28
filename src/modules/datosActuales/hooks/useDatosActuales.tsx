@@ -6,7 +6,7 @@ import { GetDatosActualesResponse } from '@interfaces/datosActuales';
 
 pdfMake.vfs = pdfFonts.vfs;
 
-type ColumnKey = 'suerte' | 'area' | 'variedad' | 'zona' | 'fecha' | 'tch' | 'edad' | 'corte';
+type ColumnKey = 'suerte' | 'area' | 'variedad' | 'zona' | 'fecha' | 'peso' | 'tch' | 'edad' | 'corte';
 
 export const useDatosActuales = () => {
     const [selectedColumns, setSelectedColumns] = useState<{
@@ -17,6 +17,7 @@ export const useDatosActuales = () => {
         variedad: false,
         zona: false,
         fecha: false,
+        peso: false,
         tch: false,
         edad: false,
         corte: false
@@ -37,6 +38,7 @@ export const useDatosActuales = () => {
             variedad: true,
             zona: true,
             fecha: true,
+            peso: true,
             tch: true,
             edad: true,
             corte: true
@@ -51,6 +53,7 @@ export const useDatosActuales = () => {
             variedad: false,
             zona: false,
             fecha: false,
+            peso: false,
             tch: false,
             edad: false,
             corte: false
@@ -70,6 +73,7 @@ export const useDatosActuales = () => {
         if (selectedColumns.variedad) columns.push('Variedad');
         if (selectedColumns.zona) columns.push('Zona Agroecológica');
         if (selectedColumns.fecha) columns.push('Fecha Último Corte');
+        if (selectedColumns.peso) columns.push('Último Peso');
         if (selectedColumns.tch) columns.push('Último TCH');
         if (selectedColumns.edad) columns.push('Edad Actual (meses)');
         if (selectedColumns.corte) columns.push('# Corte Actual');
@@ -102,6 +106,7 @@ export const useDatosActuales = () => {
             if (selectedColumns.variedad) rowData.push(row.variedad);
             if (selectedColumns.zona) rowData.push(row.zona);
             if (selectedColumns.fecha) rowData.push(row.createdAt);
+            if (selectedColumns.peso) rowData.push(row.area ? row.area.toFixed(2) : 0);
             if (selectedColumns.tch) {
                 const peso = row.area ? row.area : 0;
                 const areaCorte = Number(row.renovada);

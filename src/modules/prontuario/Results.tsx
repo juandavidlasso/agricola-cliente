@@ -44,6 +44,8 @@ const Results: React.FC<Props> = ({ filters, setIsValid }) => {
     if (loading) return <ModalLoading isOpen={loading} />;
 
     const isAnyColumnSelected = Object.values(selectedColumns).includes(true);
+    const pesoTotal =
+        data?.consultarProntuario.length === 0 ? 0 : data?.consultarProntuario.reduce((acc, val) => acc + val.peso, 0);
 
     return (
         <>
@@ -389,6 +391,12 @@ const Results: React.FC<Props> = ({ filters, setIsValid }) => {
                                         </TableRow>
                                     );
                                 })}
+                                <TableRow>
+                                    <TableCell colSpan={10}>
+                                        <span className="text-lg font-bold">Total Peso:</span>
+                                        <span className="float-end text-lg font-bold">{pesoTotal?.toFixed(2)}</span>
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>

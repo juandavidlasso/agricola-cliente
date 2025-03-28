@@ -175,6 +175,25 @@ const ResultsActuales: React.FC<Props> = ({ filters, setIsValid }) => {
                                                 control={
                                                     <Checkbox
                                                         sx={{ color: '#000000' }}
+                                                        checked={selectedColumns.peso}
+                                                        onChange={() => handleColumnChange('peso')}
+                                                    />
+                                                }
+                                                label="Último Peso"
+                                            />
+                                        </FormGroup>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                sx={{
+                                                    '& .MuiTypography-root': {
+                                                        fontSize: '14px !important'
+                                                    }
+                                                }}
+                                                control={
+                                                    <Checkbox
+                                                        sx={{ color: '#000000' }}
                                                         checked={selectedColumns.tch}
                                                         onChange={() => handleColumnChange('tch')}
                                                     />
@@ -248,6 +267,7 @@ const ResultsActuales: React.FC<Props> = ({ filters, setIsValid }) => {
                                             <TableCell align="left">{row.variedad}</TableCell>
                                             <TableCell align="left">{row.zona}</TableCell>
                                             <TableCell align="left">{row.createdAt}</TableCell>
+                                            <TableCell align="left">{peso ? peso.toFixed(2) : 0}</TableCell>
                                             <TableCell align="left">{TCH}</TableCell>
                                             <TableCell align="left">{edadActual}</TableCell>
                                             <TableCell align="left">{row.listcortes?.[0].numero}</TableCell>
