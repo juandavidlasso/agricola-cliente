@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TableRow, TableCell, Button } from '@mui/material';
 import { TablonState } from '@interfaces/cultivos/tablones';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveTablon } from '@store/cultivos/actions';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 interface Props {
     tablon: TablonState;
-    onEdit: () => void;
-    onDelete: () => void;
 }
 
-const Tablon: React.FC<Props> = ({ tablon, onEdit, onDelete }) => {
+const Tablon: React.FC<Props> = ({ tablon }) => {
     const dispatch = useAppDispatch();
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { estado } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
+    const { setFormType, setOpenModalForms } = useContext(CultivosContext);
     const { id_tablon, numero, area } = tablon;
     return (
         <TableRow key={id_tablon}>
@@ -31,7 +31,8 @@ const Tablon: React.FC<Props> = ({ tablon, onEdit, onDelete }) => {
                         color="warning"
                         onClick={() => {
                             dispatch(saveTablon(tablon));
-                            onEdit();
+                            setFormType('update');
+                            setOpenModalForms(true);
                         }}
                     >
                         Editar
@@ -42,7 +43,8 @@ const Tablon: React.FC<Props> = ({ tablon, onEdit, onDelete }) => {
                         color="error"
                         onClick={() => {
                             dispatch(saveTablon(tablon));
-                            onDelete();
+                            setFormType('delete');
+                            setOpenModalForms(true);
                         }}
                     >
                         Eliminar

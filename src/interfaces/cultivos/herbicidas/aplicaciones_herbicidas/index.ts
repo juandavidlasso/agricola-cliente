@@ -16,5 +16,5 @@ export interface GetRegistrarAplicacionesHerbicidas {
 }
 
 export interface GetDeleteAplicacionesHerbicidasResponse {
-    eliminarAplicacionesHerbicidasService: boolean;
+    eliminarAplicacionesHerbicidas: boolean;
 }

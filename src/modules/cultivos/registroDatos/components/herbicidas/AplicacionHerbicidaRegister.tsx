@@ -7,6 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {
+    AplicacionHerbicidas,
     FormDataAplicacionHerbicidas,
     GetAplicacionHerbicidaRegister,
     GetAplicacionHerbicidaUpdate
@@ -26,11 +27,12 @@ const schema = yup.object({
 interface Props {}
 
 const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
-    const { aplicacionHerbicidaEdit, formType, duplicate, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
+    const { aplicacionHerbicidaEdit, formType, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
     const [agregarAplicacionHerbicida] = useMutation<GetAplicacionHerbicidaRegister>(REGISTAR_APLICACION_HERBICIDA);
     const [actualizarAplicacionHerbicida] = useMutation<GetAplicacionHerbicidaUpdate>(ACTUALIZAR_APLICACION_HERBICIDA);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const aplicacionHerbicida = aplicacionHerbicidaEdit as AplicacionHerbicidas;
     const {
         handleSubmit,
         reset,
@@ -40,8 +42,8 @@ const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataAplicacionHerbicidas>({
         resolver: yupResolver(schema),
         defaultValues: {
-            fecha: formType === 'update' ? dayjs(aplicacionHerbicidaEdit?.fecha).format('YYYY-MM-DD') : '',
-            tipo: formType === 'update' ? aplicacionHerbicidaEdit?.tipo : ''
+            fecha: formType === 'create' ? '' : dayjs(aplicacionHerbicida?.fecha).format('YYYY-MM-DD'),
+            tipo: formType === 'create' ? '' : aplicacionHerbicida?.tipo
         }
     });
 
@@ -62,10 +64,10 @@ const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
                 await actualizarAplicacionHerbicida({
                     variables: {
                         updateAplicacionHerbicidaInput: {
-                            id_aphe: aplicacionHerbicidaEdit?.id_aphe,
+                            id_aphe: aplicacionHerbicida?.id_aphe,
                             tipo: data.tipo,
                             fecha: data.fecha,
-                            duplicate
+                            duplicate: formType === 'duplicar'
                         }
                     },
                     refetchQueries: [{ query: OBTENER_APLICACIONES_HERBICIDAS }]
@@ -73,9 +75,13 @@ const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
             }
 
             setMessageType('success');
-            setInfoMessage(`La aplicación se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(
+                `La aplicación se ${
+                    formType === 'create' ? 'registro' : formType === 'update' ? 'actualizo' : 'duplico'
+                } exitosamente.`
+            );
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -104,7 +110,7 @@ const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
                                 setValue('fecha', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={formType === 'update' ? dayjs(aplicacionHerbicidaEdit?.fecha, 'YYYY-MM-DD') : undefined}
+                            defaultValue={formType === 'create' ? undefined : dayjs(aplicacionHerbicida?.fecha, 'YYYY-MM-DD')}
                         />
                         {!!errors.fecha && (
                             <Typography
@@ -143,14 +149,22 @@ const AplicacionHerbicidaRegister: React.FC<Props> = ({}) => {
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : duplicate ? 'Duplicar' : 'Actualizar'}
+                        {submitting ? (
+                            <Loading />
+                        ) : formType === 'create' ? (
+                            'Registrar'
+                        ) : formType === 'duplicar' ? (
+                            'Duplicar'
+                        ) : (
+                            'Actualizar'
+                        )}
                     </Button>
                     <Button
                         color="primary"
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

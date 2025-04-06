@@ -33,7 +33,9 @@ const schema = yup.object({
 interface Props {}
 
 const LaborRegister: React.FC<Props> = ({}) => {
-    const { editLabor, formType, setInfoMessage, setShowMessage, setMessageType, setOpenModal } = useContext(CultivosContext);
+    const { editLabor, formType, setInfoMessage, setShowMessage, setMessageType, setOpenModalForms } =
+        useContext(CultivosContext);
+    const labor = editLabor as Labores;
     const {
         register,
         handleSubmit,
@@ -43,8 +45,8 @@ const LaborRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataLabores>({
         resolver: yupResolver(schema),
         defaultValues: {
-            ...editLabor,
-            fecha: dayjs(editLabor?.fecha).format('YYYY-MM-DD')
+            ...labor,
+            fecha: dayjs(labor?.fecha).format('YYYY-MM-DD')
         }
     });
     const [submitting, setSubmitting] = useState<boolean>(false);
@@ -68,7 +70,7 @@ const LaborRegister: React.FC<Props> = ({}) => {
                     variables: {
                         updateLaboresInput: {
                             ...formData,
-                            id_labor: editLabor?.id_labor,
+                            id_labor: labor?.id_labor,
                             estado: null
                         }
                     },
@@ -83,7 +85,7 @@ const LaborRegister: React.FC<Props> = ({}) => {
                 } exitosamente.`
             );
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -113,9 +115,7 @@ const LaborRegister: React.FC<Props> = ({}) => {
                             }}
                             format="DD/MM/YYYY"
                             defaultValue={
-                                formType === 'update' || formType === 'duplicar'
-                                    ? dayjs(editLabor?.fecha, 'YYYY-MM-DD')
-                                    : undefined
+                                formType === 'update' || formType === 'duplicar' ? dayjs(labor?.fecha, 'YYYY-MM-DD') : undefined
                             }
                         />
                         {!!errors.fecha && (
@@ -179,7 +179,7 @@ const LaborRegister: React.FC<Props> = ({}) => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

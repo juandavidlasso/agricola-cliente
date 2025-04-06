@@ -14,7 +14,8 @@ import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 interface Props {}
 
 const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
-    const { aplicacionPlagaEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModal } = useContext(CultivosContext);
+    const { aplicacionPlagaEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } =
+        useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [errorForm, setErrorForm] = useState<boolean>(false);
     const [fecha, setFecha] = useState<string>('');
@@ -40,7 +41,7 @@ const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage('La aplicación se actualizo exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -58,9 +59,6 @@ const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
     };
     return (
         <Grid2 container>
-            <Grid2 size={12} mb={2}>
-                <Typography>Actualizar la aplicación del tablón</Typography>
-            </Grid2>
             <Grid2 size={12} mb={3} textAlign={'center'}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -95,7 +93,7 @@ const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModal(false)}>
+                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)}>
                     Cancelar
                 </Button>
             </Grid2>

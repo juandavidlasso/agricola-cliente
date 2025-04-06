@@ -9,9 +9,7 @@ import { GetTratamientoPlagasResponse, TratamientoPlaga } from '@interfaces/cult
 import { CultivosContext, DataType, DataTypeApplication } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>,
+    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>,
     setTratamientoPlagaEdit: React.Dispatch<React.SetStateAction<TratamientoPlaga | undefined>>
@@ -39,12 +37,10 @@ const getColumns = (
                 >
                     <Button
                         onClick={() => {
-                            setTitle('Actualizar tratamiento plaga');
-                            setHeight(90);
                             setFormType('update');
                             setDataType('tratamiento');
                             setTratamientoPlagaEdit(param.row);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -65,12 +61,10 @@ const getColumns = (
                     </Button>
                     <Button
                         onClick={() => {
-                            setTitle('Eliminar tratamiento plaga');
-                            setHeight(50);
                             setFormType('delete');
                             setDataType('tratamiento');
                             setTratamientoPlagaEdit(param.row);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -91,12 +85,10 @@ const getColumns = (
                     </Button>
                     <Button
                         onClick={() => {
-                            setTitle('Aplicar tratamiento plaga');
-                            setHeight(90);
                             setDataType('aplicacion');
-                            setFormType('create');
+                            setFormType('aplicar');
                             setTratamientoPlagaEdit(param.row);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="info"
@@ -125,7 +117,7 @@ interface Props {}
 
 const ListTratamientoPlagas: React.FC<Props> = ({}) => {
     const { data, loading, error } = useQuery<GetTratamientoPlagasResponse>(OBTENER_TRATAMIENTO_PLAGAS);
-    const { setOpenModal, setTitle, setHeight, setFormType, setDataType, setTratamientoPlagaEdit } = useContext(CultivosContext);
+    const { setOpenModalForms, setFormType, setDataType, setTratamientoPlagaEdit } = useContext(CultivosContext);
 
     if (error) return <Alert message={error.message} />;
 
@@ -139,7 +131,7 @@ const ListTratamientoPlagas: React.FC<Props> = ({}) => {
                 <Grid2 size={12}>
                     <DataGrid
                         rows={data?.obtenerTratamientoPlagas}
-                        columns={getColumns(setOpenModal, setTitle, setHeight, setFormType, setDataType, setTratamientoPlagaEdit)}
+                        columns={getColumns(setOpenModalForms, setFormType, setDataType, setTratamientoPlagaEdit)}
                         disableVirtualization
                         initialState={{
                             pagination: {

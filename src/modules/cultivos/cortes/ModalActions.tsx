@@ -1,39 +1,43 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import DialogModal from '@components/Dialog';
 import ListLabores from '../registroDatos/components/labores/ListLabores';
 import ListAplicacionHerbicidas from '../registroDatos/components/herbicidas/ListAplicacionHerbicidas';
 import ListAplicacionFertilizantes from '../registroDatos/components/fertilizantes/ListAplicacionFertilizantes';
 import ListTratamientoPlagas from '../plagas/tratamiento/ListTratamientoPlagas';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import RiegoRegister from '../riegos/RiegoRegister';
-import CosechaRegister from '../cosecha/CosechaRegister';
 
-interface Props {
-    title: string;
-    handleClose: () => void;
-    isOpen: boolean;
-    type: 'labores' | 'herbicidas' | 'fertilizantes' | 'plagas' | 'riegos' | 'cosecha';
-    width?: string;
-}
+interface Props {}
 
-const ModalActions: React.FC<Props> = ({ title, handleClose, isOpen, type, width }) => {
+const ModalActions: React.FC<Props> = () => {
+    const { openModal, typeModal, setOpenModal } = useContext(CultivosContext);
     const getComponent = () => {
-        if (type === 'labores') return <ListLabores />;
-        if (type === 'herbicidas') return <ListAplicacionHerbicidas />;
-        if (type === 'fertilizantes') return <ListAplicacionFertilizantes />;
-        if (type === 'plagas') return <ListTratamientoPlagas />;
-        if (type === 'riegos') return <RiegoRegister handleClose={handleClose} />;
-        if (type === 'cosecha') return <CosechaRegister handleClose={handleClose} />;
+        if (typeModal === 'labores') return <ListLabores />;
+        if (typeModal === 'herbicidas') return <ListAplicacionHerbicidas />;
+        if (typeModal === 'fertilizantes') return <ListAplicacionFertilizantes />;
+        if (typeModal === 'plagas') return <ListTratamientoPlagas />;
+        if (typeModal === 'riegos') return <RiegoRegister />;
         return <></>;
     };
-    const getHeight = () => {
-        if (type === 'labores') return 90;
-        if (type === 'herbicidas' || type === 'fertilizantes' || type === 'plagas') return 80;
-        if (type === 'riegos') return 55;
-        if (type === 'cosecha') return 75;
-        return 50;
+    const getTitle = () => {
+        if (typeModal === 'labores') return 'Aplicar labor';
+        if (typeModal === 'herbicidas') return 'Aplicar herbicida';
+        if (typeModal === 'fertilizantes') return 'Aplicar fertilizante';
+        if (typeModal === 'plagas') return 'Aplicar producto';
+        if (typeModal === 'riegos') return 'Registrar riego';
+        return '';
     };
+    const getWidth = () => (typeModal === 'riegos' ? '60%' : '95%');
+    const getHeight = () => (typeModal === 'riegos' ? 50 : 90);
     return (
-        <DialogModal isOpen={isOpen} handleClose={handleClose} title={title} height={getHeight()} width={width}>
+        <DialogModal
+            isOpen={openModal}
+            handleClose={() => setOpenModal(false)}
+            title={getTitle()}
+            height={getHeight()}
+            width={getWidth()}
+            id="modal-registros"
+        >
             {getComponent()}
         </DialogModal>
     );

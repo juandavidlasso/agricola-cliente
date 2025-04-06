@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ApolloError, useMutation } from '@apollo/client';
 import { Button, Grid2, Typography } from '@mui/material';
@@ -7,19 +7,15 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { GetEliminarSuerteResponse } from '@interfaces/cultivos/suerte';
 import { ELIMINAR_SUERTE } from '@graphql/mutations';
-import { AlertType } from '@interfaces/alerts';
 import { OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {
-    handleClose: () => void;
-    setMessageType: React.Dispatch<React.SetStateAction<AlertType>>;
-    setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
-    setShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
-const DeleteSuerte: React.FC<Props> = ({ handleClose, setMessageType, setInfoMessage, setShowMessage }) => {
+const DeleteSuerte: React.FC<Props> = () => {
     const router = useRouter();
     const { id_suerte, nombre } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
+    const { setMessageType, setShowMessage, setInfoMessage, setOpenModal } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarSuerte] = useMutation<GetEliminarSuerteResponse>(ELIMINAR_SUERTE);
 
@@ -40,7 +36,7 @@ const DeleteSuerte: React.FC<Props> = ({ handleClose, setMessageType, setInfoMes
                 setInfoMessage('La suerte se eliminó exitosamente.');
                 setShowMessage(true);
                 setSubmitting(false);
-                handleClose();
+                setOpenModal(false);
                 router.replace('/suerte');
                 return;
             }
@@ -49,7 +45,7 @@ const DeleteSuerte: React.FC<Props> = ({ handleClose, setMessageType, setInfoMes
             setInfoMessage('No se pudo eliminar la suerte, intente nuevamente en un momento.');
             setShowMessage(true);
             setSubmitting(false);
-            handleClose();
+            setOpenModal(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -88,7 +84,12 @@ const DeleteSuerte: React.FC<Props> = ({ handleClose, setMessageType, setInfoMes
                 >
                     {submitting ? <Loading /> : 'Eliminar'}
                 </Button>
-                <Button onClick={() => handleClose()} color="primary" variant="contained" sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}>
+                <Button
+                    onClick={() => setOpenModal(false)}
+                    color="primary"
+                    variant="contained"
+                    sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
+                >
                     Cancelar
                 </Button>
             </Grid2>

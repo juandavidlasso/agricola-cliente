@@ -6,9 +6,11 @@ import { AplicacionHerbicidas } from '@interfaces/cultivos/herbicidas/aplicacion
 import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
 import { TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
 import { AplicacionPlaga } from '@interfaces/cultivos/plagas/aplicacion';
-import { Labores } from '@interfaces/cultivos/labores';
+import { AplicacionLabores, Labores } from '@interfaces/cultivos/labores';
 import { Riego } from '@interfaces/cultivos/riegos';
 import { Cosecha } from '@interfaces/cultivos/cosechas';
+import { AplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
+import { AplicacionesFertilizantes } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 
 interface CultivosState {
     showMessage: boolean;
@@ -19,31 +21,43 @@ interface CultivosState {
     setMessageType: React.Dispatch<React.SetStateAction<AlertType>>;
     openModal: boolean;
     setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-    title: string;
-    setTitle: React.Dispatch<React.SetStateAction<string>>;
-    height: number;
-    setHeight: React.Dispatch<React.SetStateAction<number>>;
+    openModalList: boolean;
+    setOpenModalList: React.Dispatch<React.SetStateAction<boolean>>;
+    openModalSuertes: boolean;
+    setOpenModalSuertes: React.Dispatch<React.SetStateAction<boolean>>;
+    openModalForms: boolean;
+    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>;
     formType: DataType;
     setFormType: React.Dispatch<React.SetStateAction<DataType>>;
+    typeModal: DataTypeModal;
+    setTypeModal: React.Dispatch<React.SetStateAction<DataTypeModal>>;
+    header: string;
+    setHeader: React.Dispatch<React.SetStateAction<string>>;
+    buttonName: string;
+    setButtonName: React.Dispatch<React.SetStateAction<string>>;
+    totalItems: number[];
+    setTotalItems: React.Dispatch<React.SetStateAction<number[]>>;
     // Fertilizantes
     dataType: DataTypeApplication;
     setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>;
-    aplicacionFertilizanteEdit: AplicacionFertilizante | undefined;
-    setAplicacionFertilizanteEdit: React.Dispatch<React.SetStateAction<AplicacionFertilizante | undefined>>;
+    aplicacionFertilizanteEdit: AplicacionFertilizante | AplicacionesFertilizantes | undefined;
+    setAplicacionFertilizanteEdit: React.Dispatch<
+        React.SetStateAction<AplicacionFertilizante | AplicacionesFertilizantes | undefined>
+    >;
     tratamientoFertilizanteEdit: TratamientoFertilizante | undefined;
     setTratamientoFertilizanteEdit: React.Dispatch<React.SetStateAction<TratamientoFertilizante | undefined>>;
     selectedAplicacionFertilizantes: number[];
     setSelectedAplicacionFertilizantes: React.Dispatch<React.SetStateAction<number[]>>;
     // Herbicidas
-    aplicacionHerbicidaEdit: AplicacionHerbicidas | undefined;
-    setAplicacionHerbicidaEdit: React.Dispatch<React.SetStateAction<AplicacionHerbicidas | undefined>>;
+    aplicacionHerbicidaEdit: AplicacionHerbicidas | AplicacionesHerbicidas | undefined;
+    setAplicacionHerbicidaEdit: React.Dispatch<React.SetStateAction<AplicacionHerbicidas | AplicacionesHerbicidas | undefined>>;
     tratamientoHerbicidaEdit: TratamientoHerbicidas | undefined;
     setTratamientoHerbicidaEdit: React.Dispatch<React.SetStateAction<TratamientoHerbicidas | undefined>>;
     selectedAplicacionHerbicidas: number[];
     setSelectedAplicacionHerbicidas: React.Dispatch<React.SetStateAction<number[]>>;
     // Labores
-    editLabor: Labores | undefined;
-    setEditLabor: React.Dispatch<React.SetStateAction<Labores | undefined>>;
+    editLabor: Labores | AplicacionLabores | undefined;
+    setEditLabor: React.Dispatch<React.SetStateAction<Labores | AplicacionLabores | undefined>>;
     selectedLabores: number[];
     setSelectedLabores: React.Dispatch<React.SetStateAction<number[]>>;
     // Plagas
@@ -51,15 +65,14 @@ interface CultivosState {
     setTratamientoPlagaEdit: React.Dispatch<React.SetStateAction<TratamientoPlaga | undefined>>;
     aplicacionPlagaEdit: AplicacionPlaga | undefined;
     setAplicacionPlagaEdit: React.Dispatch<React.SetStateAction<AplicacionPlaga | undefined>>;
-    // Suertes
-    type: ModalDataType;
-    setType: React.Dispatch<React.SetStateAction<ModalDataType>>;
+    // Riegos
     riegoEdit: Riego | undefined;
     setRiegoEdit: React.Dispatch<React.SetStateAction<Riego | undefined>>;
+    // Cosecha
     cosechaEdit: Cosecha | undefined;
     setCosechaEdit: React.Dispatch<React.SetStateAction<Cosecha | undefined>>;
-    duplicate: boolean;
-    setDuplicate: React.Dispatch<React.SetStateAction<boolean>>;
+    validateCosecha: boolean;
+    setValidateCosecha: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CultivosContext = createContext<CultivosState>({
@@ -71,12 +84,22 @@ export const CultivosContext = createContext<CultivosState>({
     setMessageType: () => '',
     openModal: false,
     setOpenModal: () => false,
-    title: '',
-    setTitle: () => '',
-    height: 0,
-    setHeight: () => 0,
+    openModalList: false,
+    setOpenModalList: () => false,
+    openModalSuertes: false,
+    setOpenModalSuertes: () => false,
+    openModalForms: false,
+    setOpenModalForms: () => false,
     formType: 'update',
     setFormType: () => '',
+    typeModal: '',
+    setTypeModal: () => '',
+    header: '',
+    setHeader: () => '',
+    buttonName: '',
+    setButtonName: () => '',
+    totalItems: [],
+    setTotalItems: () => [],
     // Fertilizantes
     dataType: '',
     setDataType: () => '',
@@ -103,23 +126,28 @@ export const CultivosContext = createContext<CultivosState>({
     setTratamientoPlagaEdit: () => undefined,
     aplicacionPlagaEdit: undefined,
     setAplicacionPlagaEdit: () => undefined,
-    // Suertes
-    type: 'labores',
-    setType: () => '',
     // Riegos
     riegoEdit: undefined,
     setRiegoEdit: () => undefined,
     // Cosecha
     cosechaEdit: undefined,
     setCosechaEdit: () => undefined,
-    // Duplicate
-    duplicate: false,
-    setDuplicate: () => false
+    validateCosecha: false,
+    setValidateCosecha: () => false
 });
 
 export type DataType = 'create' | 'update' | 'delete' | 'aplicar' | 'duplicar';
-export type ModalDataType = '' | 'labores' | 'herbicidas' | 'fertilizantes';
-export type DataTypeApplication = 'aplicacion' | 'tratamiento' | 'suertes' | '';
+export type DataTypeApplication = 'aplicacion' | 'tratamiento' | '';
+export type DataTypeModal =
+    | 'labores'
+    | 'herbicidas'
+    | 'fertilizantes'
+    | 'plagas'
+    | 'riegos'
+    | 'cosecha'
+    | 'corte'
+    | 'tablon'
+    | '';
 
 export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
     //Globals
@@ -127,32 +155,38 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
     const [infoMessage, setInfoMessage] = useState<string>('');
     const [messageType, setMessageType] = useState<AlertType>('success');
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const [title, setTitle] = useState<string>('');
-    const [height, setHeight] = useState<number>(0);
+    const [openModalList, setOpenModalList] = useState<boolean>(false);
+    const [openModalSuertes, setOpenModalSuertes] = useState<boolean>(false);
+    const [openModalForms, setOpenModalForms] = useState<boolean>(false);
     const [formType, setFormType] = useState<DataType>('create');
+    const [typeModal, setTypeModal] = useState<DataTypeModal>('');
+    const [header, setHeader] = useState<string>('');
+    const [buttonName, setButtonName] = useState<string>('');
+    const [totalItems, setTotalItems] = useState<number[]>([]);
     // Fertilizantes
     const [dataType, setDataType] = useState<DataTypeApplication>('');
-    const [aplicacionFertilizanteEdit, setAplicacionFertilizanteEdit] = useState<AplicacionFertilizante>();
+    const [aplicacionFertilizanteEdit, setAplicacionFertilizanteEdit] = useState<
+        AplicacionFertilizante | AplicacionesFertilizantes | undefined
+    >();
     const [tratamientoFertilizanteEdit, setTratamientoFertilizanteEdit] = useState<TratamientoFertilizante>();
     const [selectedAplicacionFertilizantes, setSelectedAplicacionFertilizantes] = useState<number[]>([]);
     // Herbicidas
-    const [aplicacionHerbicidaEdit, setAplicacionHerbicidaEdit] = useState<AplicacionHerbicidas>();
+    const [aplicacionHerbicidaEdit, setAplicacionHerbicidaEdit] = useState<
+        AplicacionHerbicidas | AplicacionesHerbicidas | undefined
+    >();
     const [tratamientoHerbicidaEdit, setTratamientoHerbicidaEdit] = useState<TratamientoHerbicidas>();
     const [selectedAplicacionHerbicidas, setSelectedAplicacionHerbicidas] = useState<number[]>([]);
     // Labores
-    const [editLabor, setEditLabor] = useState<Labores>();
+    const [editLabor, setEditLabor] = useState<Labores | AplicacionLabores | undefined>();
     const [selectedLabores, setSelectedLabores] = useState<number[]>([]);
     // Plagas
     const [tratamientoPlagaEdit, setTratamientoPlagaEdit] = useState<TratamientoPlaga>();
     const [aplicacionPlagaEdit, setAplicacionPlagaEdit] = useState<AplicacionPlaga>();
-    // Suertes
-    const [type, setType] = useState<ModalDataType>('');
     // Riegos
     const [riegoEdit, setRiegoEdit] = useState<Riego>();
     // Cosecha
     const [cosechaEdit, setCosechaEdit] = useState<Cosecha>();
-    // Duplicate
-    const [duplicate, setDuplicate] = useState<boolean>(false);
+    const [validateCosecha, setValidateCosecha] = useState<boolean>(false);
 
     return (
         <CultivosContext.Provider
@@ -161,10 +195,15 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 infoMessage,
                 messageType,
                 openModal,
-                title,
-                height,
+                openModalList,
+                openModalSuertes,
+                openModalForms,
                 formType,
                 dataType,
+                typeModal,
+                header,
+                buttonName,
+                totalItems,
                 aplicacionFertilizanteEdit,
                 tratamientoFertilizanteEdit,
                 selectedAplicacionFertilizantes,
@@ -175,18 +214,22 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 selectedLabores,
                 tratamientoPlagaEdit,
                 aplicacionPlagaEdit,
-                type,
                 riegoEdit,
                 cosechaEdit,
-                duplicate,
+                validateCosecha,
                 setShowMessage,
                 setInfoMessage,
                 setMessageType,
                 setOpenModal,
-                setTitle,
-                setHeight,
+                setOpenModalList,
+                setOpenModalSuertes,
+                setOpenModalForms,
                 setFormType,
                 setDataType,
+                setTypeModal,
+                setHeader,
+                setButtonName,
+                setTotalItems,
                 setAplicacionFertilizanteEdit,
                 setTratamientoFertilizanteEdit,
                 setSelectedAplicacionFertilizantes,
@@ -197,10 +240,9 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 setSelectedLabores,
                 setTratamientoPlagaEdit,
                 setAplicacionPlagaEdit,
-                setType,
                 setRiegoEdit,
                 setCosechaEdit,
-                setDuplicate
+                setValidateCosecha
             }}
         >
             {children}

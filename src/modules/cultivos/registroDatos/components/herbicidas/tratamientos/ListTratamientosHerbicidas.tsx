@@ -5,12 +5,10 @@ import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamien
 import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setTratamientoHerbicidaEdit: React.Dispatch<React.SetStateAction<TratamientoHerbicidas | undefined>>,
-    setDataType: React.Dispatch<React.SetStateAction<'' | 'aplicacion' | 'tratamiento' | 'suertes'>>,
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>
+    setDataType: React.Dispatch<React.SetStateAction<'' | 'aplicacion' | 'tratamiento'>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'producto', headerName: 'Producto', flex: 0.12 },
@@ -30,9 +28,7 @@ const getColumns = (
                             setTratamientoHerbicidaEdit(param.row);
                             setFormType('delete');
                             setDataType('tratamiento');
-                            setTitle('Eliminar tratamiento herbicida');
-                            setHeight(45);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -56,9 +52,7 @@ const getColumns = (
                             setTratamientoHerbicidaEdit(restData);
                             setFormType('update');
                             setDataType('tratamiento');
-                            setTitle('Actualizar tratamiento herbicida');
-                            setHeight(90);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -88,22 +82,14 @@ interface Props {
 }
 
 const ListTratamientosHerbicidas: React.FC<Props> = ({ listTratamientoHerbicida }) => {
-    const { setOpenModal, setFormType, setTratamientoHerbicidaEdit, setDataType, setTitle, setHeight } =
-        useContext(CultivosContext);
+    const { setOpenModalForms, setFormType, setTratamientoHerbicidaEdit, setDataType } = useContext(CultivosContext);
     return (
         <Grid2 container>
             <Grid2 size={12}>
                 <div style={{ height: 'auto', width: '100%' }}>
                     <DataGrid
                         rows={listTratamientoHerbicida}
-                        columns={getColumns(
-                            setOpenModal,
-                            setFormType,
-                            setTratamientoHerbicidaEdit,
-                            setDataType,
-                            setTitle,
-                            setHeight
-                        )}
+                        columns={getColumns(setOpenModalForms, setFormType, setTratamientoHerbicidaEdit, setDataType)}
                         disableVirtualization
                         getRowHeight={(params: GridRowHeightParams) => 'auto'}
                         initialState={{

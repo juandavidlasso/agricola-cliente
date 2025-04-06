@@ -16,7 +16,7 @@ interface Props {
 
 const Tablones: React.FC<Props> = ({ corteId }) => {
     const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
-    const { setOpenModal, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { setValidateCosecha, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const { data, loading, error } = useQuery<GetResponseTablonesCorte>(OBTENER_TABLONES_CORTE, {
         variables: { idCorte: id_corte }
     });
@@ -138,7 +138,7 @@ const Tablones: React.FC<Props> = ({ corteId }) => {
                 <Button variant="contained" disabled={submitting} onClick={submitForm}>
                     Agregar
                 </Button>
-                <Button variant="contained" onClick={() => setOpenModal(false)}>
+                <Button variant="contained" onClick={() => setValidateCosecha(false)}>
                     Terminar
                 </Button>
             </Grid2>

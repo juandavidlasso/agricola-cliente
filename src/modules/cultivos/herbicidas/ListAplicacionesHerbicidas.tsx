@@ -11,8 +11,8 @@ import ModalLoading from '@components/Modal';
 import { IRootState } from '@interfaces/store';
 import { OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
 import { GetAplicacionesHerbicidasResponse } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
 import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 const columns: GridColDef[] = [
     { field: 'producto', headerName: 'Producto', flex: 0.1, headerAlign: 'center' },
@@ -31,7 +31,8 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
     const { data, error, loading } = useQuery<GetAplicacionesHerbicidasResponse>(OBTENER_APLICACIONES_HERBICIDAS_CORTE, {
         variables: { corteId: id_corte }
     });
-    const { setOpenModal, setDeleteData, setHeight, setTitle, setTotalItems, setFormType } = useContext(InformationContext);
+    const { setOpenModalForms, setAplicacionHerbicidaEdit, setDataType, setFormType, setTotalItems } =
+        useContext(CultivosContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
     const [totals, setTotals] = useState<{ [key: number]: number }>({});
 
@@ -107,11 +108,10 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                             color="error"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                setDeleteData(aplicaciones);
-                                                                setHeight(40);
-                                                                setTitle('Eliminar aplicación herbicida');
-                                                                setFormType('herbicidas');
-                                                                setOpenModal(true);
+                                                                setAplicacionHerbicidaEdit(aplicaciones);
+                                                                setDataType('aplicacion');
+                                                                setFormType('delete');
+                                                                setOpenModalForms(true);
                                                             }}
                                                         >
                                                             Eliminar aplicación herbicida

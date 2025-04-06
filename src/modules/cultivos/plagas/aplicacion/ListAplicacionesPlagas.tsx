@@ -9,9 +9,7 @@ import { IRootState } from '@interfaces/store';
 import { CultivosContext, DataType, DataTypeApplication } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>,
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
+    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>,
     setAplicacionPlagaEdit: React.Dispatch<React.SetStateAction<AplicacionPlaga | undefined>>
@@ -43,10 +41,8 @@ const getColumns = (
                         onClick={() => {
                             setAplicacionPlagaEdit(param.row);
                             setDataType('aplicacion');
-                            setHeight(40);
-                            setTitle('Eliminar aplicación plaga');
                             setFormType('delete');
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -68,10 +64,8 @@ const getColumns = (
                         onClick={() => {
                             setAplicacionPlagaEdit(param.row);
                             setDataType('aplicacion');
-                            setHeight(55);
-                            setTitle('Actualizar aplicación plaga');
                             setFormType('update');
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -103,7 +97,7 @@ interface Props {
 
 const ListAplicacionesPlagas: React.FC<Props> = ({ listAplicacionesPlagas, tablon }) => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { setOpenModal, setHeight, setTitle, setFormType, setDataType, setAplicacionPlagaEdit } = useContext(CultivosContext);
+    const { setOpenModalForms, setFormType, setDataType, setAplicacionPlagaEdit } = useContext(CultivosContext);
     const now = moment().format('YYYY-MM-DD');
     const factual = moment(now);
     const finicio = moment(corte.fecha_inicio);
@@ -128,7 +122,7 @@ const ListAplicacionesPlagas: React.FC<Props> = ({ listAplicacionesPlagas, tablo
         <div style={{ height: 'auto', width: '100%' }}>
             <DataGrid
                 rows={rows}
-                columns={getColumns(setOpenModal, setHeight, setTitle, setFormType, setDataType, setAplicacionPlagaEdit)}
+                columns={getColumns(setOpenModalForms, setFormType, setDataType, setAplicacionPlagaEdit)}
                 disableVirtualization
                 disableColumnSelector
                 initialState={{

@@ -9,7 +9,6 @@ import { OBTENER_APLICACIONES_HERBICIDAS } from '@graphql/queries';
 import { GetAplicacionHerbicidaCorteResponse } from '@interfaces/cultivos/herbicidas/aplicacion';
 import ModalLoading from '@components/Modal';
 import ListTratamientosHerbicidas from './tratamientos/ListTratamientosHerbicidas';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 interface Props {}
@@ -18,17 +17,14 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetAplicacionHerbicidaCorteResponse>(OBTENER_APLICACIONES_HERBICIDAS);
     const {
         selectedAplicacionHerbicidas,
+        totalItems,
         setFormType,
         setAplicacionHerbicidaEdit,
-        setOpenModal,
         setSelectedAplicacionHerbicidas,
-        setTitle,
-        setHeight,
         setDataType,
-        setType,
-        setDuplicate
+        setOpenModalSuertes,
+        setOpenModalForms
     } = useContext(CultivosContext);
-    const { totalItems } = useContext(InformationContext);
     const [openItems, setOpenItems] = useState<any>({});
 
     const handleClick = (id: any) => {
@@ -56,34 +52,16 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
             <Button
                 className="!fixed !z-50"
                 variant="contained"
-                onClick={(e) => {
-                    e.stopPropagation();
+                onClick={() => {
                     setFormType('create');
                     setDataType('aplicacion');
-                    setTitle('Registrar aplicación herbicida');
-                    setHeight(60);
-                    setType('herbicidas');
-                    setAplicacionHerbicidaEdit(undefined);
-                    setDuplicate(false);
-                    setOpenModal(true);
+                    setOpenModalForms(true);
                 }}
             >
-                Agregar aplicación herbicida
+                Registrar aplicación herbicida
             </Button>
             {selectedAplicacionHerbicidas.length > 0 && (
-                <Button
-                    className="!fixed !ml-72 !z-50"
-                    variant="contained"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setType('herbicidas');
-                        setTitle('Selecciona la suerte y el corte');
-                        setHeight(80);
-                        setDataType('suertes');
-                        setDuplicate(false);
-                        setOpenModal(true);
-                    }}
-                >
+                <Button className="!fixed !ml-72 !z-50" variant="contained" onClick={() => setOpenModalSuertes(true)}>
                     Aplicar herbicida
                 </Button>
             )}
@@ -96,7 +74,12 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
                               sx={{ width: '100%', border: '1px solid gray', mb: 2, borderRadius: 3, mt: 7 }}
                               component="nav"
                           >
-                              <ListItemButton onClick={() => handleClick(aplicacion.id_aphe)}>
+                              <ListItemButton
+                                  onClick={() => {
+                                      handleClick(aplicacion.id_aphe);
+                                      setAplicacionHerbicidaEdit(aplicacion);
+                                  }}
+                              >
                                   <Checkbox
                                       sx={{
                                           color: '#000000'
@@ -112,27 +95,20 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
                                           aplicacion.tipo
                                       }`}
                                   />
-                                  {selectedAplicacionHerbicidas.length > 0 &&
-                                      selectedAplicacionHerbicidas.includes(aplicacion.id_aphe) && (
-                                          <Button
-                                              variant="outlined"
-                                              color="error"
-                                              onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  setAplicacionHerbicidaEdit(aplicacion);
-                                                  setFormType('update');
-                                                  setDataType('aplicacion');
-                                                  setTitle('Duplicar aplicación herbicida');
-                                                  setHeight(60);
-                                                  setType('herbicidas');
-                                                  setDuplicate(true);
-                                                  setOpenModal(true);
-                                              }}
-                                          >
-                                              Duplicar Herbicida
-                                          </Button>
-                                      )}
                                   <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
+                                      <Button
+                                          variant="outlined"
+                                          color="error"
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              setAplicacionHerbicidaEdit(aplicacion);
+                                              setFormType('duplicar');
+                                              setDataType('aplicacion');
+                                              setOpenModalForms(true);
+                                          }}
+                                      >
+                                          Duplicar Herbicida
+                                      </Button>
                                       <Button
                                           variant="outlined"
                                           color="info"
@@ -141,11 +117,7 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
                                               setAplicacionHerbicidaEdit(aplicacion);
                                               setFormType('create');
                                               setDataType('tratamiento');
-                                              setTitle('Registrar tratamiento herbicida');
-                                              setHeight(90);
-                                              setType('herbicidas');
-                                              setDuplicate(false);
-                                              setOpenModal(true);
+                                              setOpenModalForms(true);
                                           }}
                                       >
                                           Agregar tratamiento
@@ -158,11 +130,7 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
                                               setAplicacionHerbicidaEdit(aplicacion);
                                               setFormType('update');
                                               setDataType('aplicacion');
-                                              setTitle('Actualizar aplicación herbicida');
-                                              setHeight(60);
-                                              setType('herbicidas');
-                                              setDuplicate(false);
-                                              setOpenModal(true);
+                                              setOpenModalForms(true);
                                           }}
                                       >
                                           Editar
@@ -175,11 +143,7 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
                                               setAplicacionHerbicidaEdit(aplicacion);
                                               setFormType('delete');
                                               setDataType('aplicacion');
-                                              setTitle('Eliminar aplicación herbicida');
-                                              setHeight(45);
-                                              setType('herbicidas');
-                                              setDuplicate(false);
-                                              setOpenModal(true);
+                                              setOpenModalForms(true);
                                           }}
                                       >
                                           Eliminar

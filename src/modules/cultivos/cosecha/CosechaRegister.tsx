@@ -20,13 +20,11 @@ const schema = yup.object({
     numeroMulas: yup.number().optional()
 });
 
-interface Props {
-    handleClose: () => void;
-}
+interface Props {}
 
-const CosechaRegister: React.FC<Props> = ({ handleClose }) => {
+const CosechaRegister: React.FC<Props> = () => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { formType, cosechaEdit, setInfoMessage, setShowMessage, setMessageType, setOpenModal, setHeight, setTitle } =
+    const { formType, cosechaEdit, setInfoMessage, setShowMessage, setMessageType, setOpenModalForms, setValidateCosecha } =
         useContext(CultivosContext);
     const {
         register,
@@ -82,12 +80,8 @@ const CosechaRegister: React.FC<Props> = ({ handleClose }) => {
             setMessageType('success');
             setInfoMessage(`La cosecha se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            if (formType === 'create') {
-                setHeight(85);
-                setTitle('Registre la fecha de corte');
-                setOpenModal(true);
-            }
-            handleClose();
+            setOpenModalForms(false);
+            if (formType === 'create') return setValidateCosecha(true);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -157,7 +151,7 @@ const CosechaRegister: React.FC<Props> = ({ handleClose }) => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            handleClose();
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

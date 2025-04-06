@@ -21,14 +21,13 @@ const schema = yup.object({
     fecha: yup.string().required('La fecha es requerida')
 });
 
-interface Props {
-    handleClose: () => void;
-}
+interface Props {}
 
-const RiegoRegister: React.FC<Props> = ({ handleClose }) => {
+const RiegoRegister: React.FC<Props> = () => {
     const [submitting, setSubmitting] = useState<boolean>(false);
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { formType, riegoEdit, setOpenModal, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { formType, riegoEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
+        useContext(CultivosContext);
     const { data, loading, error, refetch } = useQuery<GetRiegoMayorResponse>(OBTENER_RIEGO_MAYOR, {
         variables: { corteId: corte.id_corte }
     });
@@ -83,7 +82,7 @@ const RiegoRegister: React.FC<Props> = ({ handleClose }) => {
             setMessageType('success');
             setInfoMessage(`El riego se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            handleClose();
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -141,7 +140,7 @@ const RiegoRegister: React.FC<Props> = ({ handleClose }) => {
                             variant="contained"
                             onClick={() => {
                                 reset();
-                                setOpenModal(false);
+                                setOpenModalForms(false);
                             }}
                         >
                             Cancelar

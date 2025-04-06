@@ -12,7 +12,7 @@ interface Props {}
 
 const RiegoDelete: React.FC<Props> = ({}) => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { riegoEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModal } = useContext(CultivosContext);
+    const { riegoEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarRiego] = useMutation<boolean>(ELIMINAR_RIEGO);
     const submitDelete = async () => {
@@ -26,7 +26,7 @@ const RiegoDelete: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage('El riego se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -56,7 +56,7 @@ const RiegoDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModal(false)}>
+                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)}>
                     Cancelar
                 </Button>
             </Grid2>

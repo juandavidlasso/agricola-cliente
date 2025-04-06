@@ -5,12 +5,10 @@ import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/trat
 import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
     setTratamientoFertilizanteEdit: React.Dispatch<React.SetStateAction<TratamientoFertilizante | undefined>>,
-    setDataType: React.Dispatch<React.SetStateAction<'' | 'aplicacion' | 'tratamiento' | 'suertes'>>,
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>
+    setDataType: React.Dispatch<React.SetStateAction<'' | 'aplicacion' | 'tratamiento'>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'producto', headerName: 'Producto', flex: 0.12 },
@@ -30,9 +28,7 @@ const getColumns = (
                             setTratamientoFertilizanteEdit(param.row);
                             setFormType('delete');
                             setDataType('tratamiento');
-                            setTitle('Eliminar tratamiento fertilizante');
-                            setHeight(45);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -56,9 +52,7 @@ const getColumns = (
                             setTratamientoFertilizanteEdit(restData);
                             setFormType('update');
                             setDataType('tratamiento');
-                            setTitle('Actualizar tratamiento fertilizante');
-                            setHeight(90);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -88,22 +82,14 @@ interface Props {
 }
 
 const ListTratamientosFertilizantes: React.FC<Props> = ({ listTratamientoFertilizante }) => {
-    const { setOpenModal, setFormType, setTratamientoFertilizanteEdit, setDataType, setTitle, setHeight } =
-        useContext(CultivosContext);
+    const { setOpenModalForms, setFormType, setTratamientoFertilizanteEdit, setDataType } = useContext(CultivosContext);
     return (
         <Grid2 container>
             <Grid2 size={12}>
                 <div style={{ height: 'auto', width: '100%' }}>
                     <DataGrid
                         rows={listTratamientoFertilizante}
-                        columns={getColumns(
-                            setOpenModal,
-                            setFormType,
-                            setTratamientoFertilizanteEdit,
-                            setDataType,
-                            setTitle,
-                            setHeight
-                        )}
+                        columns={getColumns(setOpenModalForms, setFormType, setTratamientoFertilizanteEdit, setDataType)}
                         disableVirtualization
                         getRowHeight={(params: GridRowHeightParams) => 'auto'}
                         initialState={{

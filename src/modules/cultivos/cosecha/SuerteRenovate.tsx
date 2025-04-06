@@ -24,7 +24,7 @@ interface Props {}
 
 const SuerteRenovate: React.FC<Props> = ({}) => {
     const dispatch = useAppDispatch();
-    const { setMessageType, setInfoMessage, setShowMessage, setOpenModal } = useContext(CultivosContext);
+    const { setMessageType, setInfoMessage, setShowMessage, setValidateCosecha } = useContext(CultivosContext);
     const { suerte } = useAppSelector((state: IRootState) => state.cultivosReducer);
     const {
         register,
@@ -63,7 +63,7 @@ const SuerteRenovate: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage('La suerte se renovo exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            setValidateCosecha(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');

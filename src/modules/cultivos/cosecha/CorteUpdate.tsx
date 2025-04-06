@@ -10,7 +10,7 @@ import SuerteRenovate from './SuerteRenovate';
 
 interface Props {}
 
-const CorteUpdate: React.FC<Props> = ({}) => {
+const CorteUpdate: React.FC<Props> = () => {
     const { corte, submitting, step, corteId, submitFormFechaCorte, submitFormPendienteRenovar, submitFormRenovarSuerte } =
         useCorteUpdate();
     const [corteDate, setCorteDate] = useState<string>('');

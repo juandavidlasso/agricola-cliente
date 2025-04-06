@@ -1,42 +1,45 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Button, Grid2, TextField } from '@mui/material';
 import Loading from '@components/Loading';
-import { AlertType } from '@interfaces/alerts';
-import { FormDataTablones, GetRegistrarTablon } from '@interfaces/cultivos/tablones';
-import { REGISTRAR_TABLON } from '@graphql/mutations';
+import { FormDataTablones, GetActualizarTablon, GetRegistrarTablon } from '@interfaces/cultivos/tablones';
+import { ACTUALIZAR_TABLON, REGISTRAR_TABLON } from '@graphql/mutations';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { OBTENER_TABLONES_CORTE, OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
+import { OBTENER_AREA_SUERTE, OBTENER_TABLONES_CORTE, OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 const schema = yup.object({
     numero: yup.number().typeError('El número es requerido').required(),
     area: yup.number().typeError('El área es requerida').required()
 });
 
-interface Props {
-    handleClose: () => void;
-    setMessageType: React.Dispatch<React.SetStateAction<AlertType>>;
-    setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
-    setShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
-const TablonRegistrar: React.FC<Props> = ({ handleClose, setMessageType, setInfoMessage, setShowMessage }) => {
+const TablonRegistrar: React.FC<Props> = () => {
     const {
-        corte: { id_corte }
+        corte: { id_corte },
+        tablon: { id_tablon, numero, area, estado },
+        suerte: { id_suerte }
     } = useAppSelector((state: IRootState) => state.cultivosReducer);
+    const { formType, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } = useContext(CultivosContext);
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors }
     } = useForm<FormDataTablones>({
-        resolver: yupResolver(schema)
+        resolver: yupResolver(schema),
+        defaultValues: {
+            numero: formType === 'create' ? undefined : numero,
+            area: formType === 'create' ? undefined : area
+        }
     });
     const [agregarTablon] = useMutation<GetRegistrarTablon>(REGISTRAR_TABLON);
+    const [actualizarTablon] = useMutation<GetActualizarTablon>(ACTUALIZAR_TABLON);
     //
     const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -45,35 +48,54 @@ const TablonRegistrar: React.FC<Props> = ({ handleClose, setMessageType, setInfo
         const { numero, area } = formData;
 
         try {
-            const { data } = await agregarTablon({
-                variables: {
-                    createTabloneInput: [
-                        {
+            if (formType === 'create') {
+                const { data } = await agregarTablon({
+                    variables: {
+                        createTabloneInput: [
+                            {
+                                numero,
+                                area,
+                                estado: true,
+                                corte_id: id_corte
+                            }
+                        ]
+                    },
+                    refetchQueries: [
+                        { query: OBTENER_TABLONES_CORTE, variables: { idCorte: id_corte } },
+                        { query: OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS, variables: { idCorte: id_corte } }
+                    ]
+                });
+                if (data?.agregarTablon?.length === 0) {
+                    setMessageType('error');
+                    setInfoMessage('El tablón ya esta registrado');
+                    setShowMessage(true);
+                    setSubmitting(false);
+                    return;
+                }
+            } else {
+                await actualizarTablon({
+                    variables: {
+                        updateTabloneInput: {
+                            id_tablon,
                             numero,
                             area,
-                            estado: true,
+                            estado,
                             corte_id: id_corte
                         }
+                    },
+                    refetchQueries: [
+                        { query: OBTENER_TABLONES_CORTE, variables: { idCorte: id_corte } },
+                        { query: OBTENER_AREA_SUERTE, variables: { idSuerte: id_suerte } },
+                        { query: OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS, variables: { idCorte: id_corte } }
                     ]
-                },
-                refetchQueries: [
-                    { query: OBTENER_TABLONES_CORTE, variables: { idCorte: id_corte } },
-                    { query: OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS, variables: { idCorte: id_corte } }
-                ]
-            });
-
-            if (data?.agregarTablon.length !== 0) {
-                setMessageType('success');
-                setInfoMessage('El tablón se registro exitosamente.');
-                setShowMessage(true);
-                setSubmitting(false);
-                reset();
-            } else {
-                setMessageType('error');
-                setInfoMessage('El tablón ya esta registrado.');
-                setShowMessage(true);
-                setSubmitting(false);
+                });
             }
+            setMessageType('success');
+            setInfoMessage(`El tablón se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setShowMessage(true);
+            setSubmitting(false);
+            reset();
+            if (formType === 'update') return setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -117,14 +139,14 @@ const TablonRegistrar: React.FC<Props> = ({ handleClose, setMessageType, setInfo
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : 'Registrar'}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
                     </Button>
                     <Button
                         color="primary"
                         variant="contained"
                         onClick={() => {
                             reset();
-                            handleClose();
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

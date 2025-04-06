@@ -14,7 +14,7 @@ const CerrarCortePopover: React.FC<Props> = ({ open, handleClose, corteId }) => 
     const { submitting, submitForm } = useCorte();
 
     return (
-        <DialogModal isOpen={open} handleClose={handleClose} title="Terminar corte" height={45}>
+        <DialogModal isOpen={open} handleClose={handleClose} title="Terminar corte" height={45} id="modal-terminar-corte">
             <Grid2 container>
                 <Grid2 size={12} m={1} mb={3}>
                     <Typography>Desea terminar el corte? Si termina, no podrá registrar más datos en este corte.</Typography>

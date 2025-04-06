@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Button, Grid2, Menu, MenuItem, Typography } from '@mui/material';
+import { Box, Button, Grid2, Menu, MenuItem, Typography } from '@mui/material';
 import { GetAplicacionPlagaRegister, SuertesCortesTablones } from '@interfaces/cultivos/plagas/aplicacion';
 import { REGISTRAR_APLICACION_PLAGA } from '@graphql/mutations';
 import { OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
@@ -21,6 +21,7 @@ const SuerteTablon: React.FC<Props> = ({ suertes }) => {
     const [errorForm, setErrorForm] = useState<boolean>(false);
     const [fecha, setFecha] = useState<string>('');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [selectedItem, setSelectedItem] = useState<SuertesCortesTablones>();
     const open = Boolean(anchorEl);
     const [agregarAplicacionPlagas] = useMutation<GetAplicacionPlagaRegister>(REGISTRAR_APLICACION_PLAGA);
 
@@ -66,11 +67,13 @@ const SuerteTablon: React.FC<Props> = ({ suertes }) => {
         }
     };
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, item: SuertesCortesTablones) => {
         setAnchorEl(event.currentTarget);
+        setSelectedItem(item);
     };
     const handleClose = () => {
         setAnchorEl(null);
+        setSelectedItem(undefined);
     };
 
     return (
@@ -110,7 +113,7 @@ const SuerteTablon: React.FC<Props> = ({ suertes }) => {
             </Grid2>
             {suertes.map((suerte) => (
                 <Grid2 key={suerte.id_suerte} size={{ xs: 12, sm: 3 }} sx={{ textAlign: 'center' }}>
-                    <div>
+                    <Box>
                         <Button
                             variant="outlined"
                             color="primary"
@@ -118,14 +121,14 @@ const SuerteTablon: React.FC<Props> = ({ suertes }) => {
                             aria-controls={open ? 'basic-menu' : undefined}
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
-                            onClick={handleClick}
+                            onClick={(event: React.MouseEvent<HTMLButtonElement>) => handleClick(event, suerte)}
                         >
                             Suerte {suerte.nombre}
                         </Button>
                         <Menu
                             id="basic-menu"
                             anchorEl={anchorEl}
-                            open={open}
+                            open={open && selectedItem?.id_suerte === suerte.id_suerte}
                             onClose={handleClose}
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button'
@@ -148,7 +151,7 @@ const SuerteTablon: React.FC<Props> = ({ suertes }) => {
                                     </MenuItem>
                                 ))}
                         </Menu>
-                    </div>
+                    </Box>
                 </Grid2>
             ))}
         </>

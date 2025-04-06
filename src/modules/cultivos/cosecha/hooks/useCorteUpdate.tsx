@@ -18,7 +18,7 @@ import { FormDataCorte, GetActualizarCorteResponse, GetRegisterCorte } from '@in
 export const useCorteUpdate = () => {
     const dispatch = useAppDispatch();
     const { corte, suerte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { setInfoMessage, setShowMessage, setMessageType, setOpenModal, setTitle } = useContext(CultivosContext);
+    const { setInfoMessage, setShowMessage, setMessageType, setValidateCosecha } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [step, setStep] = useState<number>(0);
     const [corteId, setCorteId] = useState<number>(0);
@@ -81,7 +81,6 @@ export const useCorteUpdate = () => {
             setShowMessage(true);
             //Registrar tablones
             setCorteId(data!.agregarCorte.id_corte);
-            setTitle('Tablones nuevo corte');
             setStep(1);
         } catch (error) {
             if (error instanceof ApolloError) {
@@ -128,7 +127,7 @@ export const useCorteUpdate = () => {
             setMessageType('success');
             setInfoMessage('La fecha de corte se registro exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            setValidateCosecha(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -181,7 +180,6 @@ export const useCorteUpdate = () => {
             setInfoMessage('La fecha de corte se registro exitosamente.');
             setShowMessage(true);
             // Renovar suerte
-            setTitle('Renovar suerte');
             setStep(2);
         } catch (error) {
             if (error instanceof ApolloError) {

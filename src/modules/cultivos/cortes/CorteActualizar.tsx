@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { ApolloError, useMutation } from '@apollo/client';
@@ -10,31 +10,26 @@ import { FormUpdateCorte, GetActualizarCorteResponse, GetRegisterCorte } from '@
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import Loading from '@components/Loading';
-import { AlertType } from '@interfaces/alerts';
 import { ACTUALIZAR_CORTE, REGISTRAR_CORTE } from '@graphql/mutations';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveCorte } from '@store/cultivos/actions';
 import { OBTENER_CORTE, OBTENER_CORTE_ACTUAL, OBTENER_CORTES_POR_SUERTE, OBTENER_CORTES_RENOVADOS } from '@graphql/queries';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {
-    handleClose: () => void;
-    setMessageType: React.Dispatch<React.SetStateAction<AlertType>>;
-    setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
-    setShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
-const CorteActualizar: React.FC<Props> = ({ handleClose, setMessageType, setInfoMessage, setShowMessage }) => {
+const CorteActualizar: React.FC<Props> = () => {
     const dispatch = useAppDispatch();
     const {
         corte: { id_corte, numero, fecha_inicio, fecha_siembra },
         suerte
     } = useAppSelector((state: IRootState) => state.cultivosReducer);
-
+    const { formType, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const { handleSubmit, reset, register, setValue } = useForm<FormUpdateCorte>({
         defaultValues: {
-            numero: id_corte === 0 ? 0 : numero,
-            fecha_inicio: id_corte === 0 ? '' : dayjs(fecha_inicio).format('YYYY-MM-DD'),
-            fecha_siembra: id_corte === 0 ? '' : dayjs(fecha_siembra).format('YYYY-MM-DD')
+            numero: formType === 'create' ? 0 : numero,
+            fecha_inicio: formType === 'create' ? '' : dayjs(fecha_inicio).format('YYYY-MM-DD'),
+            fecha_siembra: formType === 'create' ? '' : dayjs(fecha_siembra).format('YYYY-MM-DD')
         }
     });
     const [agregarCorte] = useMutation<GetRegisterCorte>(REGISTRAR_CORTE);
@@ -49,7 +44,7 @@ const CorteActualizar: React.FC<Props> = ({ handleClose, setMessageType, setInfo
         const newFechaSiembra = dayjs(fecha_siembra).format('YYYY-MM-DD');
 
         try {
-            if (id_corte === 0) {
+            if (formType === 'create') {
                 await agregarCorte({
                     variables: {
                         createCorteInput: {
@@ -82,9 +77,9 @@ const CorteActualizar: React.FC<Props> = ({ handleClose, setMessageType, setInfo
             }
 
             setMessageType('success');
-            setInfoMessage(`El corte se ${id_corte === 0 ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(`El corte se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            handleClose();
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -104,7 +99,7 @@ const CorteActualizar: React.FC<Props> = ({ handleClose, setMessageType, setInfo
         <form onSubmit={handleSubmit(submitForm)}>
             <Grid2 container spacing={2}>
                 <Grid2 size={12}>
-                    <TextField fullWidth label="Número" {...register('numero')} disabled={id_corte !== 0} sx={{ mt: 1 }} />
+                    <TextField fullWidth label="Número" {...register('numero')} disabled={formType === 'update'} sx={{ mt: 1 }} />
                 </Grid2>
                 <Grid2 size={12}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -115,7 +110,7 @@ const CorteActualizar: React.FC<Props> = ({ handleClose, setMessageType, setInfo
                                 setValue('fecha_inicio', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={id_corte !== 0 ? dayjs(fecha_inicio, 'YYYY-MM-DD') : undefined}
+                            defaultValue={formType === 'update' ? dayjs(fecha_inicio, 'YYYY-MM-DD') : undefined}
                         />
                     </LocalizationProvider>
                 </Grid2>
@@ -128,21 +123,21 @@ const CorteActualizar: React.FC<Props> = ({ handleClose, setMessageType, setInfo
                                 setValue('fecha_siembra', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={id_corte !== 0 ? dayjs(fecha_siembra, 'YYYY-MM-DD') : undefined}
+                            defaultValue={formType === 'update' ? dayjs(fecha_siembra, 'YYYY-MM-DD') : undefined}
                             sx={{ mb: 2 }}
                         />
                     </LocalizationProvider>
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : id_corte === 0 ? 'Registrar' : 'Actualizar'}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
                     </Button>
                     <Button
                         color="primary"
                         variant="contained"
                         onClick={() => {
                             reset();
-                            handleClose();
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

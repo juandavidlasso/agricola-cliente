@@ -1,7 +1,6 @@
-import React from 'react';
-import dynamic from 'next/dynamic';
+import React, { useContext } from 'react';
 import { useQuery } from '@apollo/client';
-import { Box, Grid2, Typography } from '@mui/material';
+import { Box, Button, Grid2, Typography } from '@mui/material';
 import Layout from '@modules/layouts/Layout';
 import { routesCultivos } from '@utils/routesCultivos';
 import { ThemeProps } from '@interfaces/theme';
@@ -14,21 +13,16 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import ListCortes from '../cortes/ListCortes';
 import BreadCrumbs from './utils/BreadCrumbs';
-import ActionsButtons from './utils/ActionsButtons';
-import { useActions } from './hooks/useActions';
-
-const LazySuertePopover = dynamic(() => import('./SuertePopover'), {
-    ssr: false
-});
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import SuertePopover from './SuertePopover';
 
 interface Props {
     toogleTheme: (theme: ThemeProps) => void;
 }
 
 const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
-    const { suerteActions, openModal, handleClose, header, formType, typeData, handleRegisterCorte } = useActions();
     const { id_suerte } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
-    const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
+    const { openModal, setOpenModal, setFormType } = useContext(CultivosContext);
 
     const { data, loading, error } = useQuery<GetSuerteResponse>(OBTENER_SUERTE, {
         variables: { idSuerte: id_suerte }
@@ -40,13 +34,7 @@ const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
 
     return (
         <>
-            <LazySuertePopover
-                isOpen={openModal}
-                handleClose={handleClose}
-                title={header}
-                formType={formType}
-                typeData={typeData}
-            />
+            {openModal && <SuertePopover />}
             <Layout toogleTheme={toogleTheme} navItems={routesCultivos}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     {!loading && (
@@ -56,7 +44,41 @@ const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
                             </Grid2>
 
                             <Grid2 size={{ xs: 12, sm: 6 }} display="flex" justifyContent="flex-end">
-                                {rol === 1 && <ActionsButtons items={suerteActions} />}
+                                <Button
+                                    className="!py-[2px] !px-2 !text-[15px]"
+                                    variant="text"
+                                    color="error"
+                                    onClick={() => {
+                                        setFormType('create');
+                                        setOpenModal(true);
+                                    }}
+                                >
+                                    Renovar Suerte
+                                </Button>
+                                |
+                                <Button
+                                    className="!py-[2px] !px-2 !text-[15px]"
+                                    variant="text"
+                                    color="error"
+                                    onClick={() => {
+                                        setFormType('update');
+                                        setOpenModal(true);
+                                    }}
+                                >
+                                    Editar Suerte
+                                </Button>
+                                |
+                                <Button
+                                    className="!py-[2px] !px-2 !text-[15px]"
+                                    variant="text"
+                                    color="error"
+                                    onClick={() => {
+                                        setFormType('delete');
+                                        setOpenModal(true);
+                                    }}
+                                >
+                                    Eliminar Suerte
+                                </Button>
                             </Grid2>
 
                             {data === undefined ? (
@@ -78,7 +100,7 @@ const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
                             )}
 
                             <Grid2 size={12}>
-                                <ListCortes handleRegisterCorte={handleRegisterCorte} />
+                                <ListCortes />
                             </Grid2>
                         </Grid2>
                     )}

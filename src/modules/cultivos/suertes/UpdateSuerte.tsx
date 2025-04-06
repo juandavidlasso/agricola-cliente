@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid2, TextField, Button } from '@mui/material';
 import { useRouter } from 'next/router';
 import { ApolloError, useMutation } from '@apollo/client';
@@ -13,7 +13,7 @@ import { OBTENER_SUERTE, OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveSuerte } from '@store/cultivos/actions';
 import Loading from '@components/Loading';
-import { AlertType } from '@interfaces/alerts';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 const schema = yup.object({
     nombre: yup.string().required('El nombre es requerido'),
@@ -22,18 +22,13 @@ const schema = yup.object({
     renovada: yup.string().required()
 });
 
-interface Props {
-    formType: 'renovar' | 'editar' | 'eliminar';
-    handleClose: () => void;
-    setMessageType: React.Dispatch<React.SetStateAction<AlertType>>;
-    setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
-    setShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
-const UpdateSuerte: React.FC<Props> = ({ formType, handleClose, setMessageType, setInfoMessage, setShowMessage }) => {
+const UpdateSuerte: React.FC<Props> = () => {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { nombre, variedad, zona, renovada, id_suerte } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
+    const { formType, setMessageType, setShowMessage, setInfoMessage, setOpenModal } = useContext(CultivosContext);
     const {
         register,
         handleSubmit,
@@ -58,7 +53,7 @@ const UpdateSuerte: React.FC<Props> = ({ formType, handleClose, setMessageType, 
         setSubmitting(true);
 
         try {
-            if (formType === 'editar') {
+            if (formType === 'update') {
                 await actualizarSuerte({
                     variables: {
                         updateSuerteInput: {
@@ -80,8 +75,7 @@ const UpdateSuerte: React.FC<Props> = ({ formType, handleClose, setMessageType, 
                         renovada
                     })
                 );
-            }
-            if (formType === 'renovar') {
+            } else {
                 await agregarSuerteRenovada({
                     variables: {
                         createSuerteInput: {
@@ -102,15 +96,11 @@ const UpdateSuerte: React.FC<Props> = ({ formType, handleClose, setMessageType, 
             setMessageType('success');
             setInfoMessage(
                 `${
-                    formType === 'renovar'
-                        ? 'La suerte se ha renovado exitosamente.'
-                        : formType === 'editar'
-                        ? 'La suerte se ha actualizado exitosamente.'
-                        : 'La suerte se eliminó exitosamente.'
+                    formType === 'update' ? 'La suerte se ha actualizado exitosamente.' : 'La suerte se ha renovado exitosamente.'
                 }`
             );
             setShowMessage(true);
-            handleClose();
+            setOpenModal(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -133,7 +123,7 @@ const UpdateSuerte: React.FC<Props> = ({ formType, handleClose, setMessageType, 
                     <TextField
                         fullWidth
                         {...register('nombre')}
-                        disabled={formType === 'renovar'}
+                        disabled={formType === 'create'}
                         label="Nombre"
                         error={!!errors.nombre}
                         helperText={errors.nombre?.message}
@@ -165,20 +155,12 @@ const UpdateSuerte: React.FC<Props> = ({ formType, handleClose, setMessageType, 
                         variant="contained"
                         sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
                     >
-                        {submitting ? (
-                            <Loading />
-                        ) : formType === 'renovar' ? (
-                            'Renovar'
-                        ) : formType === 'editar' ? (
-                            'Actualizar'
-                        ) : (
-                            'Eliminar'
-                        )}
+                        {submitting ? <Loading /> : formType === 'update' ? 'Actualizar' : 'Renovar'}
                     </Button>
                     <Button
                         onClick={() => {
-                            handleClose();
                             reset();
+                            setOpenModal(false);
                         }}
                         color="primary"
                         variant="contained"

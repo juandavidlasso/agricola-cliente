@@ -272,8 +272,8 @@ export const REGISTRAR_APLICACIONES_HERBICIDAS = gql`
 `;
 
 export const ELIMINAR_APLICACIONES_HERBICIDAS = gql`
-    mutation EliminarAplicacionesHerbicidasService($idAplicacionesHerbicidas: Int!) {
-        eliminarAplicacionesHerbicidasService(id_aplicaciones_herbicidas: $idAplicacionesHerbicidas)
+    mutation EliminarAplicacionesHerbicidas($idAplicacionesHerbicidas: Int!) {
+        eliminarAplicacionesHerbicidas(id_aplicaciones_herbicidas: $idAplicacionesHerbicidas)
     }
 `;
 

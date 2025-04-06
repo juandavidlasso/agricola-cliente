@@ -20,6 +20,7 @@ const PluviometroPopover: React.FC<Props> = ({}) => {
     };
     return (
         <DialogModal
+            id="modal-lluvias"
             isOpen={openModal}
             handleClose={() => setOpenModal(false)}
             title={title}

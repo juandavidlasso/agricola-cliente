@@ -14,6 +14,7 @@ import { OBTENER_APLICACIONES_FERTILIZANTES } from '@graphql/queries';
 import { handleKeyDownLetter, handleKeyDownLetterAndNumber, handleKeyDownNumber } from '@utils/validations';
 import Loading from '@components/Loading';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { AplicacionFertilizante } from '@interfaces/cultivos/fertilizantes/aplicacion';
 
 const schema = yup.object({
     producto: yup.string().required('El producto es requerido.'),
@@ -35,7 +36,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
         aplicacionFertilizanteEdit,
         tratamientoFertilizanteEdit,
         formType,
-        setOpenModal,
+        setOpenModalForms,
         setMessageType,
         setInfoMessage,
         setShowMessage
@@ -45,6 +46,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
         ACTUALIZAR_TRATAMIENTO_FERTILIZANTE
     );
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const aplicacionFertilizante = aplicacionFertilizanteEdit as AplicacionFertilizante;
     const {
         register,
         handleSubmit,
@@ -70,7 +72,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
                     variables: {
                         createTratamientoFertilizanteInput: {
                             ...data,
-                            apfe_id: aplicacionFertilizanteEdit?.id_apfe
+                            apfe_id: aplicacionFertilizante?.id_apfe
                         }
                     },
                     refetchQueries: [
@@ -85,7 +87,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
                         updateTratamientoFertilizanteInput: {
                             ...data,
                             id_trafe: tratamientoFertilizanteEdit?.id_trafe,
-                            apfe_id: aplicacionFertilizanteEdit?.id_apfe
+                            apfe_id: aplicacionFertilizante?.id_apfe
                         }
                     },
                     refetchQueries: [
@@ -99,7 +101,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage(`El tratamiento se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -196,7 +198,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({}) => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

@@ -2,20 +2,18 @@ import React, { useContext, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Button, Grid2, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowHeightParams } from '@mui/x-data-grid';
-import { AplicacionLabores, GetAplicacionLaboresResponse } from '@interfaces/cultivos/labores';
+import { AplicacionLabores, GetAplicacionLaboresResponse, Labores } from '@interfaces/cultivos/labores';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import { OBTENER_APLICACIONES_LABORES } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { InformationContext, TypeData } from 'src/context/cultivos/information/InformationContext';
+import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
-    setDeleteData: React.Dispatch<React.SetStateAction<TypeData<AplicacionLabores>>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>,
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
-    setFormType: React.Dispatch<React.SetStateAction<'' | 'labores' | 'herbicidas' | 'fertilizantes'>>
+    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
+    setFormType: React.Dispatch<React.SetStateAction<DataType>>,
+    setEditLabor: React.Dispatch<React.SetStateAction<Labores | AplicacionLabores | undefined>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'fecha', headerName: 'Fecha', flex: 1, headerAlign: 'center', align: 'center' },
@@ -43,11 +41,9 @@ const getColumns = (
                 >
                     <Button
                         onClick={() => {
-                            setDeleteData(param.row);
-                            setHeight(40);
-                            setTitle('Eliminar labor');
-                            setFormType('labores');
-                            setOpenModal(true);
+                            setEditLabor(param.row);
+                            setFormType('delete');
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -79,8 +75,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
     const { data, error, loading } = useQuery<GetAplicacionLaboresResponse>(OBTENER_APLICACIONES_LABORES, {
         variables: { corteId: id_corte }
     });
-    const { setOpenModal, setDeleteData, setHeight, setTitle, setTotalItems, setFormType } = useContext(InformationContext);
-
+    const { setOpenModalForms, setFormType, setEditLabor, setTotalItems } = useContext(CultivosContext);
     useEffect(() => {
         if (data !== undefined && data?.obtenerAplicacionesLabores?.length !== 0) {
             setTotalItems(data!.obtenerAplicacionesLabores.map((aplicacion) => aplicacion.labor!.id_labor));
@@ -120,7 +115,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                     ) : (
                         <DataGrid
                             rows={rows}
-                            columns={getColumns(setOpenModal, setDeleteData, setHeight, setTitle, setFormType)}
+                            columns={getColumns(setOpenModalForms, setFormType, setEditLabor)}
                             disableVirtualization
                             getRowHeight={(params: GridRowHeightParams) => 'auto'}
                             initialState={{

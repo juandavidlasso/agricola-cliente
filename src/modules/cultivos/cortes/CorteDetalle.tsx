@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react';
-import dynamic from 'next/dynamic';
+import React, { useContext } from 'react';
 import { useQuery } from '@apollo/client';
-import { Box, Grid2, Typography } from '@mui/material';
+import { Box, Button, Grid2, Typography } from '@mui/material';
 import { OBTENER_CORTE } from '@graphql/queries';
 import { ThemeProps } from '@interfaces/theme';
 import Alert from '@components/Alert';
@@ -9,33 +8,19 @@ import { GetCorteResponse } from '@interfaces/cultivos/cortes';
 import Layout from '@modules/layouts/Layout';
 import { routesCultivos } from '@utils/routesCultivos';
 import BreadCrumbs from '../suertes/utils/BreadCrumbs';
-import ActionsButtons from '../suertes/utils/ActionsButtons';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { useActions } from './hooks/useActions';
 import CardDetails from './CardDetails';
 import ModalLoading from '@components/Modal';
 import ListButtons from './ListButtons';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
-import CortePopover from './CortePopover';
-import DeleteInformationPopover from './DeleteInformationPopover';
 import SuertesPopover from '../registroDatos/components/suertes/SuertesPopover';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import { useLabores } from '../registroDatos/components/labores/hooks/useLabores';
 import { useAplicacionesHerbicidas } from '../registroDatos/components/herbicidas/hooks/useAplicacionesHerbicidas';
 import { useAplicacionesFertilizantes } from '../registroDatos/components/fertilizantes/hooks/useAplicacionesFertilizantes';
-
-const LazyTablonPopover = dynamic(() => import('../tablones/TablonPopover'), {
-    ssr: false
-});
-
-const LazyListWorks = dynamic(() => import('./ListWorks'), {
-    ssr: false
-});
-
-const LazyModalActions = dynamic(() => import('./ModalActions'), {
-    ssr: false
-});
+import ModalForms from './ModalForms';
+import ModalActions from './ModalActions';
+import ListWorks from './ListWorks';
 
 interface Props {
     toogleTheme: (theme: ThemeProps) => void;
@@ -43,28 +28,19 @@ interface Props {
 
 const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
     const {
-        corteActions,
+        typeModal,
+        openModalList,
         openModal,
-        handleClose,
-        header,
-        formType,
-        openSide,
-        handleCloseSide,
-        openListWorks,
-        handleCloseListWorks,
-        handleOpenListWorks,
-        typeWork,
-        setTypeWork,
-        openModalActions,
-        handleOpenModalActions,
-        handleCloseModalActions
-    } = useActions();
-    const { openModal: openModalInformation, setOpenModal, title, height, deleteData, width } = useContext(InformationContext);
-    const { type } = useContext(CultivosContext);
+        openModalSuertes,
+        openModalForms,
+        setOpenModalForms,
+        setFormType,
+        setTypeModal,
+        setOpenModalList,
+        setHeader
+    } = useContext(CultivosContext);
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
     const { data, loading, error } = useQuery<GetCorteResponse>(OBTENER_CORTE, { variables: { idCorte: corte.id_corte } });
-    const [titleListWorks, setTitleListWorks] = useState<string>('');
-    const [nameButton, setNameButton] = useState<string>('');
     const { handleSubmitLabor } = useLabores();
     const { handleSubmitAplicacionesHerbicidas } = useAplicacionesHerbicidas();
     const { handleSubmitAplicacionesFertilizantes } = useAplicacionesFertilizantes();
@@ -75,40 +51,20 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
 
     return (
         <>
-            <LazyListWorks
-                isOpen={openListWorks}
-                handleClose={handleCloseListWorks}
-                direction="bottom"
-                title={titleListWorks}
-                typeWrok={typeWork}
-                name={nameButton}
-                onOpen={handleOpenModalActions}
-            />
-            <LazyModalActions
-                title={nameButton}
-                type={typeWork}
-                handleClose={handleCloseModalActions}
-                isOpen={openModalActions}
-                width={width}
-            />
-            <DeleteInformationPopover
-                isOpen={openModalInformation}
-                handleClose={() => setOpenModal(false)}
-                title={title}
-                height={height}
-                data={deleteData}
-            />
-            <SuertesPopover
-                handleSubmit={
-                    type === 'labores'
-                        ? handleSubmitLabor
-                        : type === 'herbicidas'
-                        ? handleSubmitAplicacionesHerbicidas
-                        : handleSubmitAplicacionesFertilizantes
-                }
-            />
-            <LazyTablonPopover isOpen={openSide} handleClose={handleCloseSide} direction="right" />
-            <CortePopover isOpen={openModal} handleClose={handleClose} title={header} formType={formType} />
+            {openModalList && <ListWorks />}
+            {openModal && <ModalActions />}
+            {openModalForms && <ModalForms />}
+            {openModalSuertes && (
+                <SuertesPopover
+                    handleSubmit={
+                        typeModal === 'labores'
+                            ? handleSubmitLabor
+                            : typeModal === 'herbicidas'
+                            ? handleSubmitAplicacionesHerbicidas
+                            : handleSubmitAplicacionesFertilizantes
+                    }
+                />
+            )}
             <Layout toogleTheme={toogleTheme} navItems={routesCultivos}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     <Grid2 container spacing={2}>
@@ -117,7 +73,31 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
                         </Grid2>
 
                         <Grid2 size={{ xs: 12, sm: 6 }} display="flex" justifyContent="flex-end">
-                            <ActionsButtons items={corteActions} />
+                            <Button
+                                className="!py-[2px] !px-2 !text-[15px]"
+                                variant="text"
+                                color="error"
+                                onClick={() => {
+                                    setFormType('update');
+                                    setTypeModal('corte');
+                                    setOpenModalForms(true);
+                                }}
+                            >
+                                Editar Corte
+                            </Button>
+                            |
+                            <Button
+                                className="!py-[2px] !px-2 !text-[15px]"
+                                variant="text"
+                                color="error"
+                                onClick={() => {
+                                    setTypeModal('tablon');
+                                    setHeader('Listado de Tablones');
+                                    setOpenModalList(true);
+                                }}
+                            >
+                                Ver Tablones
+                            </Button>
                         </Grid2>
 
                         {data === undefined ? (
@@ -138,12 +118,7 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
                             </>
                         )}
 
-                        <ListButtons
-                            setTitleListWorks={setTitleListWorks}
-                            handleOpenListWorks={handleOpenListWorks}
-                            setTypeWork={setTypeWork}
-                            setNameButton={setNameButton}
-                        />
+                        <ListButtons />
                     </Grid2>
                 </Box>
             </Layout>

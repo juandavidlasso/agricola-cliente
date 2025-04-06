@@ -3,12 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Button, Grid2, TextField, Typography } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {
-    FormDataPlaga,
-    GetTratamientoPlagaRegister,
-    GetTratamientoPlagaUpdate,
-    TratamientoPlaga
-} from '@interfaces/cultivos/plagas/tratamiento';
+import { FormDataPlaga, GetTratamientoPlagaRegister, GetTratamientoPlagaUpdate } from '@interfaces/cultivos/plagas/tratamiento';
 import Loading from '@components/Loading';
 import { ApolloError, useMutation } from '@apollo/client';
 import { ACTUALIZAR_TRATAMIENTO_PLAGAS, REGISTRAR_TRATAMIENTO_PLAGAS } from '@graphql/mutations';
@@ -22,13 +17,12 @@ const schema = yup.object({
     tiempo: yup.string().required('El tiempo es requerido.')
 });
 
-interface Props {
-    tratamientoPlaga?: TratamientoPlaga;
-}
+interface Props {}
 
-const TratamientoPlagaRegister: React.FC<Props> = ({ tratamientoPlaga }) => {
+const TratamientoPlagaRegister: React.FC<Props> = () => {
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const { formType, setOpenModal, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { formType, tratamientoPlagaEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
+        useContext(CultivosContext);
     const {
         register,
         handleSubmit,
@@ -37,10 +31,10 @@ const TratamientoPlagaRegister: React.FC<Props> = ({ tratamientoPlaga }) => {
     } = useForm<FormDataPlaga>({
         resolver: yupResolver(schema),
         defaultValues: {
-            producto: formType === 'create' ? '' : tratamientoPlaga?.producto,
-            unidad: formType === 'create' ? '' : tratamientoPlaga?.unidad,
-            cantidad: formType === 'create' ? undefined : tratamientoPlaga?.cantidad,
-            tiempo: formType === 'create' ? '' : tratamientoPlaga?.tiempo
+            producto: formType === 'create' ? '' : tratamientoPlagaEdit?.producto,
+            unidad: formType === 'create' ? '' : tratamientoPlagaEdit?.unidad,
+            cantidad: formType === 'create' ? undefined : tratamientoPlagaEdit?.cantidad,
+            tiempo: formType === 'create' ? '' : tratamientoPlagaEdit?.tiempo
         }
     });
     const [agregarTratamientoPlagas] = useMutation<GetTratamientoPlagaRegister>(REGISTRAR_TRATAMIENTO_PLAGAS);
@@ -66,7 +60,7 @@ const TratamientoPlagaRegister: React.FC<Props> = ({ tratamientoPlaga }) => {
                 await actualizarTratamientoPlagas({
                     variables: {
                         updateTratamientoPlagasInput: {
-                            id_trapl: tratamientoPlaga?.id_trapl,
+                            id_trapl: tratamientoPlagaEdit?.id_trapl,
                             producto: formData.producto,
                             unidad: formData.unidad,
                             cantidad: formData.cantidad,
@@ -80,7 +74,7 @@ const TratamientoPlagaRegister: React.FC<Props> = ({ tratamientoPlaga }) => {
             setMessageType('success');
             setInfoMessage(`El tratamiento se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -186,7 +180,7 @@ const TratamientoPlagaRegister: React.FC<Props> = ({ tratamientoPlaga }) => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

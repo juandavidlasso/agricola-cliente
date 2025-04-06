@@ -9,7 +9,8 @@ import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 interface Props {}
 
 const AplicacionPlagaDelete: React.FC<Props> = ({}) => {
-    const { aplicacionPlagaEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModal } = useContext(CultivosContext);
+    const { aplicacionPlagaEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } =
+        useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarAplicacionPlagas] = useMutation<boolean>(ELIMINAR_APLICACION_PLAGA);
     const submitDelete = async () => {
@@ -25,7 +26,7 @@ const AplicacionPlagaDelete: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage('La aplicación se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -52,7 +53,7 @@ const AplicacionPlagaDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModal(false)}>
+                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)}>
                     Cancelar
                 </Button>
             </Grid2>

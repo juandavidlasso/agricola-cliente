@@ -11,7 +11,7 @@ interface Props {
 const SuerteRegister: React.FC<Props> = ({ isOpen, handleClose }) => {
     const { setInfoMessage, setMessageType, setShowMessage } = useContext(CultivosContext);
     return (
-        <DialogModal isOpen={isOpen} handleClose={handleClose} title="Registrar suerte" height={80}>
+        <DialogModal isOpen={isOpen} handleClose={handleClose} title="Registrar suerte" height={80} id="modal-form">
             <SuerteForm
                 handleClose={handleClose}
                 setInfoMessage={setInfoMessage}

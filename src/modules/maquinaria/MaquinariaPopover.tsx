@@ -33,6 +33,7 @@ const MaquinariaPopover: React.FC<Props> = ({}) => {
     };
     return (
         <DialogModal
+            id="modal-maquinaria"
             isOpen={openModal}
             handleClose={() => setOpenModal(false)}
             title={title}

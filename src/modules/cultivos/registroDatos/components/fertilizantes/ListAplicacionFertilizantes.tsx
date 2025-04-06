@@ -6,7 +6,6 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Button, Checkbox, Collapse, Grid2, List, ListItemButton, ListItemText } from '@mui/material';
 import { OBTENER_APLICACIONES_FERTILIZANTES } from '@graphql/queries';
 import { GetAplicacionFertilizanteResponse } from '@interfaces/cultivos/fertilizantes/aplicacion';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import ListTratamientosFertilizantes from './tratamientos/ListTratamientosFertilizantes';
@@ -18,17 +17,14 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetAplicacionFertilizanteResponse>(OBTENER_APLICACIONES_FERTILIZANTES);
     const {
         selectedAplicacionFertilizantes,
+        totalItems,
         setFormType,
         setAplicacionFertilizanteEdit,
-        setOpenModal,
+        setOpenModalForms,
         setSelectedAplicacionFertilizantes,
         setDataType,
-        setTitle,
-        setHeight,
-        setType,
-        setDuplicate
+        setOpenModalSuertes
     } = useContext(CultivosContext);
-    const { totalItems } = useContext(InformationContext);
     const [openItems, setOpenItems] = useState<any>({});
 
     const handleClick = (id: any) => {
@@ -56,34 +52,16 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
             <Button
                 className="!fixed !z-50"
                 variant="contained"
-                onClick={(e) => {
-                    e.stopPropagation();
+                onClick={() => {
                     setFormType('create');
                     setDataType('aplicacion');
-                    setTitle('Registrar aplicación fertilizante');
-                    setHeight(60);
-                    setType('fertilizantes');
-                    setAplicacionFertilizanteEdit(undefined);
-                    setDuplicate(false);
-                    setOpenModal(true);
+                    setOpenModalForms(true);
                 }}
             >
-                Agregar aplicación fertilizante
+                Registrar aplicación fertilizante
             </Button>
             {selectedAplicacionFertilizantes.length > 0 && (
-                <Button
-                    className="!fixed !z-50 !ml-80"
-                    variant="contained"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setType('fertilizantes');
-                        setTitle('Selecciona la suerte y el corte');
-                        setHeight(80);
-                        setDataType('suertes');
-                        setDuplicate(false);
-                        setOpenModal(true);
-                    }}
-                >
+                <Button className="!fixed !z-50 !ml-80" variant="contained" onClick={() => setOpenModalSuertes(true)}>
                     Aplicar fertilizante
                 </Button>
             )}
@@ -96,7 +74,12 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
                               sx={{ width: '100%', border: '1px solid gray', mb: 2, borderRadius: 3, mt: 7 }}
                               component="nav"
                           >
-                              <ListItemButton onClick={() => handleClick(aplicacion.id_apfe)}>
+                              <ListItemButton
+                                  onClick={() => {
+                                      handleClick(aplicacion.id_apfe);
+                                      setAplicacionFertilizanteEdit(aplicacion);
+                                  }}
+                              >
                                   <Checkbox
                                       sx={{
                                           color: '#000000'
@@ -112,29 +95,23 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
                                           aplicacion.tipo
                                       }`}
                                   />
-
-                                  {selectedAplicacionFertilizantes.length > 0 &&
-                                      selectedAplicacionFertilizantes.includes(aplicacion.id_apfe) && (
-                                          <Button
-                                              variant="outlined"
-                                              color="error"
-                                              onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  setAplicacionFertilizanteEdit(aplicacion);
-                                                  setFormType('update');
-                                                  setDataType('aplicacion');
-                                                  setTitle('Duplicar aplicación fertilizante');
-                                                  setHeight(60);
-                                                  setType('fertilizantes');
-                                                  setDuplicate(true);
-                                                  setOpenModal(true);
-                                              }}
-                                          >
-                                              Duplicar Fertilizante
-                                          </Button>
-                                      )}
                                   <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
                                       <Button
+                                          className="!text-[14px]"
+                                          variant="outlined"
+                                          color="error"
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              setAplicacionFertilizanteEdit(aplicacion);
+                                              setFormType('duplicar');
+                                              setDataType('aplicacion');
+                                              setOpenModalForms(true);
+                                          }}
+                                      >
+                                          Duplicar Fertilizante
+                                      </Button>
+                                      <Button
+                                          className="!text-[14px]"
                                           variant="outlined"
                                           color="info"
                                           onClick={(e) => {
@@ -142,16 +119,13 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
                                               setAplicacionFertilizanteEdit(aplicacion);
                                               setFormType('create');
                                               setDataType('tratamiento');
-                                              setTitle('Registrar tratamiento fertilizante');
-                                              setHeight(90);
-                                              setType('fertilizantes');
-                                              setDuplicate(false);
-                                              setOpenModal(true);
+                                              setOpenModalForms(true);
                                           }}
                                       >
                                           Agregar tratamiento
                                       </Button>
                                       <Button
+                                          className="!text-[14px]"
                                           variant="outlined"
                                           color="warning"
                                           onClick={(e) => {
@@ -159,16 +133,13 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
                                               setAplicacionFertilizanteEdit(aplicacion);
                                               setFormType('update');
                                               setDataType('aplicacion');
-                                              setTitle('Actualizar aplicación fertilizante');
-                                              setHeight(60);
-                                              setType('fertilizantes');
-                                              setDuplicate(false);
-                                              setOpenModal(true);
+                                              setOpenModalForms(true);
                                           }}
                                       >
                                           Editar
                                       </Button>
                                       <Button
+                                          className="!text-[14px]"
                                           variant="outlined"
                                           color="error"
                                           onClick={(e) => {
@@ -176,11 +147,7 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
                                               setAplicacionFertilizanteEdit(aplicacion);
                                               setFormType('delete');
                                               setDataType('aplicacion');
-                                              setTitle('Eliminar aplicación fertilizante');
-                                              setHeight(45);
-                                              setType('fertilizantes');
-                                              setDuplicate(false);
-                                              setOpenModal(true);
+                                              setOpenModalForms(true);
                                           }}
                                       >
                                           Eliminar

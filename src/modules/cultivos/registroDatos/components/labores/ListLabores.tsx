@@ -11,21 +11,15 @@ import {
 import { Box, Button, Grid2 } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { OBTENER_LABORES } from '@graphql/queries';
-import { GetLaboresResponse, Labores } from '@interfaces/cultivos/labores';
+import { AplicacionLabores, GetLaboresResponse, Labores } from '@interfaces/cultivos/labores';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
-import { CultivosContext, DataType, DataTypeApplication, ModalDataType } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext';
 
 const getColumns = (
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
-    setEditLabor: React.Dispatch<React.SetStateAction<Labores | undefined>>,
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>,
-    setDuplicate: React.Dispatch<React.SetStateAction<boolean>>,
-    setType: React.Dispatch<React.SetStateAction<ModalDataType>>,
-    setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>
+    setEditLabor: React.Dispatch<React.SetStateAction<Labores | AplicacionLabores | undefined>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'fecha', headerName: 'Fecha', flex: 0.1 },
@@ -55,12 +49,7 @@ const getColumns = (
                         onClick={() => {
                             setEditLabor(param.row);
                             setFormType('delete');
-                            setTitle('Eliminar labor');
-                            setType('labores');
-                            setDataType('');
-                            setHeight(40);
-                            setDuplicate(false);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -83,12 +72,7 @@ const getColumns = (
                             const { __typename, ...restData } = param.row;
                             setEditLabor(restData);
                             setFormType('update');
-                            setTitle('Actualizar labor');
-                            setType('labores');
-                            setDataType('');
-                            setHeight(90);
-                            setDuplicate(false);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -111,12 +95,7 @@ const getColumns = (
                             const { __typename, ...restData } = param.row;
                             setEditLabor(restData);
                             setFormType('duplicar');
-                            setTitle('Duplicar labor');
-                            setType('labores');
-                            setDataType('');
-                            setHeight(90);
-                            setDuplicate(false);
-                            setOpenModal(true);
+                            setOpenModalForms(true);
                         }}
                         variant="outlined"
                         color="primary"
@@ -145,19 +124,8 @@ interface Props {}
 
 const ListLabores: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetLaboresResponse>(OBTENER_LABORES);
-    const {
-        selectedLabores,
-        setOpenModal,
-        setFormType,
-        setEditLabor,
-        setSelectedLabores,
-        setTitle,
-        setHeight,
-        setDuplicate,
-        setType,
-        setDataType
-    } = useContext(CultivosContext);
-    const { totalItems } = useContext(InformationContext);
+    const { selectedLabores, totalItems, setOpenModalForms, setFormType, setEditLabor, setSelectedLabores, setOpenModalSuertes } =
+        useContext(CultivosContext);
 
     if (error) return <Alert message={error.message} />;
 
@@ -168,14 +136,7 @@ const ListLabores: React.FC<Props> = () => {
             {selectedLabores.length > 0 && (
                 <Button
                     variant="contained"
-                    onClick={() => {
-                        setType('labores');
-                        setTitle('Selecciona la suerte y el corte');
-                        setHeight(80);
-                        setDataType('suertes');
-                        setDuplicate(false);
-                        setOpenModal(true);
-                    }}
+                    onClick={() => setOpenModalSuertes(true)}
                     className="!fixed !z-50"
                     sx={{
                         ml: 25
@@ -188,12 +149,7 @@ const ListLabores: React.FC<Props> = () => {
                 variant="contained"
                 onClick={() => {
                     setFormType('create');
-                    setHeight(90);
-                    setTitle('Registrar labor');
-                    setType('labores');
-                    setEditLabor(undefined);
-                    setDuplicate(false);
-                    setOpenModal(true);
+                    setOpenModalForms(true);
                 }}
                 className="!fixed !z-50"
             >
@@ -203,16 +159,7 @@ const ListLabores: React.FC<Props> = () => {
                 <div style={{ height: 'auto', width: '100%', marginTop: 60 }}>
                     <DataGrid
                         rows={data === undefined ? [] : data.obtenerLabores}
-                        columns={getColumns(
-                            setOpenModal,
-                            setFormType,
-                            setEditLabor,
-                            setTitle,
-                            setHeight,
-                            setDuplicate,
-                            setType,
-                            setDataType
-                        )}
+                        columns={getColumns(setOpenModalForms, setFormType, setEditLabor)}
                         onRowSelectionModelChange={(rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
                             setSelectedLabores(rowSelectionModel as number[]);
                         }}

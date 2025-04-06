@@ -1,30 +1,53 @@
 import React, { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { Button, Grid2, Typography } from '@mui/material';
-import { ELIMINAR_APLICACION_FERTILIZANTE } from '@graphql/mutations';
-import { OBTENER_APLICACIONES_FERTILIZANTES } from '@graphql/queries';
+import { ELIMINAR_APLICACION_FERTILIZANTE, ELIMINAR_APLICACIONES_FERTILIZANTES } from '@graphql/mutations';
+import { OBTENER_APLICACIONES_FERTILIZANTES, OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 import Loading from '@components/Loading';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import {
+    AplicacionesFertilizantes,
+    GetDeleteAplicacionesFertilizantesResponse
+} from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
+import { AplicacionFertilizante } from '@interfaces/cultivos/fertilizantes/aplicacion';
 
 interface Props {}
 
 const AplicacionFertilizanteDelete: React.FC<Props> = ({}) => {
-    const { aplicacionFertilizanteEdit, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
+    const { aplicacionFertilizanteEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarAplicacionFertilizante] = useMutation<boolean>(ELIMINAR_APLICACION_FERTILIZANTE);
+    const [eliminarAplicacionesFertilizantes] = useMutation<GetDeleteAplicacionesFertilizantesResponse>(
+        ELIMINAR_APLICACIONES_FERTILIZANTES
+    );
     const submitDelete = async () => {
         try {
-            await eliminarAplicacionFertilizante({
-                variables: {
-                    idApfe: aplicacionFertilizanteEdit?.id_apfe
-                },
-                refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
-            });
+            if (aplicacionFertilizanteEdit?.hasOwnProperty('id_apfe')) {
+                await eliminarAplicacionFertilizante({
+                    variables: {
+                        idApfe: (aplicacionFertilizanteEdit as AplicacionFertilizante)?.id_apfe
+                    },
+                    refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
+                });
+            } else {
+                await eliminarAplicacionesFertilizantes({
+                    variables: {
+                        idAplicacionesFertilizantes: (aplicacionFertilizanteEdit as AplicacionesFertilizantes)
+                            ?.id_aplicaciones_fertilizantes
+                    },
+                    refetchQueries: [
+                        {
+                            query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE,
+                            variables: { corteId: (aplicacionFertilizanteEdit as AplicacionesFertilizantes)?.corte_id }
+                        }
+                    ]
+                });
+            }
             setMessageType('success');
             setInfoMessage('La aplicación se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -51,7 +74,7 @@ const AplicacionFertilizanteDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'} p={2}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModal(false)} fullWidth>
+                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)} fullWidth>
                     Cancelar
                 </Button>
             </Grid2>

@@ -10,6 +10,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ApolloError, useMutation } from '@apollo/client';
 import { ACTUALIZAR_APLICACION_FERTILIZANTE, REGISTRAR_APLICACION_FERTILIZANTE } from '@graphql/mutations';
 import {
+    AplicacionFertilizante,
     FormDataAplicacionFertilizante,
     GetAplicacionFertilizanteRegister,
     GetAplicacionFertilizanteUpdate
@@ -26,11 +27,12 @@ const schema = yup.object({
 interface Props {}
 
 const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
-    const { aplicacionFertilizanteEdit, formType, duplicate, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
+    const { aplicacionFertilizanteEdit, formType, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
     const [agregarAplicacionFertilizante] = useMutation<GetAplicacionFertilizanteRegister>(REGISTRAR_APLICACION_FERTILIZANTE);
     const [actualizarAplicacionFertilizante] = useMutation<GetAplicacionFertilizanteUpdate>(ACTUALIZAR_APLICACION_FERTILIZANTE);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const aplicacionFertilizante = aplicacionFertilizanteEdit as AplicacionFertilizante;
     const {
         register,
         handleSubmit,
@@ -40,8 +42,8 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataAplicacionFertilizante>({
         resolver: yupResolver(schema),
         defaultValues: {
-            fecha: formType === 'update' ? dayjs(aplicacionFertilizanteEdit?.fecha).format('YYYY-MM-DD') : '',
-            tipo: formType === 'update' ? aplicacionFertilizanteEdit?.tipo : ''
+            fecha: formType === 'create' ? '' : dayjs(aplicacionFertilizante?.fecha).format('YYYY-MM-DD'),
+            tipo: formType === 'create' ? '' : aplicacionFertilizante?.tipo
         }
     });
 
@@ -62,10 +64,10 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
                 await actualizarAplicacionFertilizante({
                     variables: {
                         updateAplicacionFertilizanteInput: {
-                            id_apfe: aplicacionFertilizanteEdit?.id_apfe,
+                            id_apfe: aplicacionFertilizante?.id_apfe,
                             tipo: data.tipo,
                             fecha: data.fecha,
-                            duplicate
+                            duplicate: formType === 'duplicar'
                         }
                     },
                     refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
@@ -73,9 +75,13 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
             }
 
             setMessageType('success');
-            setInfoMessage(`La aplicación se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(
+                `La aplicación se ${
+                    formType === 'create' ? 'registro' : formType === 'update' ? 'actualizo' : 'duplico'
+                } exitosamente.`
+            );
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -104,9 +110,7 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
                                 setValue('fecha', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={
-                                formType === 'update' ? dayjs(aplicacionFertilizanteEdit?.fecha, 'YYYY-MM-DD') : undefined
-                            }
+                            defaultValue={formType === 'create' ? undefined : dayjs(aplicacionFertilizante?.fecha, 'YYYY-MM-DD')}
                         />
                         {!!errors.fecha && (
                             <Typography
@@ -140,14 +144,22 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : duplicate ? 'Duplicar' : 'Actualizar'}
+                        {submitting ? (
+                            <Loading />
+                        ) : formType === 'create' ? (
+                            'Registrar'
+                        ) : formType === 'duplicar' ? (
+                            'Duplicar'
+                        ) : (
+                            'Actualizar'
+                        )}
                     </Button>
                     <Button
                         color="primary"
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            setOpenModalForms(false);
                         }}
                     >
                         Cancelar

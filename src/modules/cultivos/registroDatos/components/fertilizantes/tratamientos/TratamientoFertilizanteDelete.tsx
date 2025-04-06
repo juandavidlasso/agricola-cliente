@@ -9,7 +9,7 @@ import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 interface Props {}
 
 const TratamientoFertilizanteDelete: React.FC<Props> = ({}) => {
-    const { tratamientoFertilizanteEdit, setOpenModal, setMessageType, setInfoMessage, setShowMessage } =
+    const { tratamientoFertilizanteEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarTratamientoFertilizante] = useMutation<boolean>(ELIMINAR_TRATAMIENTO_FERTILIZANTE);
@@ -24,7 +24,7 @@ const TratamientoFertilizanteDelete: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage('El tratamiento se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            setOpenModalForms(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -51,7 +51,7 @@ const TratamientoFertilizanteDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'} p={2}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModal(false)} fullWidth>
+                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)} fullWidth>
                     Cancelar
                 </Button>
             </Grid2>

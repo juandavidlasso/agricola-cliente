@@ -10,7 +10,6 @@ import { darkTheme, ligthTheme } from '@themes/index';
 import '../styles/globals.css';
 import { persistor, store } from '@store/store';
 import { ThemeProps } from '@interfaces/theme';
-import { InformationProvider } from 'src/context/cultivos/information/InformationContext';
 import { PluviometroProvider } from 'src/context/lluvias/PluviometroContext';
 import { CultivosProvider } from 'src/context/cultivos/CultivosContext';
 import Alert from '@components/Alert';
@@ -32,19 +31,17 @@ export default function App({ Component, pageProps }: AppProps) {
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <ApolloProvider client={client}>
-                    <InformationProvider>
-                        <CultivosProvider>
-                            <PluviometroProvider>
-                                <MaquinariaProvider>
-                                    <ThemeProvider theme={theme}>
-                                        <CssBaseline />
-                                        <Alert />
-                                        <Component {...pageProps} toogleTheme={toogleTheme} />
-                                    </ThemeProvider>
-                                </MaquinariaProvider>
-                            </PluviometroProvider>
-                        </CultivosProvider>
-                    </InformationProvider>
+                    <CultivosProvider>
+                        <PluviometroProvider>
+                            <MaquinariaProvider>
+                                <ThemeProvider theme={theme}>
+                                    <CssBaseline />
+                                    <Alert />
+                                    <Component {...pageProps} toogleTheme={toogleTheme} />
+                                </ThemeProvider>
+                            </MaquinariaProvider>
+                        </PluviometroProvider>
+                    </CultivosProvider>
                 </ApolloProvider>
             </PersistGate>
         </Provider>

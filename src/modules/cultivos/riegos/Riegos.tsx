@@ -13,7 +13,7 @@ interface Props {
 const Riegos: React.FC<Props> = ({ riego }) => {
     const { estado } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
-    const { setOpenModal, setFormType, setTitle, setHeight, setRiegoEdit } = useContext(CultivosContext);
+    const { setOpenModalForms, setFormType, setRiegoEdit } = useContext(CultivosContext);
     return (
         <Grid2 size={{ xs: 12, sm: 4 }} p={2}>
             <Box>
@@ -29,10 +29,8 @@ const Riegos: React.FC<Props> = ({ riego }) => {
                                         <Button
                                             onClick={() => {
                                                 setRiegoEdit(riego);
-                                                setHeight(45);
-                                                setTitle('Eliminar riego');
                                                 setFormType('delete');
-                                                setOpenModal(true);
+                                                setOpenModalForms(true);
                                             }}
                                             variant="outlined"
                                             color="error"
@@ -54,10 +52,8 @@ const Riegos: React.FC<Props> = ({ riego }) => {
                                         <Button
                                             onClick={() => {
                                                 setRiegoEdit(riego);
-                                                setHeight(50);
-                                                setTitle('Actualizar riego');
                                                 setFormType('update');
-                                                setOpenModal(true);
+                                                setOpenModalForms(true);
                                             }}
                                             variant="outlined"
                                             color="error"

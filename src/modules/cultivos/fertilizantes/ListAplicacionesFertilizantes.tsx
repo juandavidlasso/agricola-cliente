@@ -7,12 +7,12 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import { OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 import { GetAplicacionesFertilizantesCorteResponse } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
 const columns: GridColDef[] = [
     { field: 'producto', headerName: 'Producto', flex: 0.13, headerAlign: 'center' },
@@ -34,7 +34,8 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
             variables: { corteId: id_corte }
         }
     );
-    const { setOpenModal, setDeleteData, setHeight, setTitle, setTotalItems, setFormType } = useContext(InformationContext);
+    const { setOpenModalForms, setAplicacionFertilizanteEdit, setFormType, setDataType, setTotalItems } =
+        useContext(CultivosContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
     const [totals, setTotals] = useState<{ [key: number]: number }>({});
 
@@ -112,11 +113,10 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                             color="error"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                setDeleteData(aplicaciones);
-                                                                setHeight(40);
-                                                                setTitle('Eliminar aplicación fertilizante');
-                                                                setFormType('fertilizantes');
-                                                                setOpenModal(true);
+                                                                setAplicacionFertilizanteEdit(aplicaciones);
+                                                                setDataType('aplicacion');
+                                                                setFormType('delete');
+                                                                setOpenModalForms(true);
                                                             }}
                                                         >
                                                             Eliminar aplicación fertilizante

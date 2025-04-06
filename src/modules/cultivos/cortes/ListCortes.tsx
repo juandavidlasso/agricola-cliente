@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Chip, Grid2, Typography } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
@@ -8,18 +8,15 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import Alert from '@components/Alert';
 import Cortes from './Cortes';
-import useAppDispatch from '@hooks/useAppDispatch';
-import { saveCorte } from '@store/cultivos/actions';
 import CerrarCortePopover from './CerrarCortePopover';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {
-    handleRegisterCorte: () => void;
-}
+interface Props {}
 
-const ListCortes: React.FC<Props> = ({ handleRegisterCorte }) => {
-    const dispatch = useAppDispatch();
+const ListCortes: React.FC<Props> = () => {
     const { id_suerte, nombre } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
     const { user } = useAppSelector((state: IRootState) => state.userReducer);
+    const { setOpenModalForms, setFormType, setTypeModal } = useContext(CultivosContext);
     const [open, setOpen] = useState<boolean>(false);
     const [corteId, setCorteId] = useState<number>(0);
     const {
@@ -46,20 +43,9 @@ const ListCortes: React.FC<Props> = ({ handleRegisterCorte }) => {
                         label="Registrar Corte"
                         color="error"
                         onClick={() => {
-                            dispatch(
-                                saveCorte({
-                                    id_corte: 0,
-                                    numero: 0,
-                                    fecha_inicio: '',
-                                    fecha_siembra: '',
-                                    fecha_corte: '',
-                                    estado: false,
-                                    activo: true,
-                                    area: 0,
-                                    suerte_id: 0
-                                })
-                            );
-                            handleRegisterCorte();
+                            setFormType('create');
+                            setTypeModal('corte');
+                            setOpenModalForms(true);
                         }}
                         icon={<AddCircleOutlineOutlinedIcon />}
                     />

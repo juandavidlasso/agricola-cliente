@@ -1,18 +1,11 @@
 import React, { useContext } from 'react';
 import { Button, Grid2 } from '@mui/material';
-import { InformationContext } from 'src/context/cultivos/information/InformationContext';
+import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {
-    setTitleListWorks: React.Dispatch<React.SetStateAction<string>>;
-    handleOpenListWorks: () => void;
-    setTypeWork: React.Dispatch<
-        React.SetStateAction<'labores' | 'herbicidas' | 'fertilizantes' | 'plagas' | 'riegos' | 'cosecha'>
-    >;
-    setNameButton: React.Dispatch<React.SetStateAction<string>>;
-}
+interface Props {}
 
-const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, setTypeWork, setNameButton }) => {
-    const { setWidth } = useContext(InformationContext);
+const ListButtons: React.FC<Props> = () => {
+    const { setOpenModalList, setHeader, setButtonName, setTypeModal } = useContext(CultivosContext);
     return (
         <>
             <Grid2 size={{ xs: 12, sm: 2 }} display="flex" justifyContent="center">
@@ -20,11 +13,10 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                        setTitleListWorks('Listado de Labores');
-                        setTypeWork('labores');
-                        setNameButton('Aplicar labor');
-                        setWidth('98%');
-                        handleOpenListWorks();
+                        setHeader('Listado de Labores');
+                        setButtonName('Aplicar labor');
+                        setTypeModal('labores');
+                        setOpenModalList(true);
                     }}
                     sx={{ width: { xs: '100%' } }}
                 >
@@ -36,11 +28,10 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                        setTitleListWorks('Listado de Herbicidas');
-                        setTypeWork('herbicidas');
-                        setNameButton('Aplicar herbicida');
-                        setWidth('98%');
-                        handleOpenListWorks();
+                        setHeader('Listado de Herbicidas');
+                        setButtonName('Aplicar herbicida');
+                        setTypeModal('herbicidas');
+                        setOpenModalList(true);
                     }}
                     sx={{ width: { xs: '100%' } }}
                 >
@@ -52,11 +43,10 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                        setTitleListWorks('Listado de  Fertilizantes');
-                        setTypeWork('fertilizantes');
-                        setNameButton('Aplicar fertilizante');
-                        setWidth('98%');
-                        handleOpenListWorks();
+                        setHeader('Listado de Fertilizantes');
+                        setButtonName('Aplicar fertilizante');
+                        setTypeModal('fertilizantes');
+                        setOpenModalList(true);
                     }}
                     sx={{ width: { xs: '100%' } }}
                 >
@@ -68,11 +58,10 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                        setTitleListWorks('Plagas y enfermedades');
-                        setTypeWork('plagas');
-                        setNameButton('Aplicar producto');
-                        setWidth('80%');
-                        handleOpenListWorks();
+                        setHeader('Plagas y enfermedades');
+                        setButtonName('Aplicar producto');
+                        setTypeModal('plagas');
+                        setOpenModalList(true);
                     }}
                     sx={{ width: { xs: '100%' } }}
                 >
@@ -84,11 +73,10 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                        setTitleListWorks('Riegos');
-                        setTypeWork('riegos');
-                        setNameButton('Registrar riego');
-                        setWidth('50%');
-                        handleOpenListWorks();
+                        setHeader('Riegos');
+                        setButtonName('Registrar riego');
+                        setTypeModal('riegos');
+                        setOpenModalList(true);
                     }}
                     sx={{ width: { xs: '100%' } }}
                 >
@@ -100,11 +88,10 @@ const ListButtons: React.FC<Props> = ({ setTitleListWorks, handleOpenListWorks, 
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                        setTitleListWorks('Cosechas');
-                        setTypeWork('cosecha');
-                        setNameButton('Registrar cosecha');
-                        setWidth('50%');
-                        handleOpenListWorks();
+                        setHeader('Cosechas');
+                        setButtonName('Registrar cosecha');
+                        setTypeModal('cosecha');
+                        setOpenModalList(true);
                     }}
                     sx={{ width: { xs: '100%' }, mb: { xs: 2, sm: 0 } }}
                 >

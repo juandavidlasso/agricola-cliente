@@ -10,11 +10,22 @@ interface Props {
     height?: number;
     width?: string;
     closeBack?: boolean;
+    id: string;
 }
 
-const DialogModal: React.FC<Props> = ({ isOpen, handleClose, title, children, height = 80, width = '50%', closeBack = true }) => {
+const DialogModal: React.FC<Props> = ({
+    isOpen,
+    handleClose,
+    title,
+    children,
+    height = 80,
+    width = '50%',
+    closeBack = true,
+    id
+}) => {
     return (
         <Dialog
+            id={id}
             onClose={() => {
                 if (closeBack) {
                     handleClose();
