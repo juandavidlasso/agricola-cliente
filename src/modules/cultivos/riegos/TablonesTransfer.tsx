@@ -27,6 +27,7 @@ const TablonesTransfer: React.FC<Props> = ({ riego }) => {
     const [eliminarAplicacionRiego] = useMutation<GetAplicacionRiegoDelete>(ELIMINAR_APLICACION_RIEGO);
     const [checkedLeft, setCheckedLeft] = useState<TablonState[]>([]);
     const [checkedRight, setCheckedRight] = useState<AplicacionRiegos[]>([]);
+    const validAdmin = estado && rol === 1;
 
     if (error) return <Alert message={error.message} />;
 
@@ -127,7 +128,7 @@ const TablonesTransfer: React.FC<Props> = ({ riego }) => {
                                         key={value.id_tablon}
                                         role="listitem"
                                         onClick={() => {
-                                            if (estado && rol === 1) {
+                                            if (validAdmin) {
                                                 const currentIndex = checkedLeft.indexOf(value);
                                                 const newChecked = [...checkedLeft];
 
@@ -142,7 +143,7 @@ const TablonesTransfer: React.FC<Props> = ({ riego }) => {
                                         }}
                                         className="!p-1"
                                     >
-                                        {estado && rol === 1 && (
+                                        {validAdmin && (
                                             <ListItemIcon>
                                                 <Checkbox
                                                     sx={{
@@ -199,31 +200,35 @@ const TablonesTransfer: React.FC<Props> = ({ riego }) => {
                                     key={value.id_apriego}
                                     role="listitem"
                                     onClick={() => {
-                                        const currentIndex = checkedRight.indexOf(value);
-                                        const newChecked = [...checkedRight];
+                                        if (validAdmin) {
+                                            const currentIndex = checkedRight.indexOf(value);
+                                            const newChecked = [...checkedRight];
 
-                                        if (currentIndex === -1) {
-                                            newChecked.push(value);
-                                        } else {
-                                            newChecked.splice(currentIndex, 1);
+                                            if (currentIndex === -1) {
+                                                newChecked.push(value);
+                                            } else {
+                                                newChecked.splice(currentIndex, 1);
+                                            }
+
+                                            setCheckedRight(newChecked);
                                         }
-
-                                        setCheckedRight(newChecked);
                                     }}
                                 >
-                                    <ListItemIcon>
-                                        <Checkbox
-                                            sx={{
-                                                color: '#000000'
-                                            }}
-                                            checked={checkedRight.includes(value)}
-                                            tabIndex={-1}
-                                            disableRipple
-                                            inputProps={{
-                                                'aria-labelledby': labelId
-                                            }}
-                                        />
-                                    </ListItemIcon>
+                                    {validAdmin && (
+                                        <ListItemIcon>
+                                            <Checkbox
+                                                sx={{
+                                                    color: '#000000'
+                                                }}
+                                                checked={checkedRight.includes(value)}
+                                                tabIndex={-1}
+                                                disableRipple
+                                                inputProps={{
+                                                    'aria-labelledby': labelId
+                                                }}
+                                            />
+                                        </ListItemIcon>
+                                    )}
                                     <ListItemText id={labelId} primary={`Tablón ${value.num_tablon}`} />
                                 </ListItemButton>
                             );

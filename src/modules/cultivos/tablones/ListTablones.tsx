@@ -37,18 +37,20 @@ const ListTablones: React.FC<Props> = ({}) => {
 
     return (
         <Grid2 container>
-            <Grid2 size={12}>
-                <Button
-                    variant="contained"
-                    className="!mb-5"
-                    onClick={() => {
-                        setFormType('create');
-                        setOpenModalForms(true);
-                    }}
-                >
-                    Registrar tablón
-                </Button>
-            </Grid2>
+            {rol === 1 && (
+                <Grid2 size={12}>
+                    <Button
+                        variant="contained"
+                        className="!mb-5"
+                        onClick={() => {
+                            setFormType('create');
+                            setOpenModalForms(true);
+                        }}
+                    >
+                        Registrar tablón
+                    </Button>
+                </Grid2>
+            )}
             <Grid2 size={12}>
                 {data?.obtenerTablonesPorCorte.length === 0 ? (
                     <Typography variant="h4" component="h4" color="text.primary" textAlign="center">

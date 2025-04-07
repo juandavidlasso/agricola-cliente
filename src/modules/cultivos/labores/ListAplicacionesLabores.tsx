@@ -13,7 +13,8 @@ import { CultivosContext, DataType } from 'src/context/cultivos/CultivosContext'
 const getColumns = (
     setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
     setFormType: React.Dispatch<React.SetStateAction<DataType>>,
-    setEditLabor: React.Dispatch<React.SetStateAction<Labores | AplicacionLabores | undefined>>
+    setEditLabor: React.Dispatch<React.SetStateAction<Labores | AplicacionLabores | undefined>>,
+    rol: number
 ) => {
     const columns: GridColDef[] = [
         { field: 'fecha', headerName: 'Fecha', flex: 1, headerAlign: 'center', align: 'center' },
@@ -65,6 +66,9 @@ const getColumns = (
             )
         }
     ];
+    if (rol === 2) {
+        columns.pop();
+    }
     return columns;
 };
 
@@ -72,6 +76,7 @@ interface Props {}
 
 const ListAplicacionesLabores: React.FC<Props> = ({}) => {
     const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
+    const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, error, loading } = useQuery<GetAplicacionLaboresResponse>(OBTENER_APLICACIONES_LABORES, {
         variables: { corteId: id_corte }
     });
@@ -109,13 +114,13 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
     return (
         <Grid2 container>
             <Grid2 size={12}>
-                <div style={{ height: 'auto', width: '100%' }}>
+                <div style={{ height: 'auto', width: '98%' }}>
                     {rows?.length === 0 ? (
                         <Typography>No hay labores registradas</Typography>
                     ) : (
                         <DataGrid
                             rows={rows}
-                            columns={getColumns(setOpenModalForms, setFormType, setEditLabor)}
+                            columns={getColumns(setOpenModalForms, setFormType, setEditLabor, rol)}
                             disableVirtualization
                             getRowHeight={(params: GridRowHeightParams) => 'auto'}
                             initialState={{

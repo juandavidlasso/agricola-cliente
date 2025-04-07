@@ -40,6 +40,7 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
         setHeader
     } = useContext(CultivosContext);
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
+    const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, loading, error } = useQuery<GetCorteResponse>(OBTENER_CORTE, { variables: { idCorte: corte.id_corte } });
     const { handleSubmitLabor } = useLabores();
     const { handleSubmitAplicacionesHerbicidas } = useAplicacionesHerbicidas();
@@ -73,19 +74,23 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
                         </Grid2>
 
                         <Grid2 size={{ xs: 12, sm: 6 }} display="flex" justifyContent="flex-end">
-                            <Button
-                                className="!py-[2px] !px-2 !text-[15px]"
-                                variant="text"
-                                color="error"
-                                onClick={() => {
-                                    setFormType('update');
-                                    setTypeModal('corte');
-                                    setOpenModalForms(true);
-                                }}
-                            >
-                                Editar Corte
-                            </Button>
-                            |
+                            {rol === 1 && (
+                                <>
+                                    <Button
+                                        className="!py-[2px] !px-2 !text-[15px]"
+                                        variant="text"
+                                        color="error"
+                                        onClick={() => {
+                                            setFormType('update');
+                                            setTypeModal('corte');
+                                            setOpenModalForms(true);
+                                        }}
+                                    >
+                                        Editar Corte
+                                    </Button>
+                                    |
+                                </>
+                            )}
                             <Button
                                 className="!py-[2px] !px-2 !text-[15px]"
                                 variant="text"

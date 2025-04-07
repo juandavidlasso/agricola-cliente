@@ -509,6 +509,7 @@ export const REGISTRAR_COSECHA = gql`
             rendimiento
             numeroVagones
             numeroMulas
+            nota
             corte_id
         }
     }
@@ -522,6 +523,7 @@ export const ACTUALIZAR_COSECHA = gql`
             rendimiento
             numeroVagones
             numeroMulas
+            nota
             corte_id
         }
     }

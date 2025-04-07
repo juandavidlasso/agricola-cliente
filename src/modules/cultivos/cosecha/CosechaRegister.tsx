@@ -17,7 +17,8 @@ const schema = yup.object({
     peso: yup.number().required('El peso es requerido.').typeError('El peso es requerido.'),
     rendimiento: yup.number().optional(),
     numeroVagones: yup.number().optional(),
-    numeroMulas: yup.number().optional()
+    numeroMulas: yup.number().optional(),
+    nota: yup.string().optional()
 });
 
 interface Props {}
@@ -37,7 +38,8 @@ const CosechaRegister: React.FC<Props> = () => {
             peso: formType === 'create' ? undefined : cosechaEdit?.peso,
             rendimiento: formType === 'create' ? undefined : cosechaEdit?.rendimiento,
             numeroVagones: formType === 'create' ? undefined : cosechaEdit?.numeroVagones,
-            numeroMulas: formType === 'create' ? undefined : cosechaEdit?.numeroMulas
+            numeroMulas: formType === 'create' ? undefined : cosechaEdit?.numeroMulas,
+            nota: formType === 'create' ? '' : cosechaEdit?.nota
         }
     });
     const [submitting, setSubmitting] = useState<boolean>(false);
@@ -56,6 +58,7 @@ const CosechaRegister: React.FC<Props> = () => {
                             rendimiento: formData.rendimiento,
                             numeroMulas: formData.numeroMulas,
                             numeroVagones: formData.numeroVagones,
+                            nota: formData.nota,
                             corte_id: corte.id_corte
                         }
                     },
@@ -70,6 +73,7 @@ const CosechaRegister: React.FC<Props> = () => {
                             rendimiento: formData.rendimiento,
                             numeroMulas: formData.numeroMulas,
                             numeroVagones: formData.numeroVagones,
+                            nota: formData.nota,
                             corte_id: corte.id_corte
                         }
                     },
@@ -141,6 +145,9 @@ const CosechaRegister: React.FC<Props> = () => {
                         {...register('numeroMulas')}
                         onKeyDown={handleKeyDownNumber}
                     />
+                </Grid2>
+                <Grid2 size={12}>
+                    <TextField fullWidth size="small" type="text" label="Nota" {...register('nota')} />
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3} mt={2}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>

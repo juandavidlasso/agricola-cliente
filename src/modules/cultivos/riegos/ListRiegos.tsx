@@ -14,6 +14,7 @@ interface Props {}
 
 const ListRiegos: React.FC<Props> = ({}) => {
     const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
+    const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, error, loading } = useQuery<GetRiegosResponse>(OBTENER_RIEGOS_CORTE, { variables: { corteId: id_corte } });
     const { setFormType, setOpenModalForms } = useContext(CultivosContext);
 
@@ -23,18 +24,20 @@ const ListRiegos: React.FC<Props> = ({}) => {
 
     return (
         <Grid2 container>
-            <Grid2 size={12}>
-                <Button
-                    variant="contained"
-                    className="!mb-5"
-                    onClick={() => {
-                        setFormType('create');
-                        setOpenModalForms(true);
-                    }}
-                >
-                    Registrar riego
-                </Button>
-            </Grid2>
+            {rol === 1 && (
+                <Grid2 size={12}>
+                    <Button
+                        variant="contained"
+                        className="!mb-5"
+                        onClick={() => {
+                            setFormType('create');
+                            setOpenModalForms(true);
+                        }}
+                    >
+                        Registrar riego
+                    </Button>
+                </Grid2>
+            )}
             {data?.obtenerRiegosCorte.length === 0 ? (
                 <Typography>No hay riegos registrados</Typography>
             ) : (

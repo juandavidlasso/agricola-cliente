@@ -414,6 +414,7 @@ export const OBTENER_COSECHA_CORTE = gql`
             rendimiento
             numeroMulas
             numeroVagones
+            nota
             corte_id
             cortePadre {
                 id_corte

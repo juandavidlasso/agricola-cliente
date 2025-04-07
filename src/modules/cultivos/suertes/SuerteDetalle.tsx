@@ -22,6 +22,7 @@ interface Props {
 
 const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
     const { id_suerte } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
+    const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { openModal, setOpenModal, setFormType } = useContext(CultivosContext);
 
     const { data, loading, error } = useQuery<GetSuerteResponse>(OBTENER_SUERTE, {
@@ -43,43 +44,45 @@ const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
                                 <BreadCrumbs />
                             </Grid2>
 
-                            <Grid2 size={{ xs: 12, sm: 6 }} display="flex" justifyContent="flex-end">
-                                <Button
-                                    className="!py-[2px] !px-2 !text-[15px]"
-                                    variant="text"
-                                    color="error"
-                                    onClick={() => {
-                                        setFormType('create');
-                                        setOpenModal(true);
-                                    }}
-                                >
-                                    Renovar Suerte
-                                </Button>
-                                |
-                                <Button
-                                    className="!py-[2px] !px-2 !text-[15px]"
-                                    variant="text"
-                                    color="error"
-                                    onClick={() => {
-                                        setFormType('update');
-                                        setOpenModal(true);
-                                    }}
-                                >
-                                    Editar Suerte
-                                </Button>
-                                |
-                                <Button
-                                    className="!py-[2px] !px-2 !text-[15px]"
-                                    variant="text"
-                                    color="error"
-                                    onClick={() => {
-                                        setFormType('delete');
-                                        setOpenModal(true);
-                                    }}
-                                >
-                                    Eliminar Suerte
-                                </Button>
-                            </Grid2>
+                            {rol === 1 && (
+                                <Grid2 size={{ xs: 12, sm: 6 }} display="flex" justifyContent="flex-end">
+                                    <Button
+                                        className="!py-[2px] !px-2 !text-[15px]"
+                                        variant="text"
+                                        color="error"
+                                        onClick={() => {
+                                            setFormType('create');
+                                            setOpenModal(true);
+                                        }}
+                                    >
+                                        Renovar Suerte
+                                    </Button>
+                                    |
+                                    <Button
+                                        className="!py-[2px] !px-2 !text-[15px]"
+                                        variant="text"
+                                        color="error"
+                                        onClick={() => {
+                                            setFormType('update');
+                                            setOpenModal(true);
+                                        }}
+                                    >
+                                        Editar Suerte
+                                    </Button>
+                                    |
+                                    <Button
+                                        className="!py-[2px] !px-2 !text-[15px]"
+                                        variant="text"
+                                        color="error"
+                                        onClick={() => {
+                                            setFormType('delete');
+                                            setOpenModal(true);
+                                        }}
+                                    >
+                                        Eliminar Suerte
+                                    </Button>
+                                </Grid2>
+                            )}
 
                             {data === undefined ? (
                                 <Grid2 size={12} display="flex" justifyContent="center">

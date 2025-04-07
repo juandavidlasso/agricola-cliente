@@ -149,7 +149,7 @@ const ModalForms: React.FC<Props> = ({}) => {
         // Cosecha
         if (typeModal === 'cosecha') {
             title = formType === 'update' ? 'Actualizar cosecha' : 'Registrar cosecha';
-            height = 75;
+            height = 85;
             component = <CosechaRegister />;
         }
         // Corte

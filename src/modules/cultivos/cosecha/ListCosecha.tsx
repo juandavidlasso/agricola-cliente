@@ -37,18 +37,20 @@ const ListCosecha: React.FC<Props> = () => {
         <>
             {validateCosecha && <CorteUpdatePopover />}
             <Grid2 container>
-                <Grid2 size={12}>
-                    <Button
-                        variant="contained"
-                        className="!mb-5"
-                        onClick={() => {
-                            setFormType('create');
-                            setOpenModalForms(true);
-                        }}
-                    >
-                        Registrar cosecha
-                    </Button>
-                </Grid2>
+                {rol === 1 && error && (
+                    <Grid2 size={12}>
+                        <Button
+                            variant="contained"
+                            className="!mb-5"
+                            onClick={() => {
+                                setFormType('create');
+                                setOpenModalForms(true);
+                            }}
+                        >
+                            Registrar cosecha
+                        </Button>
+                    </Grid2>
+                )}
                 <Grid2 size={12}>
                     {error && error.message === 'Error: No hay cosecha registrada' ? (
                         <Typography>No hay cosecha registrada</Typography>
@@ -75,6 +77,9 @@ const ListCosecha: React.FC<Props> = () => {
                                 </ListItemButton>
                                 <ListItemButton>
                                     <ListItemText primary="Número Mulas" secondary={data?.obtenerCosechaCorte.numeroMulas} />
+                                </ListItemButton>
+                                <ListItemButton>
+                                    <ListItemText primary="Nota" secondary={data?.obtenerCosechaCorte.nota} />
                                 </ListItemButton>
                                 {estado && rol === 1 && (
                                     <ListItemButton>
