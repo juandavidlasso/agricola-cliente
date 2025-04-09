@@ -1,7 +1,18 @@
 import React, { useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
-import { Button, Grid2, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import {
+    Button,
+    Grid2,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from '@mui/material';
 import { OBTENER_COSECHA_CORTE } from '@graphql/queries';
 import ModalLoading from '@components/Modal';
 import { GetCosechaResponse } from '@interfaces/cultivos/cosechas';
@@ -23,12 +34,12 @@ const ListCosecha: React.FC<Props> = () => {
     // Calcular TCH
     const peso = !error ? data?.obtenerCosechaCorte.peso : 0;
     const area = !error ? data?.obtenerCosechaCorte.cortePadre?.listTablones?.reduce((cur, val) => cur + val.area, 0) : 0;
-    const tch = !error ? Number((peso! / area!).toFixed(1)) : 0;
+    const TCH = !error ? Number((peso! / area!).toFixed(1)) : 0;
     // Calcular TCHN
     const finicio = !error ? moment(fecha_inicio) : moment();
     const fcorte = !error ? moment(fecha_corte) : moment();
     const edadCorte = !error ? fcorte.diff(finicio, 'months', true).toFixed(1) : 0;
-    const tchm = !error ? Number((Number((peso! / area!).toFixed(1)) / Number(edadCorte)).toFixed(1)) : 0;
+    const TCHM = !error ? Number((Number((peso! / area!).toFixed(1)) / Number(edadCorte)).toFixed(1)) : 0;
 
     if (error && error.message !== 'Error: No hay cosecha registrada') return <Alert message={error.message} />;
     if (loading) return <ModalLoading isOpen={loading} />;
@@ -55,37 +66,36 @@ const ListCosecha: React.FC<Props> = () => {
                     {error && error.message === 'Error: No hay cosecha registrada' ? (
                         <Typography>No hay cosecha registrada</Typography>
                     ) : (
-                        <List sx={{ width: '100%' }}>
-                            <ListItem
-                                disablePadding
-                                className="!bg-slate-800 !rounded-lg !text-slate-100 !mt-3 !flex max-lg:!block"
-                            >
-                                <ListItemButton>
-                                    <ListItemText primary="Peso Neto - Tn" secondary={data?.obtenerCosechaCorte.peso} />
-                                </ListItemButton>
-                                <ListItemButton>
-                                    <ListItemText primary="TCH" secondary={tch} />
-                                </ListItemButton>
-                                <ListItemButton>
-                                    <ListItemText primary="TCHM" secondary={tchm} />
-                                </ListItemButton>
-                                <ListItemButton>
-                                    <ListItemText primary="% - Rendimiento" secondary={data?.obtenerCosechaCorte.rendimiento} />
-                                </ListItemButton>
-                                <ListItemButton>
-                                    <ListItemText primary="Número Vagones" secondary={data?.obtenerCosechaCorte.numeroVagones} />
-                                </ListItemButton>
-                                <ListItemButton>
-                                    <ListItemText primary="Número Mulas" secondary={data?.obtenerCosechaCorte.numeroMulas} />
-                                </ListItemButton>
-                                <ListItemButton>
-                                    <ListItemText primary="Nota" secondary={data?.obtenerCosechaCorte.nota} />
-                                </ListItemButton>
-                                {estado && rol === 1 && (
-                                    <ListItemButton>
-                                        <ListItemText
-                                            primary="Acciones"
-                                            secondary={
+                        <TableContainer component={Paper}>
+                            <Table aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center">Peso Neto - Tn</TableCell>
+                                        <TableCell align="center">TCH</TableCell>
+                                        <TableCell align="center">TCHM</TableCell>
+                                        <TableCell align="center">% - Rendimiento</TableCell>
+                                        <TableCell align="center">Número Vagones</TableCell>
+                                        <TableCell align="center">Número Mulas</TableCell>
+                                        <TableCell align="center">Nota</TableCell>
+                                        {estado && rol === 1 && <TableCell align="center">Acciones</TableCell>}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell align="center">{data?.obtenerCosechaCorte?.peso}</TableCell>
+                                        <TableCell align="center">{TCH}</TableCell>
+                                        <TableCell align="center">{TCHM}</TableCell>
+                                        <TableCell align="center">{data?.obtenerCosechaCorte?.rendimiento}</TableCell>
+                                        <TableCell align="center">{data?.obtenerCosechaCorte?.numeroVagones}</TableCell>
+                                        <TableCell align="center">{data?.obtenerCosechaCorte?.numeroMulas}</TableCell>
+                                        <TableCell
+                                            align="left"
+                                            dangerouslySetInnerHTML={{
+                                                __html: data?.obtenerCosechaCorte?.nota?.replaceAll(/\n/g, '<br />') ?? ''
+                                            }}
+                                        />
+                                        {estado && rol === 1 && (
+                                            <TableCell align="center">
                                                 <Button
                                                     onClick={() => {
                                                         setFormType('update');
@@ -109,12 +119,12 @@ const ListCosecha: React.FC<Props> = () => {
                                                 >
                                                     Editar
                                                 </Button>
-                                            }
-                                        />
-                                    </ListItemButton>
-                                )}
-                            </ListItem>
-                        </List>
+                                            </TableCell>
+                                        )}
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     )}
                 </Grid2>
             </Grid2>

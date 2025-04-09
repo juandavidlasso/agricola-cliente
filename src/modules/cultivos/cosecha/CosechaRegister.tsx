@@ -147,7 +147,7 @@ const CosechaRegister: React.FC<Props> = () => {
                     />
                 </Grid2>
                 <Grid2 size={12}>
-                    <TextField fullWidth size="small" type="text" label="Nota" {...register('nota')} />
+                    <TextField fullWidth size="small" type="text" label="Nota" {...register('nota')} multiline />
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3} mt={2}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
