@@ -31,21 +31,9 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
     const { data, error, loading } = useQuery<GetAplicacionesHerbicidasResponse>(OBTENER_APLICACIONES_HERBICIDAS_CORTE, {
         variables: { corteId: id_corte }
     });
-    const { setOpenModalForms, setAplicacionHerbicidaEdit, setDataType, setFormType, setTotalItems } =
-        useContext(CultivosContext);
+    const { setOpenModalForms, setAplicacionHerbicidaEdit, setDataType, setFormType } = useContext(CultivosContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
     const [totals, setTotals] = useState<{ [key: number]: number }>({});
-
-    useEffect(() => {
-        if (data !== undefined && data?.obtenerAplicacionesHerbicidasCorte?.length !== 0) {
-            setTotalItems(data!.obtenerAplicacionesHerbicidasCorte.map((aplicacion) => aplicacion.aphe_id));
-        }
-
-        return () => {
-            setTotalItems([]);
-            setTotals({});
-        };
-    }, [data]);
 
     useEffect(() => {
         const trueKey = Object.keys(openStates).filter((key) => openStates[parseInt(key)] === true);

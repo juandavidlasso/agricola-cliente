@@ -35,8 +35,6 @@ interface CultivosState {
     setHeader: React.Dispatch<React.SetStateAction<string>>;
     buttonName: string;
     setButtonName: React.Dispatch<React.SetStateAction<string>>;
-    totalItems: number[];
-    setTotalItems: React.Dispatch<React.SetStateAction<number[]>>;
     // Fertilizantes
     dataType: DataTypeApplication;
     setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>;
@@ -98,8 +96,6 @@ export const CultivosContext = createContext<CultivosState>({
     setHeader: () => '',
     buttonName: '',
     setButtonName: () => '',
-    totalItems: [],
-    setTotalItems: () => [],
     // Fertilizantes
     dataType: '',
     setDataType: () => '',
@@ -162,7 +158,6 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
     const [typeModal, setTypeModal] = useState<DataTypeModal>('');
     const [header, setHeader] = useState<string>('');
     const [buttonName, setButtonName] = useState<string>('');
-    const [totalItems, setTotalItems] = useState<number[]>([]);
     // Fertilizantes
     const [dataType, setDataType] = useState<DataTypeApplication>('');
     const [aplicacionFertilizanteEdit, setAplicacionFertilizanteEdit] = useState<
@@ -203,7 +198,6 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 typeModal,
                 header,
                 buttonName,
-                totalItems,
                 aplicacionFertilizanteEdit,
                 tratamientoFertilizanteEdit,
                 selectedAplicacionFertilizantes,
@@ -229,7 +223,6 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 setTypeModal,
                 setHeader,
                 setButtonName,
-                setTotalItems,
                 setAplicacionFertilizanteEdit,
                 setTratamientoFertilizanteEdit,
                 setSelectedAplicacionFertilizantes,

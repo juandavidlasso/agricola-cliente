@@ -174,6 +174,7 @@ export const OBTENER_LABORES = gql`
             aplico
             costo
             nota
+            suertes
         }
     }
 `;
@@ -186,6 +187,7 @@ export const OBTENER_APLICACIONES_HERBICIDAS = gql`
             id_aphe
             fecha
             tipo
+            suertes
             listTratamientoHerbicida {
                 id_trahe
                 producto
@@ -258,6 +260,7 @@ export const OBTENER_APLICACIONES_FERTILIZANTES = gql`
             id_apfe
             fecha
             tipo
+            suertes
             listTratamientoFertilizante {
                 id_trafe
                 producto

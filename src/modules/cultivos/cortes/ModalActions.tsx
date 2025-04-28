@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import DialogModal from '@components/Dialog';
 import ListLabores from '../registroDatos/components/labores/ListLabores';
 import ListAplicacionHerbicidas from '../registroDatos/components/herbicidas/ListAplicacionHerbicidas';
@@ -6,11 +6,28 @@ import ListAplicacionFertilizantes from '../registroDatos/components/fertilizant
 import ListTratamientoPlagas from '../plagas/tratamiento/ListTratamientoPlagas';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import RiegoRegister from '../riegos/RiegoRegister';
+import useAppSelector from '@hooks/useAppSelector';
+import { IRootState } from '@interfaces/store';
 
 interface Props {}
 
 const ModalActions: React.FC<Props> = () => {
-    const { openModal, typeModal, setOpenModal } = useContext(CultivosContext);
+    const {
+        openModal,
+        typeModal,
+        setOpenModal,
+        setSelectedLabores,
+        setSelectedAplicacionFertilizantes,
+        setSelectedAplicacionHerbicidas
+    } = useContext(CultivosContext);
+    const { suerte, corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
+    useEffect(() => {
+        return () => {
+            setSelectedLabores([]);
+            setSelectedAplicacionFertilizantes([]);
+            setSelectedAplicacionHerbicidas([]);
+        };
+    }, []);
     const getComponent = () => {
         if (typeModal === 'labores') return <ListLabores />;
         if (typeModal === 'herbicidas') return <ListAplicacionHerbicidas />;
@@ -20,11 +37,11 @@ const ModalActions: React.FC<Props> = () => {
         return <></>;
     };
     const getTitle = () => {
-        if (typeModal === 'labores') return 'Aplicar labor';
-        if (typeModal === 'herbicidas') return 'Aplicar herbicida';
-        if (typeModal === 'fertilizantes') return 'Aplicar fertilizante';
-        if (typeModal === 'plagas') return 'Aplicar producto';
-        if (typeModal === 'riegos') return 'Registrar riego';
+        if (typeModal === 'labores') return `Aplicar labor - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
+        if (typeModal === 'herbicidas') return `Aplicar herbicida - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
+        if (typeModal === 'fertilizantes') return `Aplicar fertilizante - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
+        if (typeModal === 'plagas') return `Aplicar producto - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
+        if (typeModal === 'riegos') return `Registrar riego - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
         return '';
     };
     const getWidth = () => (typeModal === 'riegos' ? '60%' : '95%');
@@ -37,6 +54,7 @@ const ModalActions: React.FC<Props> = () => {
             height={getHeight()}
             width={getWidth()}
             id="modal-registros"
+            styles={typeModal === 'labores' || typeModal === 'herbicidas' || typeModal === 'fertilizantes' ? '!ml-[30%]' : ''}
         >
             {getComponent()}
         </DialogModal>

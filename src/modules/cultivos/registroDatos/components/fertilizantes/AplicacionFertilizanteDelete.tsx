@@ -10,12 +10,15 @@ import {
     GetDeleteAplicacionesFertilizantesResponse
 } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 import { AplicacionFertilizante } from '@interfaces/cultivos/fertilizantes/aplicacion';
+import useAppSelector from '@hooks/useAppSelector';
+import { IRootState } from '@interfaces/store';
 
 interface Props {}
 
 const AplicacionFertilizanteDelete: React.FC<Props> = ({}) => {
     const { aplicacionFertilizanteEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
+    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarAplicacionFertilizante] = useMutation<boolean>(ELIMINAR_APLICACION_FERTILIZANTE);
     const [eliminarAplicacionesFertilizantes] = useMutation<GetDeleteAplicacionesFertilizantesResponse>(
@@ -28,7 +31,13 @@ const AplicacionFertilizanteDelete: React.FC<Props> = ({}) => {
                     variables: {
                         idApfe: (aplicacionFertilizanteEdit as AplicacionFertilizante)?.id_apfe
                     },
-                    refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
+                    refetchQueries: [
+                        { query: OBTENER_APLICACIONES_FERTILIZANTES },
+                        {
+                            query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE,
+                            variables: { corteId: id_corte }
+                        }
+                    ]
                 });
             } else {
                 await eliminarAplicacionesFertilizantes({
@@ -67,6 +76,11 @@ const AplicacionFertilizanteDelete: React.FC<Props> = ({}) => {
         <Grid2 container>
             <Grid2 size={12} m={1} mb={3}>
                 <Typography>Desea eliminar la aplicación?</Typography>
+                {aplicacionFertilizanteEdit?.hasOwnProperty('id_apfe') && (
+                    <Typography sx={{ fontWeight: 700 }}>
+                        Esta acción eliminará la aplicación en todas las suertes asociadas
+                    </Typography>
+                )}
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'} p={2}>
                 <Button variant="contained" color="error" onClick={submitDelete} fullWidth>

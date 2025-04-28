@@ -4,6 +4,7 @@ export interface AplicacionFertilizante {
     id_apfe: number;
     fecha: string;
     tipo: string;
+    suertes?: string;
     listTratamientoFertilizante?: TratamientoFertilizante[];
 }
 

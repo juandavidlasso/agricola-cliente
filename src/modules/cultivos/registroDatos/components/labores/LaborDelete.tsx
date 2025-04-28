@@ -6,11 +6,14 @@ import { ELIMINAR_APLICACION_LABOR, ELIMINAR_LABOR } from '@graphql/mutations';
 import { OBTENER_APLICACIONES_LABORES, OBTENER_LABORES } from '@graphql/queries';
 import { AplicacionLabores, GetDeleteAplicacionLaboresResponse, Labores } from '@interfaces/cultivos/labores';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import useAppSelector from '@hooks/useAppSelector';
+import { IRootState } from '@interfaces/store';
 
 interface Props {}
 
 const LaborDelete: React.FC<Props> = ({}) => {
     const { editLabor, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarLabor] = useMutation<boolean>(ELIMINAR_LABOR);
     const [eliminarAplicacionLabores] = useMutation<GetDeleteAplicacionLaboresResponse>(ELIMINAR_APLICACION_LABOR);
@@ -21,7 +24,13 @@ const LaborDelete: React.FC<Props> = ({}) => {
                     variables: {
                         idLabor: (editLabor as Labores)?.id_labor
                     },
-                    refetchQueries: [{ query: OBTENER_LABORES }]
+                    refetchQueries: [
+                        { query: OBTENER_LABORES },
+                        {
+                            query: OBTENER_APLICACIONES_LABORES,
+                            variables: { corteId: id_corte }
+                        }
+                    ]
                 });
             } else {
                 await eliminarAplicacionLabores({
@@ -59,6 +68,11 @@ const LaborDelete: React.FC<Props> = ({}) => {
         <Grid2 container>
             <Grid2 size={12} m={1} mb={3}>
                 <Typography>Desea eliminar la labor?</Typography>
+                {editLabor?.hasOwnProperty('id_labor') && (
+                    <Typography sx={{ fontWeight: 700 }}>
+                        Esta acción eliminará la labor y todas sus aplicaciones en las suertes
+                    </Typography>
+                )}
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
                 <Button variant="contained" color="error" onClick={submitDelete}>

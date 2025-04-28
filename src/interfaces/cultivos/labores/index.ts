@@ -8,6 +8,7 @@ export interface Labores {
     aplico?: string;
     costo?: number;
     nota?: string;
+    suertes?: string;
 }
 
 export interface AplicacionLabores {

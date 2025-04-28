@@ -34,21 +34,9 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
             variables: { corteId: id_corte }
         }
     );
-    const { setOpenModalForms, setAplicacionFertilizanteEdit, setFormType, setDataType, setTotalItems } =
-        useContext(CultivosContext);
+    const { setOpenModalForms, setAplicacionFertilizanteEdit, setFormType, setDataType } = useContext(CultivosContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
     const [totals, setTotals] = useState<{ [key: number]: number }>({});
-
-    useEffect(() => {
-        if (data !== undefined && data?.obtenerAplicacionesFertilizantesCorte?.length !== 0) {
-            setTotalItems(data!.obtenerAplicacionesFertilizantesCorte.map((aplicacion) => aplicacion.apfe_id));
-        }
-
-        return () => {
-            setTotalItems([]);
-            setTotals({});
-        };
-    }, [data]);
 
     useEffect(() => {
         const trueKey = Object.keys(openStates).filter((key) => openStates[parseInt(key)] === true);

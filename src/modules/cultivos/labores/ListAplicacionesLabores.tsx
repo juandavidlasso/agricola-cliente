@@ -80,16 +80,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
     const { data, error, loading } = useQuery<GetAplicacionLaboresResponse>(OBTENER_APLICACIONES_LABORES, {
         variables: { corteId: id_corte }
     });
-    const { setOpenModalForms, setFormType, setEditLabor, setTotalItems } = useContext(CultivosContext);
-    useEffect(() => {
-        if (data !== undefined && data?.obtenerAplicacionesLabores?.length !== 0) {
-            setTotalItems(data!.obtenerAplicacionesLabores.map((aplicacion) => aplicacion.labor!.id_labor));
-        }
-
-        return () => {
-            setTotalItems([]);
-        };
-    }, [data]);
+    const { setOpenModalForms, setFormType, setEditLabor } = useContext(CultivosContext);
 
     if (error) return <Alert message={error.message} />;
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Box, Button, Checkbox, Collapse, Grid2, List, ListItemButton, ListItemText } from '@mui/material';
+import { Box, Button, Checkbox, Collapse, Grid2, List, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -17,7 +17,6 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetAplicacionHerbicidaCorteResponse>(OBTENER_APLICACIONES_HERBICIDAS);
     const {
         selectedAplicacionHerbicidas,
-        totalItems,
         setFormType,
         setAplicacionHerbicidaEdit,
         setSelectedAplicacionHerbicidas,
@@ -49,9 +48,20 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
 
     return (
         <Grid2 container>
+            <Grid2 size={12}>
+                <Typography sx={{ fontWeight: 700 }}>
+                    Si desea registrar la misma aplicación y los mismos tratamientos en otra suerte, selecione uno o varios y
+                    click en el botón verde.
+                </Typography>
+                <Typography sx={{ fontWeight: 700 }}>
+                    Si desea registrar una aplicación y los tratamientos en otra suerte pero necesita modificar algún dato, click
+                    en el botón duplicar.
+                </Typography>
+            </Grid2>
             <Button
-                className="!fixed !z-50"
+                className="!fixed !z-50 !top-[10%]"
                 variant="contained"
+                size="small"
                 onClick={() => {
                     setFormType('create');
                     setDataType('aplicacion');
@@ -61,7 +71,13 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
                 Registrar aplicación herbicida
             </Button>
             {selectedAplicacionHerbicidas.length > 0 && (
-                <Button className="!fixed !ml-72 !z-50" variant="contained" onClick={() => setOpenModalSuertes(true)}>
+                <Button
+                    className="!fixed !ml-[300px] !z-50 !top-[10%]"
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    onClick={() => setOpenModalSuertes(true)}
+                >
                     Aplicar herbicida
                 </Button>
             )}
@@ -88,12 +104,17 @@ const ListAplicacionHerbicidas: React.FC<Props> = () => {
                                       onChange={(e) => handleCheckboxChange(e, aplicacion.id_aphe)}
                                       onClick={(e) => e.stopPropagation()}
                                       inputProps={{ 'aria-label': 'controlled' }}
-                                      disabled={totalItems.includes(aplicacion.id_aphe)}
                                   />
                                   <ListItemText
                                       primary={`Fecha aplicación: ${dayjs(aplicacion.fecha).format('DD-MM-YYYY')} - ${
                                           aplicacion.tipo
                                       }`}
+                                      secondary={`Aplicada en suertes: ${aplicacion?.suertes ?? ''}`}
+                                      sx={{
+                                          '& .MuiListItemText-secondary': {
+                                              color: '#000000'
+                                          }
+                                      }}
                                   />
                                   <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
                                       <Button

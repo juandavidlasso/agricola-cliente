@@ -11,6 +11,7 @@ interface Props {
     width?: string;
     closeBack?: boolean;
     id: string;
+    styles?: string;
 }
 
 const DialogModal: React.FC<Props> = ({
@@ -21,7 +22,8 @@ const DialogModal: React.FC<Props> = ({
     height = 80,
     width = '50%',
     closeBack = true,
-    id
+    id,
+    styles
 }) => {
     return (
         <Dialog
@@ -44,7 +46,14 @@ const DialogModal: React.FC<Props> = ({
             }}
         >
             <DialogTitle sx={{ padding: 4, pb: 2, textAlign: 'center', mt: { xs: '30px !important', sm: '0px !important' } }}>
-                <Typography variant="h5" component="span" textAlign="center" fontWeight="bold" color="text.primary">
+                <Typography
+                    variant="h5"
+                    component="span"
+                    textAlign="center"
+                    fontWeight="bold"
+                    color="text.primary"
+                    className={styles}
+                >
                     {title}
                 </Typography>
                 {closeBack && (

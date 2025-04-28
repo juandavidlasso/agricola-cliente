@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Box, Button, Checkbox, Collapse, Grid2, List, ListItemButton, ListItemText } from '@mui/material';
+import { Box, Button, Checkbox, Collapse, Grid2, List, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { OBTENER_APLICACIONES_FERTILIZANTES } from '@graphql/queries';
 import { GetAplicacionFertilizanteResponse } from '@interfaces/cultivos/fertilizantes/aplicacion';
 import Alert from '@components/Alert';
@@ -17,7 +17,6 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetAplicacionFertilizanteResponse>(OBTENER_APLICACIONES_FERTILIZANTES);
     const {
         selectedAplicacionFertilizantes,
-        totalItems,
         setFormType,
         setAplicacionFertilizanteEdit,
         setOpenModalForms,
@@ -49,9 +48,20 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
 
     return (
         <Grid2 container>
+            <Grid2 size={12}>
+                <Typography sx={{ fontWeight: 700 }}>
+                    Si desea registrar la misma aplicación y los mismos tratamientos en otra suerte, selecione uno o varios y
+                    click en el botón verde.
+                </Typography>
+                <Typography sx={{ fontWeight: 700 }}>
+                    Si desea registrar una aplicación y los tratamientos en otra suerte pero necesita modificar algún dato, click
+                    en el botón duplicar.
+                </Typography>
+            </Grid2>
             <Button
-                className="!fixed !z-50"
+                className="!fixed !z-50 !top-[10%]"
                 variant="contained"
+                size="small"
                 onClick={() => {
                     setFormType('create');
                     setDataType('aplicacion');
@@ -61,7 +71,13 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
                 Registrar aplicación fertilizante
             </Button>
             {selectedAplicacionFertilizantes.length > 0 && (
-                <Button className="!fixed !z-50 !ml-80" variant="contained" onClick={() => setOpenModalSuertes(true)}>
+                <Button
+                    className="!fixed !z-50 !ml-[300px] !top-[10%]"
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    onClick={() => setOpenModalSuertes(true)}
+                >
                     Aplicar fertilizante
                 </Button>
             )}
@@ -88,12 +104,17 @@ const ListAplicacionFertilizantes: React.FC<Props> = () => {
                                       onChange={(e) => handleCheckboxChange(e, aplicacion.id_apfe)}
                                       onClick={(e) => e.stopPropagation()}
                                       inputProps={{ 'aria-label': 'controlled' }}
-                                      disabled={totalItems.includes(aplicacion.id_apfe)}
                                   />
                                   <ListItemText
                                       primary={`Fecha aplicación: ${dayjs(aplicacion.fecha).format('DD-MM-YYYY')} - ${
                                           aplicacion.tipo
                                       }`}
+                                      secondary={`Aplicada en suertes: ${aplicacion?.suertes ?? ''}`}
+                                      sx={{
+                                          '& .MuiListItemText-secondary': {
+                                              color: '#000000'
+                                          }
+                                      }}
                                   />
                                   <Box sx={{ p: 0.2, display: 'flex', gap: 1 }}>
                                       <Button

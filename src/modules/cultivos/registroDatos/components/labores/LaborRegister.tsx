@@ -45,8 +45,14 @@ const LaborRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataLabores>({
         resolver: yupResolver(schema),
         defaultValues: {
-            ...labor,
-            fecha: dayjs(labor?.fecha).format('YYYY-MM-DD')
+            fecha: dayjs(labor?.fecha).format('YYYY-MM-DD'),
+            actividad: formType === 'create' ? '' : labor.actividad,
+            aplico: formType === 'create' ? '' : labor.aplico,
+            costo: formType === 'create' ? undefined : labor.costo,
+            equipo: formType === 'create' ? '' : labor.equipo,
+            estado: formType === 'create' ? '' : labor.estado,
+            nota: formType === 'create' ? '' : labor.nota,
+            pases: formType === 'create' ? undefined : labor.pases
         }
     });
     const [submitting, setSubmitting] = useState<boolean>(false);

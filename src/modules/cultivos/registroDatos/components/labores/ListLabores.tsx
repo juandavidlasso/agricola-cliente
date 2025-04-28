@@ -8,7 +8,7 @@ import {
     GridRowParams,
     GridRowSelectionModel
 } from '@mui/x-data-grid';
-import { Box, Button, Grid2 } from '@mui/material';
+import { Box, Button, Grid2, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { OBTENER_LABORES } from '@graphql/queries';
 import { AplicacionLabores, GetLaboresResponse, Labores } from '@interfaces/cultivos/labores';
@@ -23,10 +23,11 @@ const getColumns = (
 ) => {
     const columns: GridColDef[] = [
         { field: 'fecha', headerName: 'Fecha', flex: 0.1 },
+        { field: 'suertes', headerName: 'Suertes', flex: 0.1 },
         { field: 'actividad', headerName: 'Labor', flex: 0.1 },
         { field: 'equipo', headerName: 'Equipo', flex: 0.1 },
         { field: 'estado', headerName: 'Estado', flex: 0.08 },
-        { field: 'pases', headerName: 'No. de Pases', flex: 0.1 },
+        { field: 'pases', headerName: 'No. Pases', flex: 0.1 },
         { field: 'aplico', headerName: 'Realizado Por', flex: 0.1 },
         { field: 'costo', headerName: 'Costo x Hta', flex: 0.1 },
         { field: 'nota', headerName: 'Nota', flex: 0.24 },
@@ -124,7 +125,7 @@ interface Props {}
 
 const ListLabores: React.FC<Props> = () => {
     const { data, error, loading } = useQuery<GetLaboresResponse>(OBTENER_LABORES);
-    const { selectedLabores, totalItems, setOpenModalForms, setFormType, setEditLabor, setSelectedLabores, setOpenModalSuertes } =
+    const { selectedLabores, setOpenModalForms, setFormType, setEditLabor, setSelectedLabores, setOpenModalSuertes } =
         useContext(CultivosContext);
 
     if (error) return <Alert message={error.message} />;
@@ -133,13 +134,23 @@ const ListLabores: React.FC<Props> = () => {
 
     return (
         <Grid2 container>
+            <Grid2 size={12}>
+                <Typography sx={{ fontWeight: 700 }}>
+                    Si desea registrar la misma labor en otra suerte, selecione una o varias y click en el botón verde.
+                </Typography>
+                <Typography sx={{ fontWeight: 700 }}>
+                    Si desea registrar una labor en otra suerte pero necesita modificar algún dato, click en el botón duplicar.
+                </Typography>
+            </Grid2>
             {selectedLabores.length > 0 && (
                 <Button
                     variant="contained"
+                    color="success"
+                    size="small"
                     onClick={() => setOpenModalSuertes(true)}
-                    className="!fixed !z-50"
+                    className="!fixed !z-50 !top-[10%]"
                     sx={{
-                        ml: 25
+                        ml: 22
                     }}
                 >
                     Aplicar {selectedLabores.length} labores
@@ -147,11 +158,12 @@ const ListLabores: React.FC<Props> = () => {
             )}
             <Button
                 variant="contained"
+                size="small"
                 onClick={() => {
                     setFormType('create');
                     setOpenModalForms(true);
                 }}
-                className="!fixed !z-50"
+                className="!fixed !z-50 !top-[10%]"
             >
                 Registrar labor
             </Button>
@@ -165,7 +177,6 @@ const ListLabores: React.FC<Props> = () => {
                         }}
                         disableVirtualization
                         getRowHeight={(params: GridRowHeightParams) => 'auto'}
-                        isRowSelectable={(params: GridRowParams<Labores>) => !totalItems.includes(params.row.id_labor)}
                         initialState={{
                             pagination: {
                                 paginationModel: { page: 0, pageSize: 10 }
@@ -176,7 +187,7 @@ const ListLabores: React.FC<Props> = () => {
                         checkboxSelection
                         sx={{
                             '&.MuiDataGrid-root': {
-                                width: '95% !important',
+                                width: '97% !important',
                                 margin: '0 auto'
                             },
                             '& .MuiDataGrid-row': {

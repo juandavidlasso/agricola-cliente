@@ -10,12 +10,15 @@ import {
     GetDeleteAplicacionesHerbicidasResponse
 } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
 import { AplicacionHerbicidas } from '@interfaces/cultivos/herbicidas/aplicacion';
+import useAppSelector from '@hooks/useAppSelector';
+import { IRootState } from '@interfaces/store';
 
 interface Props {}
 
 const AplicacionHerbicidaDelete: React.FC<Props> = ({}) => {
     const { aplicacionHerbicidaEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
         useContext(CultivosContext);
+    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarAplicacionHerbicida] = useMutation<boolean>(ELIMINAR_APLICACION_HERBICIDA);
     const [eliminarAplicacionesHerbicidas] =
@@ -28,7 +31,13 @@ const AplicacionHerbicidaDelete: React.FC<Props> = ({}) => {
                     variables: {
                         idAphe: (aplicacionHerbicidaEdit as AplicacionHerbicidas)?.id_aphe
                     },
-                    refetchQueries: [{ query: OBTENER_APLICACIONES_HERBICIDAS }]
+                    refetchQueries: [
+                        { query: OBTENER_APLICACIONES_HERBICIDAS },
+                        {
+                            query: OBTENER_APLICACIONES_HERBICIDAS_CORTE,
+                            variables: { corteId: id_corte }
+                        }
+                    ]
                 });
             } else {
                 await eliminarAplicacionesHerbicidas({
@@ -66,6 +75,11 @@ const AplicacionHerbicidaDelete: React.FC<Props> = ({}) => {
         <Grid2 container>
             <Grid2 size={12} m={1} mb={3}>
                 <Typography>Desea eliminar la aplicación?</Typography>
+                {aplicacionHerbicidaEdit?.hasOwnProperty('id_aphe') && (
+                    <Typography sx={{ fontWeight: 700 }}>
+                        Esta acción eliminará la aplicación en todas las suertes asociadas
+                    </Typography>
+                )}
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'} p={2}>
                 <Button variant="contained" color="error" onClick={submitDelete} fullWidth>
