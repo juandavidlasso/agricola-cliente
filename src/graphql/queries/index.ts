@@ -174,7 +174,22 @@ export const OBTENER_LABORES = gql`
             aplico
             costo
             nota
-            suertes
+        }
+    }
+`;
+
+export const OBTENER_LABOR = gql`
+    query ObtenerLabor($laborId: Int!) {
+        obtenerLabor(labor_id: $laborId) {
+            id_labor
+            fecha
+            actividad
+            equipo
+            estado
+            pases
+            aplico
+            costo
+            nota
         }
     }
 `;
@@ -187,7 +202,6 @@ export const OBTENER_APLICACIONES_HERBICIDAS = gql`
             id_aphe
             fecha
             tipo
-            suertes
             listTratamientoHerbicida {
                 id_trahe
                 producto
@@ -220,6 +234,7 @@ export const OBTENER_APLICACIONES_LABORES = gql`
                 aplico
                 costo
                 nota
+                suertes
             }
         }
     }
@@ -233,6 +248,7 @@ export const OBTENER_APLICACIONES_HERBICIDAS_CORTE = gql`
             id_aplicaciones_herbicidas
             corte_id
             aphe_id
+            suertes
             aplicacionHerbicida {
                 id_aphe
                 fecha

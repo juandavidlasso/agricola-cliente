@@ -177,12 +177,6 @@ export const ACTUALIZAR_LABOR = gql`
     }
 `;
 
-export const ELIMINAR_LABOR = gql`
-    mutation EliminarLabor($idLabor: Int!) {
-        eliminarLabor(id_labor: $idLabor)
-    }
-`;
-
 /** APLICACION HERBICIDAS */
 
 export const REGISTAR_APLICACION_HERBICIDA = gql`
@@ -202,12 +196,6 @@ export const ACTUALIZAR_APLICACION_HERBICIDA = gql`
             fecha
             tipo
         }
-    }
-`;
-
-export const ELIMINAR_APLICACION_HERBICIDA = gql`
-    mutation EliminarAplicacionHerbicida($idAphe: Float!) {
-        eliminarAplicacionHerbicida(id_aphe: $idAphe)
     }
 `;
 

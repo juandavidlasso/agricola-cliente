@@ -7,14 +7,17 @@ import * as yup from 'yup';
 import {
     FormDataTratamientoHerbicidas,
     GetTratamientoHerbicidaRegister,
-    GetTratamientoHerbicidaUpdate
+    GetTratamientoHerbicidaUpdate,
+    TratamientoHerbicidas
 } from '@interfaces/cultivos/herbicidas/tratamientos';
 import Loading from '@components/Loading';
 import { ACTUALIZAR_TRATAMIENTO_HERBICIDA, REGISTRAR_TRATAMIENTO_HERBICIDA } from '@graphql/mutations';
-import { OBTENER_APLICACIONES_HERBICIDAS } from '@graphql/queries';
+import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
 import { handleKeyDownLetter, handleKeyDownNumber } from '@utils/validations';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { AplicacionHerbicidas } from '@interfaces/cultivos/herbicidas/aplicacion';
+import { AplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
+import useAppSelector from '@hooks/useAppSelector';
+import { IRootState } from '@interfaces/store';
 
 const schema = yup.object({
     producto: yup.string().required('El producto es requerido.'),
@@ -29,22 +32,24 @@ const schema = yup.object({
     nota: yup.string().optional()
 });
 
-interface Props {}
+interface Props {
+    tratamientoHerbicida: TratamientoHerbicidas;
+    aplicacionesHerbicida: AplicacionesHerbicidas;
+    handleClose: () => void;
+    formType: 'delete' | 'update' | 'create';
+}
 
-const TratamientoHerbicidaRegister: React.FC<Props> = ({}) => {
-    const {
-        aplicacionHerbicidaEdit,
-        tratamientoHerbicidaEdit,
-        formType,
-        setOpenModalForms,
-        setMessageType,
-        setInfoMessage,
-        setShowMessage
-    } = useContext(CultivosContext);
+const TratamientoHerbicidaRegister: React.FC<Props> = ({
+    tratamientoHerbicida,
+    aplicacionesHerbicida,
+    handleClose,
+    formType
+}) => {
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const [agregarTratamientoHerbicida] = useMutation<GetTratamientoHerbicidaRegister>(REGISTRAR_TRATAMIENTO_HERBICIDA);
     const [actualizarTratamientoHerbicida] = useMutation<GetTratamientoHerbicidaUpdate>(ACTUALIZAR_TRATAMIENTO_HERBICIDA);
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const aplicacionHerbicida = aplicacionHerbicidaEdit as AplicacionHerbicidas;
     const {
         register,
         handleSubmit,
@@ -53,12 +58,12 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataTratamientoHerbicidas>({
         resolver: yupResolver(schema),
         defaultValues: {
-            producto: formType === 'create' ? '' : tratamientoHerbicidaEdit?.producto,
-            dosis: formType === 'create' ? undefined : tratamientoHerbicidaEdit?.dosis,
-            presentacion: formType === 'create' ? '' : tratamientoHerbicidaEdit?.presentacion,
-            valor: formType === 'create' ? undefined : tratamientoHerbicidaEdit?.valor,
-            aplico: formType === 'create' ? '' : tratamientoHerbicidaEdit?.aplico,
-            nota: formType === 'create' ? '' : tratamientoHerbicidaEdit?.nota
+            producto: formType === 'create' ? '' : tratamientoHerbicida?.producto,
+            dosis: formType === 'create' ? undefined : tratamientoHerbicida?.dosis,
+            presentacion: formType === 'create' ? '' : tratamientoHerbicida?.presentacion,
+            valor: formType === 'create' ? undefined : tratamientoHerbicida?.valor,
+            aplico: formType === 'create' ? '' : tratamientoHerbicida?.aplico,
+            nota: formType === 'create' ? '' : tratamientoHerbicida?.nota
         }
     });
 
@@ -70,13 +75,12 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({}) => {
                     variables: {
                         createTratamientoHerbicidaInput: {
                             ...data,
-                            aphe_id: aplicacionHerbicida?.id_aphe
+                            aphe_id: aplicacionesHerbicida?.aplicacionHerbicida?.id_aphe
                         }
                     },
                     refetchQueries: [
-                        {
-                            query: OBTENER_APLICACIONES_HERBICIDAS
-                        }
+                        { query: OBTENER_APLICACIONES_HERBICIDAS },
+                        { query: OBTENER_APLICACIONES_HERBICIDAS_CORTE, variables: { corteId: id_corte } }
                     ]
                 });
             } else {
@@ -84,14 +88,13 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({}) => {
                     variables: {
                         updateTratamientoHerbicidaInput: {
                             ...data,
-                            id_trahe: tratamientoHerbicidaEdit?.id_trahe,
-                            aphe_id: aplicacionHerbicida?.id_aphe
+                            id_trahe: tratamientoHerbicida?.id_trahe,
+                            aphe_id: aplicacionesHerbicida?.aplicacionHerbicida?.id_aphe
                         }
                     },
                     refetchQueries: [
-                        {
-                            query: OBTENER_APLICACIONES_HERBICIDAS
-                        }
+                        { query: OBTENER_APLICACIONES_HERBICIDAS },
+                        { query: OBTENER_APLICACIONES_HERBICIDAS_CORTE, variables: { corteId: id_corte } }
                     ]
                 });
             }
@@ -99,7 +102,7 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage(`El tratamiento se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -197,7 +200,7 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({}) => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModalForms(false);
+                            handleClose();
                         }}
                     >
                         Cancelar

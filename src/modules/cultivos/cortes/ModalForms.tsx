@@ -1,12 +1,6 @@
 import DialogModal from '@components/Dialog';
 import React, { useContext } from 'react';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import LaborDelete from '../registroDatos/components/labores/LaborDelete';
-import LaborRegister from '../registroDatos/components/labores/LaborRegister';
-import AplicacionHerbicidaRegister from '../registroDatos/components/herbicidas/AplicacionHerbicidaRegister';
-import AplicacionHerbicidaDelete from '../registroDatos/components/herbicidas/AplicacionHerbicidaDelete';
-import TratamientoHerbicidaDelete from '../registroDatos/components/herbicidas/tratamientos/TratamientoHerbicidaDelete';
-import TratamientoHerbicidaRegister from '../registroDatos/components/herbicidas/tratamientos/TratamientoHerbicidaRegister';
 import AplicacionFertilizanteDelete from '../registroDatos/components/fertilizantes/AplicacionFertilizanteDelete';
 import AplicacionFertilizanteRegister from '../registroDatos/components/fertilizantes/AplicacionFertilizanteRegister';
 import TratamientoFertilizanteDelete from '../registroDatos/components/fertilizantes/tratamientos/TratamientoFertilizanteDelete';
@@ -32,47 +26,6 @@ const ModalForms: React.FC<Props> = ({}) => {
         let height = 0;
         let width = '60%';
         let component = <></>;
-        // Labores
-        if (typeModal === 'labores') {
-            if (formType === 'delete') {
-                title = 'Eliminar labor';
-                height = 45;
-                component = <LaborDelete />;
-            } else {
-                title = formType === 'create' ? 'Registrar labor' : formType === 'update' ? 'Actualizar labor' : 'Duplicar labor';
-                height = 90;
-                component = <LaborRegister />;
-            }
-        }
-        // Herbicidas
-        if (typeModal === 'herbicidas') {
-            if (dataType === 'aplicacion') {
-                if (formType === 'delete') {
-                    title = 'Eliminar aplicación herbicida';
-                    height = 45;
-                    component = <AplicacionHerbicidaDelete />;
-                } else {
-                    title =
-                        formType === 'create'
-                            ? 'Registrar aplicación herbicida'
-                            : formType === 'update'
-                            ? 'Actualizar aplicación herbicida'
-                            : 'Duplicar aplicación herbicida';
-                    height = 60;
-                    component = <AplicacionHerbicidaRegister />;
-                }
-            } else {
-                if (formType === 'delete') {
-                    title = 'Eliminar tratamiento herbicida';
-                    height = 45;
-                    component = <TratamientoHerbicidaDelete />;
-                } else {
-                    title = formType === 'create' ? 'Registrar tratamiento herbicida' : 'Actualizar tratamiento herbicida';
-                    height = 90;
-                    component = <TratamientoHerbicidaRegister />;
-                }
-            }
-        }
         // Fertilizantes
         if (typeModal === 'fertilizantes') {
             if (dataType === 'aplicacion') {

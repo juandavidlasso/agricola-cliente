@@ -1,30 +1,43 @@
 import React, { useContext, useState } from 'react';
-import { ApolloError, useMutation } from '@apollo/client';
 import { Button, Grid2, Typography } from '@mui/material';
+import { ApolloError, useMutation } from '@apollo/client';
 import Loading from '@components/Loading';
-import { ELIMINAR_TRATAMIENTO_HERBICIDA } from '@graphql/mutations';
-import { OBTENER_APLICACIONES_HERBICIDAS } from '@graphql/queries';
+import { ELIMINAR_APLICACIONES_HERBICIDAS } from '@graphql/mutations';
+import { OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import {
+    AplicacionesHerbicidas,
+    GetDeleteAplicacionesHerbicidasResponse
+} from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
 
-interface Props {}
+interface Props {
+    aplicacionHerbicida: AplicacionesHerbicidas;
+    handleClose: () => void;
+}
 
-const TratamientoHerbicidaDelete: React.FC<Props> = ({}) => {
-    const { tratamientoHerbicidaEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
-        useContext(CultivosContext);
+const AplicacionHerbicidaDelete: React.FC<Props> = ({ aplicacionHerbicida, handleClose }) => {
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const [eliminarTratamientoHerbicida] = useMutation<boolean>(ELIMINAR_TRATAMIENTO_HERBICIDA);
+    const [eliminarAplicacionesHerbicidas] =
+        useMutation<GetDeleteAplicacionesHerbicidasResponse>(ELIMINAR_APLICACIONES_HERBICIDAS);
+
     const submitDelete = async () => {
         try {
-            await eliminarTratamientoHerbicida({
+            await eliminarAplicacionesHerbicidas({
                 variables: {
-                    idTrahe: tratamientoHerbicidaEdit?.id_trahe
+                    idAplicacionesHerbicidas: aplicacionHerbicida?.id_aplicaciones_herbicidas
                 },
-                refetchQueries: [{ query: OBTENER_APLICACIONES_HERBICIDAS }]
+                refetchQueries: [
+                    {
+                        query: OBTENER_APLICACIONES_HERBICIDAS_CORTE,
+                        variables: { corteId: aplicacionHerbicida?.corte_id }
+                    }
+                ]
             });
             setMessageType('success');
-            setInfoMessage('El tratamiento se eliminó exitosamente.');
+            setInfoMessage('La aplicación se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -43,7 +56,7 @@ const TratamientoHerbicidaDelete: React.FC<Props> = ({}) => {
     return (
         <Grid2 container>
             <Grid2 size={12} m={1} mb={3}>
-                <Typography>Desea eliminar el tratamiento?</Typography>
+                <Typography>Desea eliminar la aplicación?</Typography>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'} p={2}>
                 <Button variant="contained" color="error" onClick={submitDelete} fullWidth>
@@ -51,7 +64,7 @@ const TratamientoHerbicidaDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'} p={2}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)} fullWidth>
+                <Button variant="contained" color="primary" onClick={handleClose} fullWidth>
                     Cancelar
                 </Button>
             </Grid2>
@@ -59,4 +72,4 @@ const TratamientoHerbicidaDelete: React.FC<Props> = ({}) => {
     );
 };
 
-export default TratamientoHerbicidaDelete;
+export default AplicacionHerbicidaDelete;

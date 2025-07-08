@@ -15,8 +15,6 @@ import ModalLoading from '@components/Modal';
 import ListButtons from './ListButtons';
 import SuertesPopover from '../registroDatos/components/suertes/SuertesPopover';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { useLabores } from '../registroDatos/components/labores/hooks/useLabores';
-import { useAplicacionesHerbicidas } from '../registroDatos/components/herbicidas/hooks/useAplicacionesHerbicidas';
 import { useAplicacionesFertilizantes } from '../registroDatos/components/fertilizantes/hooks/useAplicacionesFertilizantes';
 import ModalForms from './ModalForms';
 import ModalActions from './ModalActions';
@@ -42,8 +40,6 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, loading, error } = useQuery<GetCorteResponse>(OBTENER_CORTE, { variables: { idCorte: corte.id_corte } });
-    const { handleSubmitLabor } = useLabores();
-    const { handleSubmitAplicacionesHerbicidas } = useAplicacionesHerbicidas();
     const { handleSubmitAplicacionesFertilizantes } = useAplicacionesFertilizantes();
 
     if (error) return <Alert message={error.message} />;
@@ -55,17 +51,7 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
             {openModalList && <ListWorks />}
             {openModal && <ModalActions />}
             {openModalForms && <ModalForms />}
-            {openModalSuertes && (
-                <SuertesPopover
-                    handleSubmit={
-                        typeModal === 'labores'
-                            ? handleSubmitLabor
-                            : typeModal === 'herbicidas'
-                            ? handleSubmitAplicacionesHerbicidas
-                            : handleSubmitAplicacionesFertilizantes
-                    }
-                />
-            )}
+            {openModalSuertes && <SuertesPopover handleSubmit={handleSubmitAplicacionesFertilizantes} />}
             <Layout toogleTheme={toogleTheme} navItems={routesCultivos}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     <Grid2 container spacing={2}>

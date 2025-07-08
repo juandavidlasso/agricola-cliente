@@ -22,6 +22,10 @@ export interface GetLaboresResponse {
     obtenerLabores: Labores[];
 }
 
+export interface GetLaborResponse {
+    obtenerLabor: Labores;
+}
+
 export interface GetRegisterLabor {
     agregarLabor: Labores;
 }

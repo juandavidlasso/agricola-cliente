@@ -31,7 +31,13 @@ const ListWorks: React.FC<Props> = () => {
         return <></>;
     };
     const visibleButton = () =>
-        estado && rol === 1 && typeModal !== 'tablon' && typeModal !== 'cosecha' && typeModal !== 'riegos';
+        estado &&
+        rol === 1 &&
+        typeModal !== 'tablon' &&
+        typeModal !== 'cosecha' &&
+        typeModal !== 'riegos' &&
+        typeModal !== 'labores' &&
+        typeModal !== 'herbicidas';
     return (
         <SideModal isOpen={openModalList} handleClose={() => setOpenModalList(false)} direction={'bottom'}>
             <Grid2 container spacing={2} padding={2}>
