@@ -178,22 +178,6 @@ export const OBTENER_LABORES = gql`
     }
 `;
 
-export const OBTENER_LABOR = gql`
-    query ObtenerLabor($laborId: Int!) {
-        obtenerLabor(labor_id: $laborId) {
-            id_labor
-            fecha
-            actividad
-            equipo
-            estado
-            pases
-            aplico
-            costo
-            nota
-        }
-    }
-`;
-
 /** APLICACION HERBICIDAS */
 
 export const OBTENER_APLICACIONES_HERBICIDAS = gql`

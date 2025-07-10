@@ -13,7 +13,7 @@ import { IRootState } from '@interfaces/store';
 import CardDetails from './CardDetails';
 import ModalLoading from '@components/Modal';
 import ListButtons from './ListButtons';
-import SuertesPopover from '../registroDatos/components/suertes/SuertesPopover';
+import SuertesPopover from '../registroDatos/suertes/SuertesPopover';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import { useAplicacionesFertilizantes } from '../registroDatos/components/fertilizantes/hooks/useAplicacionesFertilizantes';
 import ModalForms from './ModalForms';

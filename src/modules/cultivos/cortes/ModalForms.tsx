@@ -1,10 +1,6 @@
 import DialogModal from '@components/Dialog';
 import React, { useContext } from 'react';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import AplicacionFertilizanteDelete from '../registroDatos/components/fertilizantes/AplicacionFertilizanteDelete';
-import AplicacionFertilizanteRegister from '../registroDatos/components/fertilizantes/AplicacionFertilizanteRegister';
-import TratamientoFertilizanteDelete from '../registroDatos/components/fertilizantes/tratamientos/TratamientoFertilizanteDelete';
-import TratamientoFertilizanteRegister from '../registroDatos/components/fertilizantes/tratamientos/TratamientoFertilizanteRegister';
 import TratamientoPlagaRegister from '../plagas/tratamiento/TratamientoPlagaRegister';
 import TratamientoPlagaDelete from '../plagas/tratamiento/TratamientoPlagaDelete';
 import AplicacionPlagaDelete from '../plagas/aplicacion/AplicacionPlagaDelete';
@@ -26,35 +22,6 @@ const ModalForms: React.FC<Props> = ({}) => {
         let height = 0;
         let width = '60%';
         let component = <></>;
-        // Fertilizantes
-        if (typeModal === 'fertilizantes') {
-            if (dataType === 'aplicacion') {
-                if (formType === 'delete') {
-                    title = 'Eliminar aplicación fertilizante';
-                    height = 45;
-                    component = <AplicacionFertilizanteDelete />;
-                } else {
-                    title =
-                        formType === 'create'
-                            ? 'Registrar aplicación fertilizante'
-                            : formType === 'update'
-                            ? 'Actualizar aplicación fertilizante'
-                            : 'Duplicar aplicación fertilizante';
-                    height = 60;
-                    component = <AplicacionFertilizanteRegister />;
-                }
-            } else {
-                if (formType === 'delete') {
-                    title = 'Eliminar tratamiento fertilizante';
-                    height = 45;
-                    component = <TratamientoFertilizanteDelete />;
-                } else {
-                    title = formType === 'create' ? 'Registrar tratamiento fertilizante' : 'Actualizar tratamiento fertilizante';
-                    height = 90;
-                    component = <TratamientoFertilizanteRegister />;
-                }
-            }
-        }
         // Plagas
         if (typeModal === 'plagas') {
             if (dataType === 'tratamiento') {

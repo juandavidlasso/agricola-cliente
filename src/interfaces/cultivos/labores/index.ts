@@ -11,6 +11,8 @@ export interface Labores {
     suertes?: string;
 }
 
+export type DataType = 'create' | 'update' | 'delete' | 'duplicate' | 'suertes';
+
 export interface AplicacionLabores {
     id_aplicacion_labores: number;
     corte_id: number;
@@ -20,10 +22,6 @@ export interface AplicacionLabores {
 
 export interface GetLaboresResponse {
     obtenerLabores: Labores[];
-}
-
-export interface GetLaborResponse {
-    obtenerLabor: Labores;
 }
 
 export interface GetRegisterLabor {

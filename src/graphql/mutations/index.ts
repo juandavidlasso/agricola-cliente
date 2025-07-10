@@ -287,12 +287,6 @@ export const ACTUALIZAR_APLICACION_FERTILIZANTE = gql`
     }
 `;
 
-export const ELIMINAR_APLICACION_FERTILIZANTE = gql`
-    mutation EliminarAplicacionFertilizante($idApfe: Int!) {
-        eliminarAplicacionFertilizante(id_apfe: $idApfe)
-    }
-`;
-
 /** TRATAMIENTO FERTILIZANTE */
 
 export const REGISTRAR_TRATAMIENTO_FERTILIZANTE = gql`

@@ -26,7 +26,7 @@ const PopoverHerbicida: React.FC<Props> = ({
         if (typeModal === 'aplicacion') {
             if (formType === 'create') return 'Registrar aplicación herbicida';
             if (formType === 'update') return 'Actualizar aplicación herbicida';
-            return 'Eliminar tratamiento herbicida';
+            return 'Eliminar aplicación herbicida';
         }
         if (formType === 'create') return 'Registrar tratamiento herbicida';
         if (formType === 'update') return 'Actualizar tratamiento herbicida';

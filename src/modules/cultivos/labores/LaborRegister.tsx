@@ -7,20 +7,19 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { ApolloError, useMutation, useQuery } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import {
     AplicacionLabores,
+    DataType,
     FormDataLabores,
-    GetLaborResponse,
     GetRegisterAplicacionLabor,
-    GetRegisterLabor
+    GetRegisterLabor,
+    Labores
 } from '@interfaces/cultivos/labores';
 import Loading from '@components/Loading';
 import { ACTUALIZAR_LABOR, REGISTRAR_LABOR, REGISTRAR_LABORES_CORTES } from '@graphql/mutations';
-import { OBTENER_APLICACIONES_LABORES, OBTENER_LABOR, OBTENER_LABORES } from '@graphql/queries';
+import { OBTENER_APLICACIONES_LABORES, OBTENER_LABORES } from '@graphql/queries';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import Alert from '@components/Alert';
-import ModalLoading from '@components/Modal';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 
@@ -41,21 +40,20 @@ const schema = yup.object({
 });
 
 interface Props {
-    formType: 'create' | 'update' | 'delete';
+    formType: DataType;
     labor: AplicacionLabores | undefined;
     onClose: () => void;
+    setLaborDuplicate?: React.Dispatch<React.SetStateAction<Labores | undefined>>;
+    setFormType?: React.Dispatch<React.SetStateAction<DataType>>;
 }
 
-const LaborRegister: React.FC<Props> = ({ formType, labor, onClose }) => {
-    const { data, loading, error } = useQuery<GetLaborResponse>(OBTENER_LABOR, {
-        variables: { laborId: labor?.labor_id },
-        skip: formType === 'update' ? false : true
-    });
+const LaborRegister: React.FC<Props> = ({ formType, labor, onClose, setLaborDuplicate, setFormType }) => {
     const { setInfoMessage, setShowMessage, setMessageType } = useContext(CultivosContext);
-
-    if (error) return <Alert message={error.message} />;
-
-    if (loading) return <ModalLoading isOpen={loading} />;
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [agregarLabor] = useMutation<GetRegisterLabor>(REGISTRAR_LABOR);
+    const [actualizarLabor] = useMutation<GetRegisterLabor>(ACTUALIZAR_LABOR);
+    const [agregarAplicacionLabores] = useMutation<GetRegisterAplicacionLabor>(REGISTRAR_LABORES_CORTES);
+    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
 
     const {
         register,
@@ -66,45 +64,46 @@ const LaborRegister: React.FC<Props> = ({ formType, labor, onClose }) => {
     } = useForm<FormDataLabores>({
         resolver: yupResolver(schema),
         defaultValues: {
-            fecha: dayjs(data?.obtenerLabor?.fecha).format('YYYY-MM-DD'),
-            actividad: formType === 'create' ? '' : data?.obtenerLabor?.actividad,
-            aplico: formType === 'create' ? '' : data?.obtenerLabor?.aplico,
-            costo: formType === 'create' ? undefined : data?.obtenerLabor?.costo,
-            equipo: formType === 'create' ? '' : data?.obtenerLabor?.equipo,
-            estado: formType === 'create' ? '' : data?.obtenerLabor?.estado,
-            nota: formType === 'create' ? '' : data?.obtenerLabor?.nota,
-            pases: formType === 'create' ? undefined : data?.obtenerLabor?.pases
+            fecha: dayjs(labor?.labor?.fecha).format('YYYY-MM-DD'),
+            actividad: formType === 'create' ? '' : labor?.labor?.actividad,
+            aplico: formType === 'create' ? '' : labor?.labor?.aplico,
+            costo: formType === 'create' ? undefined : labor?.labor?.costo,
+            equipo: formType === 'create' ? '' : labor?.labor?.equipo,
+            estado: formType === 'create' ? '' : labor?.labor?.estado,
+            nota: formType === 'create' ? '' : labor?.labor?.nota,
+            pases: formType === 'create' ? undefined : labor?.labor?.pases
         }
     });
-    const [submitting, setSubmitting] = useState<boolean>(false);
-    const [agregarLabor] = useMutation<GetRegisterLabor>(REGISTRAR_LABOR);
-    const [actualizarLabor] = useMutation<GetRegisterLabor>(ACTUALIZAR_LABOR);
-    const [agregarAplicacionLabores] = useMutation<GetRegisterAplicacionLabor>(REGISTRAR_LABORES_CORTES);
-    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
 
     const submitForm = async (formData: FormDataLabores) => {
         setSubmitting(true);
         const { id_labor, ...newObject } = formData as any;
 
         try {
-            if (formType === 'create') {
+            if (formType === 'create' || formType === 'duplicate') {
                 const { data } = await agregarLabor({
                     variables: {
                         createLaboresInput: formType === 'create' ? formData : newObject
-                    },
-                    refetchQueries: [{ query: OBTENER_LABORES }]
+                    }
                 });
-                await agregarAplicacionLabores({
-                    variables: {
-                        createAplicacionLaboresInput: [
-                            {
-                                corte_id: id_corte,
-                                labor_id: data?.agregarLabor?.id_labor
-                            }
+                if (formType === 'create') {
+                    await agregarAplicacionLabores({
+                        variables: {
+                            createAplicacionLaboresInput: [
+                                {
+                                    corte_id: id_corte,
+                                    labor_id: data?.agregarLabor?.id_labor
+                                }
+                            ]
+                        },
+                        refetchQueries: [
+                            { query: OBTENER_LABORES },
+                            { query: OBTENER_APLICACIONES_LABORES, variables: { corteId: id_corte } }
                         ]
-                    },
-                    refetchQueries: [{ query: OBTENER_APLICACIONES_LABORES, variables: { corteId: id_corte } }]
-                });
+                    });
+                } else {
+                    setLaborDuplicate?.(data?.agregarLabor);
+                }
             } else {
                 await actualizarLabor({
                     variables: {
@@ -114,14 +113,20 @@ const LaborRegister: React.FC<Props> = ({ formType, labor, onClose }) => {
                             estado: null
                         }
                     },
-                    refetchQueries: [{ query: OBTENER_LABORES }]
+                    refetchQueries: [
+                        { query: OBTENER_LABORES },
+                        { query: OBTENER_APLICACIONES_LABORES, variables: { corteId: id_corte } }
+                    ]
                 });
             }
 
             setMessageType('success');
-            setInfoMessage(`La labor se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(
+                `La labor se ${formType === 'create' || formType === 'duplicate' ? 'registro' : 'actualizo'} exitosamente.`
+            );
             setShowMessage(true);
-            onClose();
+            if (formType === 'create') return onClose();
+            return setFormType?.('suertes');
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -150,7 +155,11 @@ const LaborRegister: React.FC<Props> = ({ formType, labor, onClose }) => {
                                 setValue('fecha', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={formType === 'update' ? dayjs(data?.obtenerLabor?.fecha, 'YYYY-MM-DD') : undefined}
+                            defaultValue={
+                                formType === 'update' || formType === 'duplicate'
+                                    ? dayjs(labor?.labor?.fecha, 'YYYY-MM-DD')
+                                    : undefined
+                            }
                         />
                         {!!errors.fecha && (
                             <Typography
@@ -198,7 +207,10 @@ const LaborRegister: React.FC<Props> = ({ formType, labor, onClose }) => {
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting && <Loading />}
+                        {formType === 'create' && !submitting && 'Registrar'}
+                        {formType === 'update' && !submitting && 'Actualizar'}
+                        {formType === 'duplicate' && !submitting && 'Duplicar'}
                     </Button>
                     <Button
                         color="primary"

@@ -15,7 +15,7 @@ import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamien
 import { useHerbicidas } from './hooks/useHerbicidas';
 import PopoverHerbicida from './PopoverHerbicida';
 import DialogModal from '@components/Dialog';
-import ListSuertes from '../registroDatos/components/suertes/ListSuertes';
+import ListSuertes from '../registroDatos/suertes/ListSuertes';
 
 interface Props {}
 
@@ -42,7 +42,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
         getColumns,
         setModalSuertes,
         handleSubmitAplicacionHerbicidas
-    } = useHerbicidas(data);
+    } = useHerbicidas(data, rol);
 
     if (error) return <Alert message={error.message} />;
 
@@ -76,19 +76,21 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                 </DialogModal>
             )}
             <Grid2 container>
-                <Grid2 size={12}>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => {
-                            setTypeModal('aplicacion');
-                            setFormType('create');
-                            setOpenModal(true);
-                        }}
-                    >
-                        Registrar aplicación herbicida
-                    </Button>
-                </Grid2>
+                {rol === 1 && (
+                    <Grid2 size={12}>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => {
+                                setTypeModal('aplicacion');
+                                setFormType('create');
+                                setOpenModal(true);
+                            }}
+                        >
+                            Registrar aplicación herbicida
+                        </Button>
+                    </Grid2>
+                )}
                 <Grid2 size={12}>
                     {data?.obtenerAplicacionesHerbicidasCorte.length === 0 ? (
                         <Typography>No hay aplicaciones registradas</Typography>
@@ -117,6 +119,14 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                         </Typography>
                                                         {rol === 1 && (
                                                             <Box className="flex gap-2">
+                                                                {/* <Button
+                                                                    className="!text-sm !normal-case"
+                                                                    onClick={() => {}}
+                                                                    variant="outlined"
+                                                                    color="success"
+                                                                >
+                                                                    Duplicar
+                                                                </Button> */}
                                                                 <Button
                                                                     className="!text-sm !normal-case"
                                                                     onClick={(e) => {

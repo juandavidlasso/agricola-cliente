@@ -8,31 +8,46 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ApolloError, useMutation } from '@apollo/client';
-import { ACTUALIZAR_APLICACION_FERTILIZANTE, REGISTRAR_APLICACION_FERTILIZANTE } from '@graphql/mutations';
 import {
-    AplicacionFertilizante,
+    ACTUALIZAR_APLICACION_FERTILIZANTE,
+    REGISTRAR_APLICACION_FERTILIZANTE,
+    REGISTRAR_APLICACIONES_FERTILIZANTES
+} from '@graphql/mutations';
+import {
     FormDataAplicacionFertilizante,
     GetAplicacionFertilizanteRegister,
     GetAplicacionFertilizanteUpdate
 } from '@interfaces/cultivos/fertilizantes/aplicacion';
-import { OBTENER_APLICACIONES_FERTILIZANTES } from '@graphql/queries';
+import { OBTENER_APLICACIONES_FERTILIZANTES, OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 import Loading from '@components/Loading';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import {
+    AplicacionesFertilizantes,
+    GetAplicacionesFertilizantesRegister
+} from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
+import useAppSelector from '@hooks/useAppSelector';
+import { IRootState } from '@interfaces/store';
 
 const schema = yup.object({
     tipo: yup.string().required('El tipo de aplicación es requerido.'),
     fecha: yup.string().required('La fecha es requerida.')
 });
 
-interface Props {}
+interface Props {
+    handleClose: () => void;
+    formType: 'delete' | 'update' | 'create';
+    aplicacionFertilizante: AplicacionesFertilizantes;
+}
 
-const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
-    const { aplicacionFertilizanteEdit, formType, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
-        useContext(CultivosContext);
+const AplicacionFertilizanteRegister: React.FC<Props> = ({ handleClose, formType, aplicacionFertilizante }) => {
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const [agregarAplicacionFertilizante] = useMutation<GetAplicacionFertilizanteRegister>(REGISTRAR_APLICACION_FERTILIZANTE);
+    const [agregarAplicacionesFertilizantes] = useMutation<GetAplicacionesFertilizantesRegister>(
+        REGISTRAR_APLICACIONES_FERTILIZANTES
+    );
     const [actualizarAplicacionFertilizante] = useMutation<GetAplicacionFertilizanteUpdate>(ACTUALIZAR_APLICACION_FERTILIZANTE);
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const aplicacionFertilizante = aplicacionFertilizanteEdit as AplicacionFertilizante;
     const {
         register,
         handleSubmit,
@@ -42,46 +57,71 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataAplicacionFertilizante>({
         resolver: yupResolver(schema),
         defaultValues: {
-            fecha: formType === 'create' ? '' : dayjs(aplicacionFertilizante?.fecha).format('YYYY-MM-DD'),
-            tipo: formType === 'create' ? '' : aplicacionFertilizante?.tipo
+            fecha: formType === 'create' ? '' : dayjs(aplicacionFertilizante?.aplicacionFertilizante?.fecha).format('YYYY-MM-DD'),
+            tipo: formType === 'create' ? '' : aplicacionFertilizante?.aplicacionFertilizante?.tipo
         }
     });
 
-    const submitAplicacionHerbicida = async (data: FormDataAplicacionFertilizante) => {
+    const submitAplicacionHerbicida = async (dataForm: FormDataAplicacionFertilizante) => {
         setSubmitting(true);
         try {
             if (formType === 'create') {
-                await agregarAplicacionFertilizante({
+                const { data } = await agregarAplicacionFertilizante({
                     variables: {
                         createAplicacionFertilizanteInput: {
-                            tipo: data.tipo,
-                            fecha: data.fecha
+                            tipo: dataForm.tipo,
+                            fecha: dataForm.fecha
                         }
-                    },
-                    refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
+                    }
                 });
+
+                const { data: result } = await agregarAplicacionesFertilizantes({
+                    variables: {
+                        createAplicacionesFertilizanteInput: [
+                            {
+                                corte_id: id_corte,
+                                apfe_id: data?.agregarAplicacionFertilizante?.id_apfe
+                            }
+                        ]
+                    },
+                    refetchQueries: [
+                        { query: OBTENER_APLICACIONES_FERTILIZANTES },
+                        { query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE, variables: { corteId: id_corte } }
+                    ]
+                });
+
+                if (result?.agregarAplicacionesFertilizantes?.length !== 0) {
+                    setMessageType('success');
+                    setInfoMessage(`La aplicación se registro exitosamente.`);
+                    setShowMessage(true);
+                } else {
+                    setMessageType('error');
+                    setInfoMessage(`La aplicación ya esta aplicada en el corte seleccionado.`);
+                    setShowMessage(true);
+                }
+                handleClose();
+                return;
             } else {
                 await actualizarAplicacionFertilizante({
                     variables: {
                         updateAplicacionFertilizanteInput: {
-                            id_apfe: aplicacionFertilizante?.id_apfe,
-                            tipo: data.tipo,
-                            fecha: data.fecha,
-                            duplicate: formType === 'duplicar'
+                            id_apfe: aplicacionFertilizante?.aplicacionFertilizante?.id_apfe,
+                            tipo: dataForm.tipo,
+                            fecha: dataForm.fecha,
+                            duplicate: false // formType === 'duplicar'
                         }
                     },
-                    refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
+                    refetchQueries: [
+                        { query: OBTENER_APLICACIONES_FERTILIZANTES },
+                        { query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE, variables: { corteId: id_corte } }
+                    ]
                 });
             }
 
             setMessageType('success');
-            setInfoMessage(
-                `La aplicación se ${
-                    formType === 'create' ? 'registro' : formType === 'update' ? 'actualizo' : 'duplico'
-                } exitosamente.`
-            );
+            setInfoMessage('La aplicación se actualizo exitosamente.');
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -104,13 +144,17 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
                 <Grid2 size={12} mt={2}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
-                            label="Fecha aplicación herbicida"
+                            label="Fecha aplicación fertilizante"
                             onChange={(value) => {
                                 const newValue = dayjs(value as any).format('YYYY-MM-DD');
                                 setValue('fecha', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={formType === 'create' ? undefined : dayjs(aplicacionFertilizante?.fecha, 'YYYY-MM-DD')}
+                            defaultValue={
+                                formType === 'create'
+                                    ? undefined
+                                    : dayjs(aplicacionFertilizante?.aplicacionFertilizante?.fecha, 'YYYY-MM-DD')
+                            }
                         />
                         {!!errors.fecha && (
                             <Typography
@@ -144,22 +188,14 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({}) => {
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? (
-                            <Loading />
-                        ) : formType === 'create' ? (
-                            'Registrar'
-                        ) : formType === 'duplicar' ? (
-                            'Duplicar'
-                        ) : (
-                            'Actualizar'
-                        )}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
                     </Button>
                     <Button
                         color="primary"
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModalForms(false);
+                            handleClose();
                         }}
                     >
                         Cancelar

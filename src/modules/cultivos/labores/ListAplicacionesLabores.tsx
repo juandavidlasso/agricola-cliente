@@ -14,11 +14,9 @@ import ModalLoading from '@components/Modal';
 import { OBTENER_APLICACIONES_LABORES } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import DialogModal from '@components/Dialog';
-import LaborRegister from './LaborRegister';
-import LaborDelete from './LaborDelete';
-import ListSuertes from '../registroDatos/components/suertes/ListSuertes';
 import { useLabores } from './hooks/useLabores';
+import PopoverLabores from './PopoverLabores';
+import PopoverSuertesLabores from './PopoverSuertesLabores';
 
 interface Props {}
 
@@ -37,7 +35,8 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
         setModalSuertes,
         setLaborEdit,
         setFormType,
-        handleSubmitLabor
+        handleSubmitLabor,
+        setLaborDuplicate
     } = useLabores();
 
     if (error) return <Alert message={error.message} />;
@@ -47,64 +46,42 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
     return (
         <>
             {openModal && (
-                <DialogModal
-                    isOpen={true}
+                <PopoverLabores
                     handleClose={() => {
                         setFormType('create');
                         setOpenModal(false);
                     }}
-                    title={formType === 'create' ? 'Registrar labor' : formType === 'update' ? 'Editar labor' : 'Eliminar labor'}
-                    height={formType === 'delete' ? 40 : 90}
-                    width={formType === 'delete' ? '40%' : '70%'}
-                    id="modal-registros"
-                >
-                    {formType === 'delete' ? (
-                        <LaborDelete
-                            labor={laborEdit}
-                            onClose={() => {
-                                setFormType('create');
-                                setOpenModal(false);
-                            }}
-                        />
-                    ) : (
-                        <LaborRegister
-                            formType={formType}
-                            labor={laborEdit}
-                            onClose={() => {
-                                setFormType('create');
-                                setOpenModal(false);
-                            }}
-                        />
-                    )}
-                </DialogModal>
+                    laborEdit={laborEdit}
+                    formType={formType}
+                />
             )}
             {modalSuertes && (
-                <DialogModal
-                    isOpen={true}
+                <PopoverSuertesLabores
                     handleClose={() => setModalSuertes(false)}
-                    title={'Selecciona la suerte y el corte'}
-                    height={90}
-                    id="modal-suertes"
-                    width="80%"
-                >
-                    <ListSuertes handleSubmit={(corteId: number) => handleSubmitLabor(corteId, laborEdit?.labor_id!)} />
-                </DialogModal>
+                    handleSubmitLabor={handleSubmitLabor}
+                    laborEdit={laborEdit}
+                    formType={formType}
+                    setFormType={setFormType}
+                    setLaborDuplicate={setLaborDuplicate}
+                />
             )}
             <Grid2 container>
-                <Grid2 size={12}>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => {
-                            setLaborEdit(undefined);
-                            setFormType('create');
-                            setOpenModal(true);
-                        }}
-                        className="!mb-3"
-                    >
-                        Registrar labor
-                    </Button>
-                </Grid2>
+                {rol === 1 && (
+                    <Grid2 size={12}>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => {
+                                setLaborEdit(undefined);
+                                setFormType('create');
+                                setOpenModal(true);
+                            }}
+                            className="!mb-3"
+                        >
+                            Registrar labor
+                        </Button>
+                    </Grid2>
+                )}
                 <Grid2 size={12}>
                     <div style={{ height: 'auto', width: '98%' }}>
                         {data?.obtenerAplicacionesLabores?.length === 0 ? (
@@ -197,17 +174,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                                                                 }}
                                                                 variant="outlined"
                                                                 color="warning"
-                                                                sx={{
-                                                                    fontSize: 8,
-                                                                    minWidth: 70,
-                                                                    maxWidth: 80,
-                                                                    border: '1px solid #D4AC0D !important',
-                                                                    ':hover': {
-                                                                        background: '#D4AC0D !important',
-                                                                        border: '1px solid #D4AC0D !important',
-                                                                        color: '#FFFFFF !important'
-                                                                    }
-                                                                }}
+                                                                className="!text-[10px] !py-1 !px-3 !min-w-fit"
                                                             >
                                                                 Editar
                                                             </Button>
@@ -219,19 +186,21 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                                                                 }}
                                                                 variant="outlined"
                                                                 color="error"
-                                                                sx={{
-                                                                    fontSize: 8,
-                                                                    minWidth: 70,
-                                                                    maxWidth: 80,
-                                                                    border: '1px solid #922B21 !important',
-                                                                    ':hover': {
-                                                                        background: '#922B21 !important',
-                                                                        border: '1px solid #922B21 !important',
-                                                                        color: '#FFFFFF !important'
-                                                                    }
-                                                                }}
+                                                                className="!text-[10px] !py-1 !px-3 !min-w-fit"
                                                             >
                                                                 Eliminar
+                                                            </Button>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    setLaborEdit(row);
+                                                                    setFormType('duplicate');
+                                                                    setModalSuertes(true);
+                                                                }}
+                                                                variant="outlined"
+                                                                color="success"
+                                                                className="!text-[10px] !py-1 !px-3 !min-w-fit"
+                                                            >
+                                                                Duplicar
                                                             </Button>
                                                             <Button
                                                                 onClick={() => {
@@ -240,16 +209,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                                                                 }}
                                                                 variant="outlined"
                                                                 color="primary"
-                                                                sx={{
-                                                                    fontSize: 8,
-                                                                    border: '1px solid #1f618d !important',
-                                                                    textTransform: 'none',
-                                                                    ':hover': {
-                                                                        background: '#1f618d !important',
-                                                                        border: '1px solid #1f618d !important',
-                                                                        color: '#FFFFFF !important'
-                                                                    }
-                                                                }}
+                                                                className="!text-[8px] !py-1 !px-3 !min-w-fit !normal-case"
                                                             >
                                                                 Aplicar en otra suerte
                                                             </Button>

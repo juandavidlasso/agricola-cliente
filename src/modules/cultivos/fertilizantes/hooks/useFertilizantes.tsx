@@ -1,39 +1,43 @@
 import { useContext, useEffect, useState } from 'react';
-import {
-    AplicacionesHerbicidas,
-    GetAplicacionesHerbicidasResponse,
-    GetRegistrarAplicacionesHerbicidas
-} from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
+import { ApolloError, useMutation } from '@apollo/client';
 import { GridColDef } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
-import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
-import { ApolloError, useMutation } from '@apollo/client';
-import { REGISTRAR_APLICACIONES_HERBICIDAS } from '@graphql/mutations';
+import { REGISTRAR_APLICACIONES_FERTILIZANTES } from '@graphql/mutations';
+import { OBTENER_APLICACIONES_FERTILIZANTES, OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
+import {
+    AplicacionesFertilizantes,
+    GetAplicacionesFertilizantesCorteResponse,
+    GetAplicacionesFertilizantesRegister
+} from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
+import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
 
-export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefined, rol: number) => {
+export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse | undefined, rol: number) => {
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
     const [totals, setTotals] = useState<{ [key: number]: number }>({});
-    const [aplicacionHerbicidaEdit, setAplicacionHerbicidaEdit] = useState<AplicacionesHerbicidas>();
-    const [tratamientoHerbicidaEdit, setTratamientoHerbicidaEdit] = useState<TratamientoHerbicidas>();
+    const [aplicacionFertilizanteEdit, setAplicacionFertilizanteEdit] = useState<AplicacionesFertilizantes>();
+    const [tratamientoFertilizanteEdit, setTratamientoFertilizanteEdit] = useState<TratamientoFertilizante>();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [formType, setFormType] = useState<'create' | 'update' | 'delete'>('create');
     const [typeModal, setTypeModal] = useState<'aplicacion' | 'tratamiento'>('aplicacion');
     const [modalSuertes, setModalSuertes] = useState<boolean>(false);
-    const [agregarAplicacionesHerbicidas] = useMutation<GetRegistrarAplicacionesHerbicidas>(REGISTRAR_APLICACIONES_HERBICIDAS);
+    const [agregarAplicacionesFertilizantes] = useMutation<GetAplicacionesFertilizantesRegister>(
+        REGISTRAR_APLICACIONES_FERTILIZANTES
+    );
 
     useEffect(() => {
         const trueKey = Object.keys(openStates).filter((key) => openStates[parseInt(key)] === true);
         if (trueKey.length !== 0) {
             for (let index = 0; index < trueKey.length; index++) {
-                const tratamientos = data?.obtenerAplicacionesHerbicidasCorte.find(
-                    (data) => data.id_aplicaciones_herbicidas === Number(trueKey[index])
+                const tratamientos = data?.obtenerAplicacionesFertilizantesCorte?.find(
+                    (data) => data.id_aplicaciones_fertilizantes === Number(trueKey[index])
                 );
                 const total =
-                    tratamientos?.aplicacionHerbicida.listTratamientoHerbicida?.reduce((acc, cr) => acc + (cr?.valor ?? 0), 0) ??
-                    0;
+                    tratamientos?.aplicacionFertilizante?.listTratamientoFertilizante?.reduce(
+                        (acc, cr) => acc + (cr?.valor ?? 0),
+                        0
+                    ) ?? 0;
                 setTotals((prevTotals) => ({
                     ...prevTotals,
                     [trueKey[index]]: total.toLocaleString()
@@ -65,26 +69,26 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
                     return (
                         <Box className="flex flex-col gap-1">
                             <Button
-                                className="!text-[10px] !py-1 !px-1 !min-w-fit"
+                                className="!text-[10px] !py-1 !px-3 !min-w-fit"
                                 variant="outlined"
                                 color="warning"
                                 onClick={() => {
                                     setTypeModal('tratamiento');
                                     setFormType('update');
-                                    setTratamientoHerbicidaEdit(params.row);
+                                    setTratamientoFertilizanteEdit(params.row);
                                     setOpenModal(true);
                                 }}
                             >
                                 Editar
                             </Button>
                             <Button
-                                className="!text-[10px] !py-1 !px-1 !min-w-fit"
+                                className="!text-[10px] !py-1 !px-3 !min-w-fit"
                                 variant="outlined"
                                 color="error"
                                 onClick={() => {
                                     setTypeModal('tratamiento');
                                     setFormType('delete');
-                                    setTratamientoHerbicidaEdit(params.row);
+                                    setTratamientoFertilizanteEdit(params.row);
                                     setOpenModal(true);
                                 }}
                             >
@@ -101,24 +105,24 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
         return columns;
     };
 
-    const handleSubmitAplicacionHerbicidas = async (corteId: number) => {
+    const handleSubmitAplicacionesFertilizantes = async (corteId: number) => {
         try {
-            const data = await agregarAplicacionesHerbicidas({
+            const data = await agregarAplicacionesFertilizantes({
                 variables: {
-                    createAplicacionesHerbicidaInput: [
+                    createAplicacionesFertilizanteInput: [
                         {
-                            aphe_id: aplicacionHerbicidaEdit?.aphe_id,
-                            corte_id: corteId
+                            corte_id: corteId,
+                            apfe_id: aplicacionFertilizanteEdit?.apfe_id
                         }
                     ]
                 },
                 refetchQueries: [
-                    { query: OBTENER_APLICACIONES_HERBICIDAS },
-                    { query: OBTENER_APLICACIONES_HERBICIDAS_CORTE, variables: { corteId } }
+                    { query: OBTENER_APLICACIONES_FERTILIZANTES },
+                    { query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE, variables: { corteId } }
                 ]
             });
 
-            if (data.data?.agregarAplicacionesHerbicidas.length !== 0) {
+            if (data.data?.agregarAplicacionesFertilizantes.length !== 0) {
                 setMessageType('success');
                 setInfoMessage(`La aplicación se registro exitosamente.`);
                 setShowMessage(true);
@@ -142,21 +146,21 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
     };
 
     return {
-        aplicacionHerbicidaEdit,
         openStates,
         totals,
         openModal,
-        formType,
         typeModal,
-        tratamientoHerbicidaEdit,
+        formType,
+        aplicacionFertilizanteEdit,
+        tratamientoFertilizanteEdit,
         modalSuertes,
-        setAplicacionHerbicidaEdit,
         handleToggle,
+        setAplicacionFertilizanteEdit,
         setOpenModal,
         setFormType,
         setTypeModal,
-        getColumns,
         setModalSuertes,
-        handleSubmitAplicacionHerbicidas
+        getColumns,
+        handleSubmitAplicacionesFertilizantes
     };
 };

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react';
 import DialogModal from '@components/Dialog';
-import ListAplicacionFertilizantes from '../registroDatos/components/fertilizantes/ListAplicacionFertilizantes';
 import ListTratamientoPlagas from '../plagas/tratamiento/ListTratamientoPlagas';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import RiegoRegister from '../riegos/RiegoRegister';
@@ -27,14 +26,11 @@ const ModalActions: React.FC<Props> = () => {
         };
     }, []);
     const getComponent = () => {
-        if (typeModal === 'fertilizantes') return <ListAplicacionFertilizantes />;
         if (typeModal === 'plagas') return <ListTratamientoPlagas />;
         if (typeModal === 'riegos') return <RiegoRegister />;
         return <></>;
     };
     const getTitle = () => {
-        if (typeModal === 'herbicidas') return `Aplicar herbicida - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
-        if (typeModal === 'fertilizantes') return `Aplicar fertilizante - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
         if (typeModal === 'plagas') return `Aplicar producto - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
         if (typeModal === 'riegos') return `Registrar riego - Suerte ${suerte.nombre} - Corte ${corte.numero}`;
         return '';
@@ -49,7 +45,6 @@ const ModalActions: React.FC<Props> = () => {
             height={getHeight()}
             width={getWidth()}
             id="modal-registros"
-            styles={typeModal === 'herbicidas' || typeModal === 'fertilizantes' ? '!ml-[30%]' : ''}
         >
             {getComponent()}
         </DialogModal>
