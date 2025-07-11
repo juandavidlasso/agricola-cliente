@@ -3,12 +3,18 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TablonState } from '@interfaces/cultivos/tablones';
 import ListAplicacionesPlagas from './aplicacion/ListAplicacionesPlagas';
+import { AplicacionPlaga } from '@interfaces/cultivos/plagas/aplicacion';
+import { DataTypePlaga } from '@interfaces/cultivos/plagas/tratamiento';
 
 interface Props {
     tablon: TablonState;
+    setAplicacionPlaga: React.Dispatch<React.SetStateAction<AplicacionPlaga | undefined>>;
+    setFormType: React.Dispatch<React.SetStateAction<DataTypePlaga>>;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setTypeModal: React.Dispatch<React.SetStateAction<'aplicacion' | 'tratamiento'>>;
 }
 
-const Plaga: React.FC<Props> = ({ tablon }) => {
+const Plaga: React.FC<Props> = ({ tablon, setAplicacionPlaga, setFormType, setOpenModal, setTypeModal }) => {
     return (
         <Accordion
             sx={{
@@ -39,7 +45,14 @@ const Plaga: React.FC<Props> = ({ tablon }) => {
                 {tablon?.listAplicacionesPlagas?.length === 0 ? (
                     <Typography>No hay aplicaciones registradas</Typography>
                 ) : (
-                    <ListAplicacionesPlagas listAplicacionesPlagas={tablon.listAplicacionesPlagas} tablon={tablon} />
+                    <ListAplicacionesPlagas
+                        listAplicacionesPlagas={tablon.listAplicacionesPlagas}
+                        tablon={tablon}
+                        setAplicacionPlaga={setAplicacionPlaga}
+                        setFormType={setFormType}
+                        setOpenModal={setOpenModal}
+                        setTypeModal={setTypeModal}
+                    />
                 )}
             </AccordionDetails>
         </Accordion>

@@ -8,14 +8,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Loading from '@components/Loading';
 import { ACTUALIZAR_APLICACION_PLAGA } from '@graphql/mutations';
 import { OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
-import { GetAplicacionPlagaUpdate } from '@interfaces/cultivos/plagas/aplicacion';
+import { AplicacionPlaga, GetAplicacionPlagaUpdate } from '@interfaces/cultivos/plagas/aplicacion';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {}
+interface Props {
+    handleClose: () => void;
+    aplicacionPlaga: AplicacionPlaga | undefined;
+}
 
-const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
-    const { aplicacionPlagaEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } =
-        useContext(CultivosContext);
+const AplicacionPlagaActualizar: React.FC<Props> = ({ aplicacionPlaga, handleClose }) => {
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [errorForm, setErrorForm] = useState<boolean>(false);
     const [fecha, setFecha] = useState<string>('');
@@ -27,21 +29,21 @@ const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
             await actualizarAplicacionPlagas({
                 variables: {
                     updateAplicacionPlagasInput: {
-                        id_apla: aplicacionPlagaEdit?.id_apla,
+                        id_apla: aplicacionPlaga?.id_apla,
                         fecha,
-                        corte_id: aplicacionPlagaEdit?.corte_id,
-                        tablon_id: aplicacionPlagaEdit?.tablon_id,
-                        trapl_id: aplicacionPlagaEdit?.trapl_id
+                        corte_id: aplicacionPlaga?.corte_id,
+                        tablon_id: aplicacionPlaga?.tablon_id,
+                        trapl_id: aplicacionPlaga?.trapl_id
                     }
                 },
                 refetchQueries: [
-                    { query: OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS, variables: { idCorte: aplicacionPlagaEdit?.corte_id } }
+                    { query: OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS, variables: { idCorte: aplicacionPlaga?.corte_id } }
                 ]
             });
             setMessageType('success');
             setInfoMessage('La aplicación se actualizo exitosamente.');
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -69,7 +71,7 @@ const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
                             setErrorForm(false);
                         }}
                         format="DD/MM/YYYY"
-                        defaultValue={dayjs(aplicacionPlagaEdit?.fecha, 'YYYY-MM-DD')}
+                        defaultValue={dayjs(aplicacionPlaga?.fecha, 'YYYY-MM-DD')}
                     />
                     {errorForm && (
                         <Typography
@@ -93,7 +95,7 @@ const AplicacionPlagaActualizar: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)}>
+                <Button variant="contained" color="primary" onClick={handleClose}>
                     Cancelar
                 </Button>
             </Grid2>

@@ -37,7 +37,7 @@ const PopoverHerbicida: React.FC<Props> = ({
             if (formType === 'delete') return 50;
             return 60;
         }
-        if (formType === 'delete') return 40;
+        if (formType === 'delete') return 45;
         return 90;
     };
     const getComponent = () => {

@@ -1,17 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Button, Grid2, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import { OBTENER_TRATAMIENTO_PLAGAS } from '@graphql/queries';
-import { GetTratamientoPlagasResponse, TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
-import { CultivosContext, DataType, DataTypeApplication } from 'src/context/cultivos/CultivosContext';
+import { DataTypePlaga, GetTratamientoPlagasResponse, TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
 
 const getColumns = (
-    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
-    setFormType: React.Dispatch<React.SetStateAction<DataType>>,
-    setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>,
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setFormType: React.Dispatch<React.SetStateAction<DataTypePlaga>>,
+    setTypeModal: React.Dispatch<React.SetStateAction<'aplicacion' | 'tratamiento'>>,
     setTratamientoPlagaEdit: React.Dispatch<React.SetStateAction<TratamientoPlaga | undefined>>
 ) => {
     const columns: GridColDef[] = [
@@ -38,9 +37,9 @@ const getColumns = (
                     <Button
                         onClick={() => {
                             setFormType('update');
-                            setDataType('tratamiento');
+                            setTypeModal('tratamiento');
                             setTratamientoPlagaEdit(param.row);
-                            setOpenModalForms(true);
+                            setOpenModal(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -62,9 +61,9 @@ const getColumns = (
                     <Button
                         onClick={() => {
                             setFormType('delete');
-                            setDataType('tratamiento');
+                            setTypeModal('tratamiento');
                             setTratamientoPlagaEdit(param.row);
-                            setOpenModalForms(true);
+                            setOpenModal(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -85,10 +84,8 @@ const getColumns = (
                     </Button>
                     <Button
                         onClick={() => {
-                            setDataType('aplicacion');
                             setFormType('aplicar');
-                            setTratamientoPlagaEdit(param.row);
-                            setOpenModalForms(true);
+                            setOpenModal(true);
                         }}
                         variant="outlined"
                         color="info"
@@ -113,11 +110,15 @@ const getColumns = (
     return columns;
 };
 
-interface Props {}
+interface Props {
+    setFormType: React.Dispatch<React.SetStateAction<DataTypePlaga>>;
+    setTypeModal: React.Dispatch<React.SetStateAction<'aplicacion' | 'tratamiento'>>;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setTratamientoPlagaEdit: React.Dispatch<React.SetStateAction<TratamientoPlaga | undefined>>;
+}
 
-const ListTratamientoPlagas: React.FC<Props> = ({}) => {
+const ListTratamientoPlagas: React.FC<Props> = ({ setFormType, setOpenModal, setTypeModal, setTratamientoPlagaEdit }) => {
     const { data, loading, error } = useQuery<GetTratamientoPlagasResponse>(OBTENER_TRATAMIENTO_PLAGAS);
-    const { setOpenModalForms, setFormType, setDataType, setTratamientoPlagaEdit } = useContext(CultivosContext);
 
     if (error) return <Alert message={error.message} />;
 
@@ -131,7 +132,7 @@ const ListTratamientoPlagas: React.FC<Props> = ({}) => {
                 <Grid2 size={12}>
                     <DataGrid
                         rows={data?.obtenerTratamientoPlagas}
-                        columns={getColumns(setOpenModalForms, setFormType, setDataType, setTratamientoPlagaEdit)}
+                        columns={getColumns(setOpenModal, setFormType, setTypeModal, setTratamientoPlagaEdit)}
                         disableVirtualization
                         initialState={{
                             pagination: {

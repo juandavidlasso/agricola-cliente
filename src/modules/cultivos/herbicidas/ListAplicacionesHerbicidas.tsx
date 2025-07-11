@@ -112,8 +112,8 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                 primary={
                                                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                                                         <Typography>
-                                                            Fecha aplicación: {aplicaciones.aplicacionHerbicida.fecha} -{' '}
-                                                            {aplicaciones.aplicacionHerbicida.tipo}
+                                                            Fecha aplicación: {aplicaciones?.aplicacionHerbicida?.fecha} -{' '}
+                                                            {aplicaciones?.aplicacionHerbicida?.tipo}
                                                             <br />
                                                             Suertes: {aplicaciones?.suertes}
                                                         </Typography>

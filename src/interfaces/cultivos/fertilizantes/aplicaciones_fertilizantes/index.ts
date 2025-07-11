@@ -4,6 +4,7 @@ export interface AplicacionesFertilizantes {
     id_aplicaciones_fertilizantes: number;
     corte_id: number;
     apfe_id: number;
+    suertes?: string;
     aplicacionFertilizante: AplicacionFertilizante;
 }
 

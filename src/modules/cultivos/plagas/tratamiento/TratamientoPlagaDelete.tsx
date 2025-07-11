@@ -5,26 +5,29 @@ import Loading from '@components/Loading';
 import { ELIMINAR_TRATAMIENTO_PLAGAS } from '@graphql/mutations';
 import { OBTENER_TRATAMIENTO_PLAGAS } from '@graphql/queries';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
 
-interface Props {}
+interface Props {
+    tratamientoPlaga: TratamientoPlaga | undefined;
+    handleClose: () => void;
+}
 
-const TratamientoPlagaDelete: React.FC<Props> = ({}) => {
-    const { tratamientoPlagaEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } =
-        useContext(CultivosContext);
+const TratamientoPlagaDelete: React.FC<Props> = ({ tratamientoPlaga, handleClose }) => {
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarTratamientoPlagas] = useMutation<boolean>(ELIMINAR_TRATAMIENTO_PLAGAS);
     const submitDelete = async () => {
         try {
             await eliminarTratamientoPlagas({
                 variables: {
-                    idTrapl: tratamientoPlagaEdit?.id_trapl
+                    idTrapl: tratamientoPlaga?.id_trapl
                 },
                 refetchQueries: [{ query: OBTENER_TRATAMIENTO_PLAGAS }]
             });
             setMessageType('success');
             setInfoMessage('El tratamiento se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -54,7 +57,7 @@ const TratamientoPlagaDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)}>
+                <Button variant="contained" color="primary" onClick={handleClose}>
                     Cancelar
                 </Button>
             </Grid2>

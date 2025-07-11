@@ -10,13 +10,15 @@ import { REGISTRAR_APLICACION_PLAGA } from '@graphql/mutations';
 import { OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
 import Loading from '@components/Loading';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
 
 interface Props {
     suertes: SuertesCortesTablones[];
+    tratamientoPlaga: TratamientoPlaga | undefined;
 }
 
-const SuerteTablon: React.FC<Props> = ({ suertes }) => {
-    const { tratamientoPlagaEdit, setInfoMessage, setShowMessage, setMessageType } = useContext(CultivosContext);
+const SuerteTablon: React.FC<Props> = ({ suertes, tratamientoPlaga }) => {
+    const { setInfoMessage, setShowMessage, setMessageType } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [errorForm, setErrorForm] = useState<boolean>(false);
     const [fecha, setFecha] = useState<string>('');
@@ -36,7 +38,7 @@ const SuerteTablon: React.FC<Props> = ({ suertes }) => {
                         fecha,
                         corte_id: corteId,
                         tablon_id: tablonId,
-                        trapl_id: tratamientoPlagaEdit?.id_trapl
+                        trapl_id: tratamientoPlaga?.id_trapl
                     }
                 },
                 refetchQueries: [
@@ -80,8 +82,7 @@ const SuerteTablon: React.FC<Props> = ({ suertes }) => {
         <>
             <Grid2 size={12} mt={2} textAlign={'center'}>
                 <Typography>
-                    Producto a aplicar: {tratamientoPlagaEdit?.producto} - {tratamientoPlagaEdit?.unidad} -{' '}
-                    {tratamientoPlagaEdit?.tiempo}
+                    Producto a aplicar: {tratamientoPlaga?.producto} - {tratamientoPlaga?.unidad} - {tratamientoPlaga?.tiempo}
                 </Typography>
             </Grid2>
             <Grid2 size={12} mt={2} textAlign={'center'}>

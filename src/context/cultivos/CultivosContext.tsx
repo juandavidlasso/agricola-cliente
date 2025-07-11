@@ -1,16 +1,9 @@
 import { createContext, useState } from 'react';
 import { AlertType } from '@interfaces/alerts';
-import { AplicacionFertilizante } from '@interfaces/cultivos/fertilizantes/aplicacion';
-import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
-import { AplicacionHerbicidas } from '@interfaces/cultivos/herbicidas/aplicacion';
-import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
 import { TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
 import { AplicacionPlaga } from '@interfaces/cultivos/plagas/aplicacion';
-import { AplicacionLabores, Labores } from '@interfaces/cultivos/labores';
 import { Riego } from '@interfaces/cultivos/riegos';
 import { Cosecha } from '@interfaces/cultivos/cosechas';
-import { AplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
-import { AplicacionesFertilizantes } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 
 interface CultivosState {
     showMessage: boolean;
@@ -35,34 +28,6 @@ interface CultivosState {
     setHeader: React.Dispatch<React.SetStateAction<string>>;
     buttonName: string;
     setButtonName: React.Dispatch<React.SetStateAction<string>>;
-    // Fertilizantes
-    dataType: DataTypeApplication;
-    setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>;
-    aplicacionFertilizanteEdit: AplicacionFertilizante | AplicacionesFertilizantes | undefined;
-    setAplicacionFertilizanteEdit: React.Dispatch<
-        React.SetStateAction<AplicacionFertilizante | AplicacionesFertilizantes | undefined>
-    >;
-    tratamientoFertilizanteEdit: TratamientoFertilizante | undefined;
-    setTratamientoFertilizanteEdit: React.Dispatch<React.SetStateAction<TratamientoFertilizante | undefined>>;
-    selectedAplicacionFertilizantes: number[];
-    setSelectedAplicacionFertilizantes: React.Dispatch<React.SetStateAction<number[]>>;
-    // Herbicidas
-    aplicacionHerbicidaEdit: AplicacionHerbicidas | AplicacionesHerbicidas | undefined;
-    setAplicacionHerbicidaEdit: React.Dispatch<React.SetStateAction<AplicacionHerbicidas | AplicacionesHerbicidas | undefined>>;
-    tratamientoHerbicidaEdit: TratamientoHerbicidas | undefined;
-    setTratamientoHerbicidaEdit: React.Dispatch<React.SetStateAction<TratamientoHerbicidas | undefined>>;
-    selectedAplicacionHerbicidas: number[];
-    setSelectedAplicacionHerbicidas: React.Dispatch<React.SetStateAction<number[]>>;
-    // Labores
-    editLabor: Labores | AplicacionLabores | undefined;
-    setEditLabor: React.Dispatch<React.SetStateAction<Labores | AplicacionLabores | undefined>>;
-    selectedLabores: number[];
-    setSelectedLabores: React.Dispatch<React.SetStateAction<number[]>>;
-    // Plagas
-    tratamientoPlagaEdit: TratamientoPlaga | undefined;
-    setTratamientoPlagaEdit: React.Dispatch<React.SetStateAction<TratamientoPlaga | undefined>>;
-    aplicacionPlagaEdit: AplicacionPlaga | undefined;
-    setAplicacionPlagaEdit: React.Dispatch<React.SetStateAction<AplicacionPlaga | undefined>>;
     // Riegos
     riegoEdit: Riego | undefined;
     setRiegoEdit: React.Dispatch<React.SetStateAction<Riego | undefined>>;
@@ -96,32 +61,6 @@ export const CultivosContext = createContext<CultivosState>({
     setHeader: () => '',
     buttonName: '',
     setButtonName: () => '',
-    // Fertilizantes
-    dataType: '',
-    setDataType: () => '',
-    aplicacionFertilizanteEdit: undefined,
-    setAplicacionFertilizanteEdit: () => undefined,
-    tratamientoFertilizanteEdit: undefined,
-    setTratamientoFertilizanteEdit: () => undefined,
-    selectedAplicacionFertilizantes: [],
-    setSelectedAplicacionFertilizantes: () => [],
-    // Herbicidas
-    aplicacionHerbicidaEdit: undefined,
-    setAplicacionHerbicidaEdit: () => undefined,
-    tratamientoHerbicidaEdit: undefined,
-    setTratamientoHerbicidaEdit: () => undefined,
-    selectedAplicacionHerbicidas: [],
-    setSelectedAplicacionHerbicidas: () => [],
-    // Labores
-    editLabor: undefined,
-    setEditLabor: () => undefined,
-    selectedLabores: [],
-    setSelectedLabores: () => [],
-    // Plagas
-    tratamientoPlagaEdit: undefined,
-    setTratamientoPlagaEdit: () => undefined,
-    aplicacionPlagaEdit: undefined,
-    setAplicacionPlagaEdit: () => undefined,
     // Riegos
     riegoEdit: undefined,
     setRiegoEdit: () => undefined,
@@ -133,17 +72,7 @@ export const CultivosContext = createContext<CultivosState>({
 });
 
 export type DataType = 'create' | 'update' | 'delete' | 'aplicar' | 'duplicar';
-export type DataTypeApplication = 'aplicacion' | 'tratamiento' | '';
-export type DataTypeModal =
-    | 'labores'
-    | 'herbicidas'
-    | 'fertilizantes'
-    | 'plagas'
-    | 'riegos'
-    | 'cosecha'
-    | 'corte'
-    | 'tablon'
-    | '';
+type DataTypeModal = 'labores' | 'herbicidas' | 'fertilizantes' | 'plagas' | 'riegos' | 'cosecha' | 'corte' | 'tablon' | '';
 
 export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
     //Globals
@@ -158,25 +87,6 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
     const [typeModal, setTypeModal] = useState<DataTypeModal>('');
     const [header, setHeader] = useState<string>('');
     const [buttonName, setButtonName] = useState<string>('');
-    // Fertilizantes
-    const [dataType, setDataType] = useState<DataTypeApplication>('');
-    const [aplicacionFertilizanteEdit, setAplicacionFertilizanteEdit] = useState<
-        AplicacionFertilizante | AplicacionesFertilizantes | undefined
-    >();
-    const [tratamientoFertilizanteEdit, setTratamientoFertilizanteEdit] = useState<TratamientoFertilizante>();
-    const [selectedAplicacionFertilizantes, setSelectedAplicacionFertilizantes] = useState<number[]>([]);
-    // Herbicidas
-    const [aplicacionHerbicidaEdit, setAplicacionHerbicidaEdit] = useState<
-        AplicacionHerbicidas | AplicacionesHerbicidas | undefined
-    >();
-    const [tratamientoHerbicidaEdit, setTratamientoHerbicidaEdit] = useState<TratamientoHerbicidas>();
-    const [selectedAplicacionHerbicidas, setSelectedAplicacionHerbicidas] = useState<number[]>([]);
-    // Labores
-    const [editLabor, setEditLabor] = useState<Labores | AplicacionLabores | undefined>();
-    const [selectedLabores, setSelectedLabores] = useState<number[]>([]);
-    // Plagas
-    const [tratamientoPlagaEdit, setTratamientoPlagaEdit] = useState<TratamientoPlaga>();
-    const [aplicacionPlagaEdit, setAplicacionPlagaEdit] = useState<AplicacionPlaga>();
     // Riegos
     const [riegoEdit, setRiegoEdit] = useState<Riego>();
     // Cosecha
@@ -194,20 +104,9 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 openModalSuertes,
                 openModalForms,
                 formType,
-                dataType,
                 typeModal,
                 header,
                 buttonName,
-                aplicacionFertilizanteEdit,
-                tratamientoFertilizanteEdit,
-                selectedAplicacionFertilizantes,
-                aplicacionHerbicidaEdit,
-                tratamientoHerbicidaEdit,
-                selectedAplicacionHerbicidas,
-                editLabor,
-                selectedLabores,
-                tratamientoPlagaEdit,
-                aplicacionPlagaEdit,
                 riegoEdit,
                 cosechaEdit,
                 validateCosecha,
@@ -219,20 +118,9 @@ export const CultivosProvider = ({ children }: { children: JSX.Element }) => {
                 setOpenModalSuertes,
                 setOpenModalForms,
                 setFormType,
-                setDataType,
                 setTypeModal,
                 setHeader,
                 setButtonName,
-                setAplicacionFertilizanteEdit,
-                setTratamientoFertilizanteEdit,
-                setSelectedAplicacionFertilizantes,
-                setAplicacionHerbicidaEdit,
-                setTratamientoHerbicidaEdit,
-                setSelectedAplicacionHerbicidas,
-                setEditLabor,
-                setSelectedLabores,
-                setTratamientoPlagaEdit,
-                setAplicacionPlagaEdit,
                 setRiegoEdit,
                 setCosechaEdit,
                 setValidateCosecha

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
@@ -6,13 +6,13 @@ import { AplicacionPlaga } from '@interfaces/cultivos/plagas/aplicacion';
 import { TablonState } from '@interfaces/cultivos/tablones';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { CultivosContext, DataType, DataTypeApplication } from 'src/context/cultivos/CultivosContext';
+import { DataTypePlaga } from '@interfaces/cultivos/plagas/tratamiento';
 
 const getColumns = (
-    setOpenModalForms: React.Dispatch<React.SetStateAction<boolean>>,
-    setFormType: React.Dispatch<React.SetStateAction<DataType>>,
-    setDataType: React.Dispatch<React.SetStateAction<DataTypeApplication>>,
-    setAplicacionPlagaEdit: React.Dispatch<React.SetStateAction<AplicacionPlaga | undefined>>
+    setAplicacionPlagaEdit: React.Dispatch<React.SetStateAction<AplicacionPlaga | undefined>>,
+    setFormType: React.Dispatch<React.SetStateAction<DataTypePlaga>>,
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setTypeModal: React.Dispatch<React.SetStateAction<'aplicacion' | 'tratamiento'>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'edad', headerName: 'Edad Actual (meses)', flex: 1 },
@@ -40,9 +40,9 @@ const getColumns = (
                     <Button
                         onClick={() => {
                             setAplicacionPlagaEdit(param.row);
-                            setDataType('aplicacion');
                             setFormType('delete');
-                            setOpenModalForms(true);
+                            setTypeModal('aplicacion');
+                            setOpenModal(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -63,9 +63,9 @@ const getColumns = (
                     <Button
                         onClick={() => {
                             setAplicacionPlagaEdit(param.row);
-                            setDataType('aplicacion');
                             setFormType('update');
-                            setOpenModalForms(true);
+                            setTypeModal('aplicacion');
+                            setOpenModal(true);
                         }}
                         variant="outlined"
                         color="error"
@@ -93,11 +93,21 @@ const getColumns = (
 interface Props {
     tablon: TablonState;
     listAplicacionesPlagas: TablonState['listAplicacionesPlagas'];
+    setAplicacionPlaga: React.Dispatch<React.SetStateAction<AplicacionPlaga | undefined>>;
+    setFormType: React.Dispatch<React.SetStateAction<DataTypePlaga>>;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setTypeModal: React.Dispatch<React.SetStateAction<'aplicacion' | 'tratamiento'>>;
 }
 
-const ListAplicacionesPlagas: React.FC<Props> = ({ listAplicacionesPlagas, tablon }) => {
+const ListAplicacionesPlagas: React.FC<Props> = ({
+    listAplicacionesPlagas,
+    tablon,
+    setAplicacionPlaga,
+    setFormType,
+    setOpenModal,
+    setTypeModal
+}) => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { setOpenModalForms, setFormType, setDataType, setAplicacionPlagaEdit } = useContext(CultivosContext);
     const now = moment().format('YYYY-MM-DD');
     const factual = moment(now);
     const finicio = moment(corte.fecha_inicio);
@@ -122,7 +132,7 @@ const ListAplicacionesPlagas: React.FC<Props> = ({ listAplicacionesPlagas, tablo
         <div style={{ height: 'auto', width: '100%' }}>
             <DataGrid
                 rows={rows}
-                columns={getColumns(setOpenModalForms, setFormType, setDataType, setAplicacionPlagaEdit)}
+                columns={getColumns(setAplicacionPlaga, setFormType, setOpenModal, setTypeModal)}
                 disableVirtualization
                 disableColumnSelector
                 initialState={{

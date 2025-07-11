@@ -115,8 +115,10 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                 primary={
                                                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                                                         <Typography>
-                                                            Fecha aplicación: {aplicaciones.aplicacionFertilizante.fecha} -{' '}
-                                                            {aplicaciones.aplicacionFertilizante.tipo}
+                                                            Fecha aplicación: {aplicaciones?.aplicacionFertilizante?.fecha} -{' '}
+                                                            {aplicaciones?.aplicacionFertilizante?.tipo}
+                                                            <br />
+                                                            Suertes: {aplicaciones?.suertes}
                                                         </Typography>
                                                         {rol === 1 && (
                                                             <Box className="flex gap-2">

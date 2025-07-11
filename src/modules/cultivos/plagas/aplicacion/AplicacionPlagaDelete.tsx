@@ -5,28 +5,31 @@ import Loading from '@components/Loading';
 import { ELIMINAR_APLICACION_PLAGA } from '@graphql/mutations';
 import { OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { AplicacionPlaga } from '@interfaces/cultivos/plagas/aplicacion';
 
-interface Props {}
+interface Props {
+    aplicacionPlaga: AplicacionPlaga | undefined;
+    handleClose: () => void;
+}
 
-const AplicacionPlagaDelete: React.FC<Props> = ({}) => {
-    const { aplicacionPlagaEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } =
-        useContext(CultivosContext);
+const AplicacionPlagaDelete: React.FC<Props> = ({ aplicacionPlaga, handleClose }) => {
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarAplicacionPlagas] = useMutation<boolean>(ELIMINAR_APLICACION_PLAGA);
     const submitDelete = async () => {
         try {
             await eliminarAplicacionPlagas({
                 variables: {
-                    idApla: aplicacionPlagaEdit?.id_apla
+                    idApla: aplicacionPlaga?.id_apla
                 },
                 refetchQueries: [
-                    { query: OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS, variables: { idCorte: aplicacionPlagaEdit?.corte_id } }
+                    { query: OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS, variables: { idCorte: aplicacionPlaga?.corte_id } }
                 ]
             });
             setMessageType('success');
             setInfoMessage('La aplicación se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -53,7 +56,7 @@ const AplicacionPlagaDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)}>
+                <Button variant="contained" color="primary" onClick={handleClose}>
                     Cancelar
                 </Button>
             </Grid2>

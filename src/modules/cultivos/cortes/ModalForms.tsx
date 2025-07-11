@@ -1,11 +1,6 @@
 import DialogModal from '@components/Dialog';
 import React, { useContext } from 'react';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import TratamientoPlagaRegister from '../plagas/tratamiento/TratamientoPlagaRegister';
-import TratamientoPlagaDelete from '../plagas/tratamiento/TratamientoPlagaDelete';
-import AplicacionPlagaDelete from '../plagas/aplicacion/AplicacionPlagaDelete';
-import ListSuertesTablones from '../plagas/aplicacion/ListSuertesTablones';
-import AplicacionPlagaActualizar from '../plagas/aplicacion/AplicacionPlagaActualizar';
 import RiegoDelete from '../riegos/RiegoDelete';
 import RiegoRegister from '../riegos/RiegoRegister';
 import CosechaRegister from '../cosecha/CosechaRegister';
@@ -16,44 +11,12 @@ import TablonEliminar from '../tablones/TablonEliminar';
 interface Props {}
 
 const ModalForms: React.FC<Props> = ({}) => {
-    const { openModalForms, typeModal, formType, dataType, setOpenModalForms } = useContext(CultivosContext);
+    const { openModalForms, typeModal, formType, setOpenModalForms } = useContext(CultivosContext);
     const getComponent = () => {
         let title = '';
         let height = 0;
         let width = '60%';
         let component = <></>;
-        // Plagas
-        if (typeModal === 'plagas') {
-            if (dataType === 'tratamiento') {
-                if (formType === 'delete') {
-                    title = 'Eliminar producto';
-                    height = 45;
-                    component = <TratamientoPlagaDelete />;
-                } else {
-                    title = formType === 'create' ? 'Registrar tratamiento plaga' : 'Actualizar tratamiento plaga';
-                    height = 90;
-                    component = <TratamientoPlagaRegister />;
-                }
-            } else {
-                if (formType === 'delete') {
-                    title = 'Eliminar aplicación plaga';
-                    height = 45;
-                    component = <AplicacionPlagaDelete />;
-                } else {
-                    if (formType === 'aplicar') {
-                        title = 'Seleccione la suerte, el corte y el tablón para aplicar el tratamiento';
-                        height = 90;
-                        width = '80%';
-                        component = <ListSuertesTablones />;
-                    } else {
-                        title = 'Actualizar aplicación plaga';
-                        height = 50;
-                        width = '50%';
-                        component = <AplicacionPlagaActualizar />;
-                    }
-                }
-            }
-        }
         // Riegos
         if (typeModal === 'riegos') {
             if (formType === 'delete') {

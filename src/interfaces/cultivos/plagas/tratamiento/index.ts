@@ -6,6 +6,8 @@ export interface TratamientoPlaga {
     tiempo: string;
 }
 
+export type DataTypePlaga = 'create' | 'update' | 'delete' | 'aplicar';
+
 export interface FormDataPlaga {
     producto: string;
     unidad: string;

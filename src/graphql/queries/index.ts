@@ -283,6 +283,7 @@ export const OBTENER_APLICACIONES_FERTILIZANTES_CORTE = gql`
             id_aplicaciones_fertilizantes
             corte_id
             apfe_id
+            suertes
             aplicacionFertilizante {
                 id_apfe
                 fecha

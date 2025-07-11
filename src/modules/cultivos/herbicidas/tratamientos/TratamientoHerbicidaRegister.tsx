@@ -102,7 +102,8 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({
             setMessageType('success');
             setInfoMessage(`El tratamiento se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            handleClose();
+            reset();
+            setSubmitting(false);
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');

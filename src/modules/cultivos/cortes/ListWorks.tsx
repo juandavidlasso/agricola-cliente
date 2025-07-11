@@ -38,7 +38,8 @@ const ListWorks: React.FC<Props> = () => {
         typeModal !== 'riegos' &&
         typeModal !== 'labores' &&
         typeModal !== 'herbicidas' &&
-        typeModal !== 'fertilizantes';
+        typeModal !== 'fertilizantes' &&
+        typeModal !== 'plagas';
     return (
         <SideModal isOpen={openModalList} handleClose={() => setOpenModalList(false)} direction={'bottom'}>
             <Grid2 container spacing={2} padding={2}>
