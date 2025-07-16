@@ -7,6 +7,8 @@ export interface Maquinaria {
     color: string;
 }
 
+export type FormType = 'insumo' | 'aplicacion' | 'mantenimiento';
+
 export interface FormDataMaquinaria {
     marca: string;
     serie: string;

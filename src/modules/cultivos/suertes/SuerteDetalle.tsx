@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Button, Grid2, Typography } from '@mui/material';
 import Layout from '@modules/layouts/Layout';
@@ -13,8 +13,10 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import ListCortes from '../cortes/ListCortes';
 import BreadCrumbs from './utils/BreadCrumbs';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import SuertePopover from './SuertePopover';
+import DialogModal from '@components/Dialog';
+import { useSuerte } from './hooks/useSuerte';
+import DeleteSuerte from './DeleteSuerte';
+import UpdateSuerte from './UpdateSuerte';
 
 interface Props {
     toogleTheme: (theme: ThemeProps) => void;
@@ -23,11 +25,10 @@ interface Props {
 const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
     const { id_suerte } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
-    const { openModal, setOpenModal, setFormType } = useContext(CultivosContext);
-
     const { data, loading, error } = useQuery<GetSuerteResponse>(OBTENER_SUERTE, {
         variables: { idSuerte: id_suerte }
     });
+    const { openModal, formType, setOpenModal, setFormType } = useSuerte();
 
     if (error) return <Alert message={error.message} />;
 
@@ -35,7 +36,23 @@ const SuerteDetalleView: React.FC<Props> = ({ toogleTheme }) => {
 
     return (
         <>
-            {openModal && <SuertePopover />}
+            {openModal && (
+                <DialogModal
+                    isOpen={true}
+                    handleClose={() => setOpenModal(false)}
+                    title={
+                        formType === 'delete' ? 'Eliminar Suerte' : formType === 'update' ? 'Actualizar Suerte' : 'Renovar Suerte'
+                    }
+                    height={formType === 'delete' ? 60 : 80}
+                    id="modal-suerte"
+                >
+                    {formType === 'delete' ? (
+                        <DeleteSuerte handleClose={() => setOpenModal(false)} />
+                    ) : (
+                        <UpdateSuerte formType={formType} handleClose={() => setOpenModal(false)} />
+                    )}
+                </DialogModal>
+            )}
             <Layout toogleTheme={toogleTheme} navItems={routesCultivos}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     {!loading && (

@@ -8,14 +8,13 @@ import dayjs from 'dayjs';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Loading from '@components/Loading';
-import { FormDataMantenimiento, GetMantenimientoUpdate } from '@interfaces/mantenimientos/mantenimiento';
+import { FormDataMantenimiento, GetMantenimientoUpdate, Mantenimiento } from '@interfaces/mantenimientos/mantenimiento';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { OBTENER_APLICACIONES_MANTENIMIENTO, OBTENER_INSUMOS } from '@graphql/queries';
 import { GetInsumosResponse } from '@interfaces/insumos';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import { handleKeyDownNumber } from '@utils/validations';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 import { ACTUALIZAR_MANTENIMIENTO } from '@graphql/mutations';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
@@ -30,11 +29,13 @@ const schema = yup.object({
     detalle: yup.string().optional()
 });
 
-interface Props {}
+interface Props {
+    mantenimiento: Mantenimiento | undefined;
+    handleClose: () => void;
+}
 
-const MantenimientoUpdate: React.FC<Props> = ({}) => {
+const MantenimientoUpdate: React.FC<Props> = ({ mantenimiento, handleClose }) => {
     const { data, loading, error } = useQuery<GetInsumosResponse>(OBTENER_INSUMOS);
-    const { mantenimientoEdit, setOpenModal } = useContext(MaquinariaContext);
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [actualizarMantenimiento] = useMutation<GetMantenimientoUpdate>(ACTUALIZAR_MANTENIMIENTO);
@@ -51,12 +52,12 @@ const MantenimientoUpdate: React.FC<Props> = ({}) => {
     } = useForm<FormDataMantenimiento>({
         resolver: yupResolver(schema),
         defaultValues: {
-            insumoId: mantenimientoEdit?.insumoId,
-            cantidad: mantenimientoEdit?.cantidad,
-            tipoCambio: mantenimientoEdit?.tipoCambio,
-            horaCambio: mantenimientoEdit?.horaCambio,
-            proximoCambio: mantenimientoEdit?.proximoCambio,
-            detalle: mantenimientoEdit?.detalle
+            insumoId: mantenimiento?.insumoId,
+            cantidad: mantenimiento?.cantidad,
+            tipoCambio: mantenimiento?.tipoCambio,
+            horaCambio: mantenimiento?.horaCambio,
+            proximoCambio: mantenimiento?.proximoCambio,
+            detalle: mantenimiento?.detalle
         }
     });
     const submitForm = async (data: FormDataMantenimiento) => {
@@ -66,7 +67,7 @@ const MantenimientoUpdate: React.FC<Props> = ({}) => {
                 variables: {
                     updateMantenimientoInput: {
                         ...data,
-                        idMantenimiento: mantenimientoEdit?.idMantenimiento
+                        idMantenimiento: mantenimiento?.idMantenimiento
                     }
                 },
                 refetchQueries: [{ query: OBTENER_APLICACIONES_MANTENIMIENTO, variables: { maquinariaId: idMaquinaria } }]
@@ -74,7 +75,7 @@ const MantenimientoUpdate: React.FC<Props> = ({}) => {
             setMessageType('success');
             setInfoMessage('El mantenimiento se actualizo exitosamente.');
             setShowMessage(true);
-            setOpenModal(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -136,7 +137,7 @@ const MantenimientoUpdate: React.FC<Props> = ({}) => {
                         <Typography>Fecha</Typography>
                         <Switch
                             {...register('tipoCambio')}
-                            defaultChecked={mantenimientoEdit?.tipoCambio}
+                            defaultChecked={mantenimiento?.tipoCambio}
                             inputProps={{ 'aria-label': 'controlled' }}
                         />
                         <Typography>Hora</Typography>
@@ -154,7 +155,7 @@ const MantenimientoUpdate: React.FC<Props> = ({}) => {
                                         setValue('horaCambio', newValue);
                                     }}
                                     format="DD/MM/YYYY"
-                                    defaultValue={dayjs(mantenimientoEdit?.horaCambio, 'YYYY-MM-DD')}
+                                    defaultValue={dayjs(mantenimiento?.horaCambio, 'YYYY-MM-DD')}
                                 />
                                 {!!errors.horaCambio && (
                                     <Typography
@@ -213,7 +214,7 @@ const MantenimientoUpdate: React.FC<Props> = ({}) => {
                     <Button
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            handleClose();
                         }}
                         color="primary"
                         variant="contained"

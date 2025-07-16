@@ -29,8 +29,6 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
         filtersLluvia,
         setOpenModal,
         setFormType,
-        setHeight,
-        setTitle,
         setType,
         setReportType,
         setOpenModalReport,
@@ -63,8 +61,6 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                     color="primary"
                                     onClick={() => {
                                         setFormType('pluviometro');
-                                        setTitle('Registrar pluviómetro');
-                                        setHeight(60);
                                         setType('create');
                                         setOpenModal(true);
                                     }}
@@ -84,7 +80,6 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                         setShowError(true);
                                     } else {
                                         setReportType('mes');
-                                        setTitle('Listado de lluvias por mes y año');
                                         setOpenModalReport(true);
                                     }
                                 }}
@@ -103,7 +98,6 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                         setShowError(true);
                                     } else {
                                         setReportType('year');
-                                        setTitle('Listado de lluvias por año');
                                         setOpenModalReport(true);
                                     }
                                 }}
@@ -119,8 +113,6 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                     color="primary"
                                     onClick={() => {
                                         setFormType('');
-                                        setTitle('Listado de lluvias');
-                                        setHeight(80);
                                         setOpenModal(true);
                                     }}
                                     sx={{ width: { xs: '100%' } }}

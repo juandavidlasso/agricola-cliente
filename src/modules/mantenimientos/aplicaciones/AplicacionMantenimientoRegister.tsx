@@ -9,12 +9,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import {
+    AplicacionMantenimiento,
     FormDataAplicacionMantenimiento,
     GetAplicacionMantenimientoRegister,
     GetAplicacionMantenimientoUpdate
 } from '@interfaces/mantenimientos/aplicaciones';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { ACTUALIZAR_APLICACION_MANTENIMIENTO, REGISTRAR_APLICACION_MANTENIMIENTO } from '@graphql/mutations';
@@ -27,10 +27,13 @@ const schema = yup.object({
     maquinariaId: yup.number().required()
 });
 
-interface Props {}
+interface Props {
+    aplicacionMantenimiento: AplicacionMantenimiento | undefined;
+    formType: 'delete' | 'create' | 'update';
+    handleClose: () => void;
+}
 
-const AplicacionMantenimientoRegister: React.FC<Props> = ({}) => {
-    const { setOpenModal, type, aplicacionMantenimientoEdit } = useContext(MaquinariaContext);
+const AplicacionMantenimientoRegister: React.FC<Props> = ({ aplicacionMantenimiento, formType, handleClose }) => {
     const { setShowMessage, setInfoMessage, setMessageType } = useContext(CultivosContext);
     const { idMaquinaria } = useAppSelector((state: IRootState) => state.maquinariaReducer.maquinaria);
     const {
@@ -42,8 +45,8 @@ const AplicacionMantenimientoRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataAplicacionMantenimiento>({
         resolver: yupResolver(schema),
         defaultValues: {
-            fecha: type === 'update' ? aplicacionMantenimientoEdit?.fecha : '',
-            nombre: type === 'update' ? aplicacionMantenimientoEdit?.nombre : '',
+            fecha: formType === 'update' ? aplicacionMantenimiento?.fecha : '',
+            nombre: formType === 'update' ? aplicacionMantenimiento?.nombre : '',
             maquinariaId: idMaquinaria
         }
     });
@@ -58,7 +61,7 @@ const AplicacionMantenimientoRegister: React.FC<Props> = ({}) => {
         setSubmitting(true);
 
         try {
-            if (type === 'create') {
+            if (formType === 'create') {
                 await agregarAplicacionMantenimiento({
                     variables: {
                         createAplicacionMantenimientoInput: dataForm
@@ -70,7 +73,7 @@ const AplicacionMantenimientoRegister: React.FC<Props> = ({}) => {
                     variables: {
                         updateAplicacionMantenimientoInput: {
                             ...dataForm,
-                            idApMant: aplicacionMantenimientoEdit?.idApMant
+                            idApMant: aplicacionMantenimiento?.idApMant
                         }
                     },
                     refetchQueries: [{ query: OBTENER_APLICACIONES_MANTENIMIENTO, variables: { maquinariaId: idMaquinaria } }]
@@ -78,9 +81,10 @@ const AplicacionMantenimientoRegister: React.FC<Props> = ({}) => {
             }
 
             setMessageType('success');
-            setInfoMessage(`La aplicación se ${type === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(`La aplicación se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModal(false);
+            handleClose();
+            return;
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -108,7 +112,7 @@ const AplicacionMantenimientoRegister: React.FC<Props> = ({}) => {
                                 setValue('fecha', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={type === 'update' ? dayjs(aplicacionMantenimientoEdit?.fecha, 'YYYY-MM-DD') : undefined}
+                            defaultValue={formType === 'update' ? dayjs(aplicacionMantenimiento?.fecha, 'YYYY-MM-DD') : undefined}
                         />
                         {!!errors.fecha && (
                             <Typography
@@ -145,12 +149,12 @@ const AplicacionMantenimientoRegister: React.FC<Props> = ({}) => {
                         variant="contained"
                         sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
                     >
-                        {submitting ? <Loading /> : type === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
                     </Button>
                     <Button
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            handleClose();
                         }}
                         color="primary"
                         variant="contained"

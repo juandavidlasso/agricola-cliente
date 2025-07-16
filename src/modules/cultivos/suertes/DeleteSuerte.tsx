@@ -10,12 +10,14 @@ import { ELIMINAR_SUERTE } from '@graphql/mutations';
 import { OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {}
+interface Props {
+    handleClose: () => void;
+}
 
-const DeleteSuerte: React.FC<Props> = () => {
+const DeleteSuerte: React.FC<Props> = ({ handleClose }) => {
     const router = useRouter();
     const { id_suerte, nombre } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
-    const { setMessageType, setShowMessage, setInfoMessage, setOpenModal } = useContext(CultivosContext);
+    const { setMessageType, setShowMessage, setInfoMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarSuerte] = useMutation<GetEliminarSuerteResponse>(ELIMINAR_SUERTE);
 
@@ -36,7 +38,6 @@ const DeleteSuerte: React.FC<Props> = () => {
                 setInfoMessage('La suerte se eliminó exitosamente.');
                 setShowMessage(true);
                 setSubmitting(false);
-                setOpenModal(false);
                 router.replace('/suerte');
                 return;
             }
@@ -45,7 +46,7 @@ const DeleteSuerte: React.FC<Props> = () => {
             setInfoMessage('No se pudo eliminar la suerte, intente nuevamente en un momento.');
             setShowMessage(true);
             setSubmitting(false);
-            setOpenModal(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -84,12 +85,7 @@ const DeleteSuerte: React.FC<Props> = () => {
                 >
                     {submitting ? <Loading /> : 'Eliminar'}
                 </Button>
-                <Button
-                    onClick={() => setOpenModal(false)}
-                    color="primary"
-                    variant="contained"
-                    sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
-                >
+                <Button onClick={handleClose} color="primary" variant="contained" sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}>
                     Cancelar
                 </Button>
             </Grid2>

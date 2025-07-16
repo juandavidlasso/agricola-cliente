@@ -16,6 +16,7 @@ import { useFertilizantes } from './hooks/useFertilizantes';
 import PopoverFertilizante from './PopoverFertilizante';
 import DialogModal from '@components/Dialog';
 import ListSuertes from '../registroDatos/suertes/ListSuertes';
+import ListFertilizantes from './ListFertilizantes';
 
 interface Props {}
 
@@ -29,22 +30,25 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
         }
     );
     const {
+        openFertilizantes,
         openStates,
-        totals,
         openModal,
         typeModal,
         formType,
         aplicacionFertilizanteEdit,
         tratamientoFertilizanteEdit,
         modalSuertes,
-        handleToggle,
+        setOpenStates,
         setAplicacionFertilizanteEdit,
         setOpenModal,
         setFormType,
         setTypeModal,
         setModalSuertes,
         getColumns,
-        handleSubmitAplicacionesFertilizantes
+        handleSubmitAplicacionesFertilizantes,
+        getTotalById,
+        setOpenFertilizantes,
+        setIdFertilizante
     } = useFertilizantes(data, rol);
 
     if (error) return <Alert message={error.message} />;
@@ -70,7 +74,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                 <DialogModal
                     isOpen={true}
                     handleClose={() => setModalSuertes(false)}
-                    title={'Selecciona la suerte y el corte'}
+                    title="Selecciona la suerte y el corte"
                     height={90}
                     id="modal-suertes"
                     width="80%"
@@ -78,10 +82,23 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                     <ListSuertes handleSubmit={(corteId: number) => handleSubmitAplicacionesFertilizantes(corteId)} />
                 </DialogModal>
             )}
+            {openFertilizantes && (
+                <DialogModal
+                    isOpen={true}
+                    handleClose={() => setOpenFertilizantes(false)}
+                    title="Listado de fertilizantes"
+                    height={90}
+                    id="modal-fertilizantes"
+                    width="95%"
+                >
+                    <ListFertilizantes setIdFertilizante={setIdFertilizante} setModalSuertes={setModalSuertes} />
+                </DialogModal>
+            )}
             <Grid2 container>
                 {rol === 1 && (
                     <Grid2 size={12}>
                         <Button
+                            className="!normal-case !mr-2"
                             variant="contained"
                             size="small"
                             onClick={() => {
@@ -91,6 +108,14 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                             }}
                         >
                             Registrar aplicación fertilizante
+                        </Button>
+                        <Button
+                            variant="contained"
+                            className="!normal-case"
+                            size="small"
+                            onClick={() => setOpenFertilizantes(true)}
+                        >
+                            Ver todos los fertilizantes
                         </Button>
                     </Grid2>
                 )}
@@ -105,7 +130,13 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                 data.obtenerAplicacionesFertilizantesCorte.map((aplicaciones) => (
                                     <div key={aplicaciones.id_aplicaciones_fertilizantes}>
                                         <ListItemButton
-                                            onClick={() => handleToggle(aplicaciones.id_aplicaciones_fertilizantes)}
+                                            onClick={() =>
+                                                setOpenStates((prevState) => ({
+                                                    ...prevState,
+                                                    [aplicaciones.id_aplicaciones_fertilizantes]:
+                                                        !prevState[aplicaciones.id_aplicaciones_fertilizantes]
+                                                }))
+                                            }
                                             sx={{ border: '1px solid #000000', mb: 1, borderRadius: 2 }}
                                         >
                                             <ListItemIcon>
@@ -134,7 +165,9 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                                     className="!text-sm !normal-case"
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        setAplicacionFertilizanteEdit(aplicaciones);
+                                                                        setIdFertilizante(
+                                                                            aplicaciones?.aplicacionFertilizante?.id_apfe
+                                                                        );
                                                                         setModalSuertes(true);
                                                                     }}
                                                                     variant="outlined"
@@ -238,7 +271,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                             </List>
                                             <Typography className="!text-lg !font-bold !mt-2 !mb-2 !ml-2">
                                                 {openStates[aplicaciones.id_aplicaciones_fertilizantes]
-                                                    ? `Valor total: ${totals[aplicaciones.id_aplicaciones_fertilizantes]}`
+                                                    ? `Valor total: ${getTotalById(aplicaciones.id_aplicaciones_fertilizantes)}`
                                                     : ''}
                                             </Typography>
                                         </Collapse>

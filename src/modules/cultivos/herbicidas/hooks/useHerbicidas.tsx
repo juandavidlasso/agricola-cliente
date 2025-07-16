@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     AplicacionesHerbicidas,
     GetAplicacionesHerbicidasResponse,
@@ -15,38 +15,23 @@ import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE 
 export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefined, rol: number) => {
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
-    const [totals, setTotals] = useState<{ [key: number]: number }>({});
     const [aplicacionHerbicidaEdit, setAplicacionHerbicidaEdit] = useState<AplicacionesHerbicidas>();
     const [tratamientoHerbicidaEdit, setTratamientoHerbicidaEdit] = useState<TratamientoHerbicidas>();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [formType, setFormType] = useState<'create' | 'update' | 'delete'>('create');
     const [typeModal, setTypeModal] = useState<'aplicacion' | 'tratamiento'>('aplicacion');
     const [modalSuertes, setModalSuertes] = useState<boolean>(false);
+    const [openHerbicidas, setOpenHerbicidas] = useState<boolean>(false);
+    const [idHerbicida, setIdHerbicida] = useState<number>();
     const [agregarAplicacionesHerbicidas] = useMutation<GetRegistrarAplicacionesHerbicidas>(REGISTRAR_APLICACIONES_HERBICIDAS);
 
-    useEffect(() => {
-        const trueKey = Object.keys(openStates).filter((key) => openStates[parseInt(key)] === true);
-        if (trueKey.length !== 0) {
-            for (let index = 0; index < trueKey.length; index++) {
-                const tratamientos = data?.obtenerAplicacionesHerbicidasCorte.find(
-                    (data) => data.id_aplicaciones_herbicidas === Number(trueKey[index])
-                );
-                const total =
-                    tratamientos?.aplicacionHerbicida.listTratamientoHerbicida?.reduce((acc, cr) => acc + (cr?.valor ?? 0), 0) ??
-                    0;
-                setTotals((prevTotals) => ({
-                    ...prevTotals,
-                    [trueKey[index]]: total.toLocaleString()
-                }));
-            }
-        }
-    }, [openStates]);
+    const getTotalById = (id: number): string => {
+        const item = data?.obtenerAplicacionesHerbicidasCorte?.find((data) => data.id_aplicaciones_herbicidas === id);
 
-    const handleToggle = (id: number) => {
-        setOpenStates((prevState) => ({
-            ...prevState,
-            [id]: !prevState[id]
-        }));
+        const total =
+            item?.aplicacionHerbicida?.listTratamientoHerbicida?.reduce((acc, curr) => acc + (curr?.valor ?? 0), 0) ?? 0;
+
+        return total.toLocaleString();
     };
 
     const getColumns = () => {
@@ -107,7 +92,7 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
                 variables: {
                     createAplicacionesHerbicidaInput: [
                         {
-                            aphe_id: aplicacionHerbicidaEdit?.aphe_id,
+                            aphe_id: idHerbicida,
                             corte_id: corteId
                         }
                     ]
@@ -142,21 +127,24 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
     };
 
     return {
+        openHerbicidas,
         aplicacionHerbicidaEdit,
         openStates,
-        totals,
         openModal,
         formType,
         typeModal,
         tratamientoHerbicidaEdit,
         modalSuertes,
+        setIdHerbicida,
+        setOpenHerbicidas,
         setAplicacionHerbicidaEdit,
-        handleToggle,
+        setOpenStates,
         setOpenModal,
         setFormType,
         setTypeModal,
         getColumns,
         setModalSuertes,
-        handleSubmitAplicacionHerbicidas
+        handleSubmitAplicacionHerbicidas,
+        getTotalById
     };
 };

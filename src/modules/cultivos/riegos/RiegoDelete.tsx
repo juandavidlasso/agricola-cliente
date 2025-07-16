@@ -7,26 +7,30 @@ import { ELIMINAR_RIEGO } from '@graphql/mutations';
 import { OBTENER_RIEGOS_CORTE } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { Riego } from '@interfaces/cultivos/riegos';
 
-interface Props {}
+interface Props {
+    riego: Riego | undefined;
+    handleClose: () => void;
+}
 
-const RiegoDelete: React.FC<Props> = ({}) => {
+const RiegoDelete: React.FC<Props> = ({ riego, handleClose }) => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { riegoEdit, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } = useContext(CultivosContext);
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarRiego] = useMutation<boolean>(ELIMINAR_RIEGO);
     const submitDelete = async () => {
         try {
             await eliminarRiego({
                 variables: {
-                    idRiego: riegoEdit?.id_riego
+                    idRiego: riego?.id_riego
                 },
                 refetchQueries: [{ query: OBTENER_RIEGOS_CORTE, variables: { corteId: corte.id_corte } }]
             });
             setMessageType('success');
             setInfoMessage('El riego se eliminó exitosamente.');
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -56,7 +60,7 @@ const RiegoDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModalForms(false)}>
+                <Button variant="contained" color="primary" onClick={handleClose}>
                     Cancelar
                 </Button>
             </Grid2>

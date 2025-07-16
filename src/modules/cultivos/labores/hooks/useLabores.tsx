@@ -11,6 +11,8 @@ export const useLabores = () => {
     const [laborEdit, setLaborEdit] = useState<AplicacionLabores>();
     const [laborDuplicate, setLaborDuplicate] = useState<Labores>();
     const [formType, setFormType] = useState<DataType>('create');
+    const [openLabores, setOpenLabores] = useState<boolean>(false);
+    const [idLabor, setIdLabor] = useState<number>();
 
     const { setInfoMessage, setMessageType, setShowMessage } = useContext(CultivosContext);
     const [agregarAplicacionLabores] = useMutation<GetRegisterAplicacionLabor>(REGISTRAR_LABORES_CORTES);
@@ -22,16 +24,14 @@ export const useLabores = () => {
                     createAplicacionLaboresInput: [
                         {
                             corte_id: corteId,
-                            labor_id: formType === 'create' ? laborEdit?.labor_id : laborDuplicate?.id_labor
+                            labor_id: formType === 'create' ? idLabor : laborDuplicate?.id_labor
                         }
                     ]
                 },
                 refetchQueries: [{ query: OBTENER_APLICACIONES_LABORES, variables: { corteId } }]
             });
 
-            if (
-                data?.agregarAplicacionLabores.includes(formType === 'create' ? laborEdit?.labor_id! : laborDuplicate?.id_labor!)
-            ) {
+            if (data?.agregarAplicacionLabores.includes(formType === 'create' ? idLabor! : laborDuplicate?.id_labor!)) {
                 setMessageType('success');
                 setInfoMessage(`La labor se aplico exitosamente.`);
                 setShowMessage(true);
@@ -59,6 +59,9 @@ export const useLabores = () => {
         modalSuertes,
         laborEdit,
         formType,
+        openLabores,
+        setIdLabor,
+        setOpenLabores,
         setOpenModal,
         setModalSuertes,
         setLaborEdit,

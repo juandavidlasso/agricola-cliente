@@ -17,6 +17,8 @@ import { IRootState } from '@interfaces/store';
 import { useLabores } from './hooks/useLabores';
 import PopoverLabores from './PopoverLabores';
 import PopoverSuertesLabores from './PopoverSuertesLabores';
+import DialogModal from '@components/Dialog';
+import ListLabores from './ListLabores';
 
 interface Props {}
 
@@ -31,12 +33,15 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
         modalSuertes,
         laborEdit,
         formType,
+        openLabores,
+        setIdLabor,
         setOpenModal,
         setModalSuertes,
         setLaborEdit,
         setFormType,
         handleSubmitLabor,
-        setLaborDuplicate
+        setLaborDuplicate,
+        setOpenLabores
     } = useLabores();
 
     if (error) return <Alert message={error.message} />;
@@ -45,16 +50,7 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
 
     return (
         <>
-            {openModal && (
-                <PopoverLabores
-                    handleClose={() => {
-                        setFormType('create');
-                        setOpenModal(false);
-                    }}
-                    laborEdit={laborEdit}
-                    formType={formType}
-                />
-            )}
+            {openModal && <PopoverLabores handleClose={() => setOpenModal(false)} laborEdit={laborEdit} formType={formType} />}
             {modalSuertes && (
                 <PopoverSuertesLabores
                     handleClose={() => setModalSuertes(false)}
@@ -65,6 +61,18 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                     setLaborDuplicate={setLaborDuplicate}
                 />
             )}
+            {openLabores && (
+                <DialogModal
+                    isOpen={true}
+                    handleClose={() => setOpenLabores(false)}
+                    title="Listado de labores"
+                    height={90}
+                    id="modal-labores"
+                    width="95%"
+                >
+                    <ListLabores setFormType={setFormType} setIdLabor={setIdLabor} setModalSuertes={setModalSuertes} />
+                </DialogModal>
+            )}
             <Grid2 container>
                 {rol === 1 && (
                     <Grid2 size={12}>
@@ -72,13 +80,20 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                             variant="contained"
                             size="small"
                             onClick={() => {
-                                setLaborEdit(undefined);
                                 setFormType('create');
                                 setOpenModal(true);
                             }}
-                            className="!mb-3"
+                            className="!mb-3 !normal-case !mr-2"
                         >
                             Registrar labor
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => setOpenLabores(true)}
+                            className="!mb-3 !normal-case"
+                        >
+                            Ver todas las labores
                         </Button>
                     </Grid2>
                 )}
@@ -204,7 +219,8 @@ const ListAplicacionesLabores: React.FC<Props> = ({}) => {
                                                             </Button>
                                                             <Button
                                                                 onClick={() => {
-                                                                    setLaborEdit(row);
+                                                                    setFormType('create');
+                                                                    setIdLabor(row?.labor_id);
                                                                     setModalSuertes(true);
                                                                 }}
                                                                 variant="outlined"

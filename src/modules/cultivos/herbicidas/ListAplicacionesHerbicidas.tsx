@@ -16,6 +16,7 @@ import { useHerbicidas } from './hooks/useHerbicidas';
 import PopoverHerbicida from './PopoverHerbicida';
 import DialogModal from '@components/Dialog';
 import ListSuertes from '../registroDatos/suertes/ListSuertes';
+import ListHerbicidas from './ListHerbicidas';
 
 interface Props {}
 
@@ -26,22 +27,25 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
         variables: { corteId: id_corte }
     });
     const {
+        openHerbicidas,
         openStates,
-        totals,
         aplicacionHerbicidaEdit,
         openModal,
         formType,
         typeModal,
         tratamientoHerbicidaEdit,
         modalSuertes,
+        setIdHerbicida,
         setTypeModal,
         setFormType,
         setOpenModal,
         setAplicacionHerbicidaEdit,
-        handleToggle,
+        setOpenStates,
         getColumns,
         setModalSuertes,
-        handleSubmitAplicacionHerbicidas
+        handleSubmitAplicacionHerbicidas,
+        setOpenHerbicidas,
+        getTotalById
     } = useHerbicidas(data, rol);
 
     if (error) return <Alert message={error.message} />;
@@ -67,7 +71,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                 <DialogModal
                     isOpen={true}
                     handleClose={() => setModalSuertes(false)}
-                    title={'Selecciona la suerte y el corte'}
+                    title="Selecciona la suerte y el corte"
                     height={90}
                     id="modal-suertes"
                     width="80%"
@@ -75,11 +79,24 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                     <ListSuertes handleSubmit={(corteId: number) => handleSubmitAplicacionHerbicidas(corteId)} />
                 </DialogModal>
             )}
+            {openHerbicidas && (
+                <DialogModal
+                    isOpen={true}
+                    handleClose={() => setOpenHerbicidas(false)}
+                    title="Listado de herbicidas"
+                    height={90}
+                    id="modal-herbicidas"
+                    width="95%"
+                >
+                    <ListHerbicidas setIdHerbicida={setIdHerbicida} setModalSuertes={setModalSuertes} />
+                </DialogModal>
+            )}
             <Grid2 container>
                 {rol === 1 && (
                     <Grid2 size={12}>
                         <Button
                             variant="contained"
+                            className="!normal-case !mr-2"
                             size="small"
                             onClick={() => {
                                 setTypeModal('aplicacion');
@@ -89,37 +106,50 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                         >
                             Registrar aplicación herbicida
                         </Button>
+                        <Button variant="contained" className="!normal-case" size="small" onClick={() => setOpenHerbicidas(true)}>
+                            Ver todos los herbicidas
+                        </Button>
                     </Grid2>
                 )}
                 <Grid2 size={12}>
-                    {data?.obtenerAplicacionesHerbicidasCorte.length === 0 ? (
+                    {data?.obtenerAplicacionesHerbicidasCorte?.length === 0 ? (
                         <Typography>No hay aplicaciones registradas</Typography>
-                    ) : null}
-                    <div style={{ height: 'auto', width: '100%' }}>
-                        <List sx={{ width: '100%' }} component="nav" aria-labelledby="nested-list-subheader">
-                            {data !== undefined &&
-                                data.obtenerAplicacionesHerbicidasCorte.length > 0 &&
-                                data.obtenerAplicacionesHerbicidasCorte.map((aplicaciones) => (
-                                    <div key={aplicaciones.id_aplicaciones_herbicidas}>
-                                        <ListItemButton
-                                            onClick={() => handleToggle(aplicaciones.id_aplicaciones_herbicidas)}
-                                            sx={{ border: '1px solid #000000', mb: 1, borderRadius: 2 }}
-                                        >
-                                            <ListItemIcon>
-                                                <HikingOutlinedIcon />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={
-                                                    <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                                                        <Typography>
-                                                            Fecha aplicación: {aplicaciones?.aplicacionHerbicida?.fecha} -{' '}
-                                                            {aplicaciones?.aplicacionHerbicida?.tipo}
-                                                            <br />
-                                                            Suertes: {aplicaciones?.suertes}
-                                                        </Typography>
-                                                        {rol === 1 && (
-                                                            <Box className="flex gap-2">
-                                                                {/* <Button
+                    ) : (
+                        <div style={{ height: 'auto', width: '100%' }}>
+                            <List sx={{ width: '100%' }} component="nav" aria-labelledby="nested-list-subheader">
+                                {data !== undefined &&
+                                    data?.obtenerAplicacionesHerbicidasCorte?.length > 0 &&
+                                    data?.obtenerAplicacionesHerbicidasCorte?.map((aplicaciones) => (
+                                        <div key={aplicaciones.id_aplicaciones_herbicidas}>
+                                            <ListItemButton
+                                                onClick={() =>
+                                                    setOpenStates((prevState) => ({
+                                                        ...prevState,
+                                                        [aplicaciones.id_aplicaciones_herbicidas]:
+                                                            !prevState[aplicaciones.id_aplicaciones_herbicidas]
+                                                    }))
+                                                }
+                                                sx={{ border: '1px solid #000000', mb: 1, borderRadius: 2 }}
+                                            >
+                                                <ListItemIcon>
+                                                    <HikingOutlinedIcon />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={
+                                                        <Box
+                                                            display={'flex'}
+                                                            alignItems={'center'}
+                                                            justifyContent={'space-between'}
+                                                        >
+                                                            <Typography>
+                                                                Fecha aplicación: {aplicaciones?.aplicacionHerbicida?.fecha} -{' '}
+                                                                {aplicaciones?.aplicacionHerbicida?.tipo}
+                                                                <br />
+                                                                Suertes: {aplicaciones?.suertes}
+                                                            </Typography>
+                                                            {rol === 1 && (
+                                                                <Box className="flex gap-2">
+                                                                    {/* <Button
                                                                     className="!text-sm !normal-case"
                                                                     onClick={() => {}}
                                                                     variant="outlined"
@@ -127,121 +157,125 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                                 >
                                                                     Duplicar
                                                                 </Button> */}
-                                                                <Button
-                                                                    className="!text-sm !normal-case"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setAplicacionHerbicidaEdit(aplicaciones);
-                                                                        setModalSuertes(true);
-                                                                    }}
-                                                                    variant="outlined"
-                                                                    color="primary"
-                                                                >
-                                                                    Aplicar en otra suerte
-                                                                </Button>
-                                                                <Button
-                                                                    className="!text-sm !normal-case"
-                                                                    variant="outlined"
-                                                                    color="warning"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setTypeModal('aplicacion');
-                                                                        setFormType('update');
-                                                                        setAplicacionHerbicidaEdit(aplicaciones);
-                                                                        setOpenModal(true);
-                                                                    }}
-                                                                >
-                                                                    Editar
-                                                                </Button>
-                                                                <Button
-                                                                    className="!text-sm !normal-case"
-                                                                    variant="outlined"
-                                                                    color="error"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setTypeModal('aplicacion');
-                                                                        setFormType('delete');
-                                                                        setAplicacionHerbicidaEdit(aplicaciones);
-                                                                        setOpenModal(true);
-                                                                    }}
-                                                                >
-                                                                    Eliminar
-                                                                </Button>
-                                                                <Button
-                                                                    className="!text-sm !normal-case"
-                                                                    variant="outlined"
-                                                                    color="info"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setTypeModal('tratamiento');
-                                                                        setFormType('create');
-                                                                        setAplicacionHerbicidaEdit(aplicaciones);
-                                                                        setOpenModal(true);
-                                                                    }}
-                                                                >
-                                                                    Agregar tratamiento
-                                                                </Button>
-                                                            </Box>
-                                                        )}
-                                                    </Box>
-                                                }
-                                            />
-                                            {openStates[aplicaciones.id_aplicaciones_herbicidas] ? (
-                                                <ExpandLess />
-                                            ) : (
-                                                <ExpandMore />
-                                            )}
-                                        </ListItemButton>
-                                        <Collapse
-                                            in={openStates[aplicaciones.id_aplicaciones_herbicidas]}
-                                            timeout="auto"
-                                            unmountOnExit
-                                        >
-                                            <List component="div" disablePadding>
-                                                <DataGrid
-                                                    rows={
-                                                        aplicaciones?.aplicacionHerbicida?.listTratamientoHerbicida?.length === 0
-                                                            ? []
-                                                            : aplicaciones?.aplicacionHerbicida?.listTratamientoHerbicida!
+                                                                    <Button
+                                                                        className="!text-sm !normal-case"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setIdHerbicida(
+                                                                                aplicaciones?.aplicacionHerbicida?.id_aphe
+                                                                            );
+                                                                            setModalSuertes(true);
+                                                                        }}
+                                                                        variant="outlined"
+                                                                        color="primary"
+                                                                    >
+                                                                        Aplicar en otra suerte
+                                                                    </Button>
+                                                                    <Button
+                                                                        className="!text-sm !normal-case"
+                                                                        variant="outlined"
+                                                                        color="warning"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setTypeModal('aplicacion');
+                                                                            setFormType('update');
+                                                                            setAplicacionHerbicidaEdit(aplicaciones);
+                                                                            setOpenModal(true);
+                                                                        }}
+                                                                    >
+                                                                        Editar
+                                                                    </Button>
+                                                                    <Button
+                                                                        className="!text-sm !normal-case"
+                                                                        variant="outlined"
+                                                                        color="error"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setTypeModal('aplicacion');
+                                                                            setFormType('delete');
+                                                                            setAplicacionHerbicidaEdit(aplicaciones);
+                                                                            setOpenModal(true);
+                                                                        }}
+                                                                    >
+                                                                        Eliminar
+                                                                    </Button>
+                                                                    <Button
+                                                                        className="!text-sm !normal-case"
+                                                                        variant="outlined"
+                                                                        color="info"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setTypeModal('tratamiento');
+                                                                            setFormType('create');
+                                                                            setAplicacionHerbicidaEdit(aplicaciones);
+                                                                            setOpenModal(true);
+                                                                        }}
+                                                                    >
+                                                                        Agregar tratamiento
+                                                                    </Button>
+                                                                </Box>
+                                                            )}
+                                                        </Box>
                                                     }
-                                                    columns={getColumns()}
-                                                    disableVirtualization
-                                                    getRowHeight={(params: GridRowHeightParams) => 'auto'}
-                                                    initialState={{
-                                                        pagination: {
-                                                            paginationModel: { page: 0, pageSize: 10 }
-                                                        }
-                                                    }}
-                                                    getRowId={(row: TratamientoHerbicidas) => row.id_trahe}
-                                                    pageSizeOptions={[10, 20]}
-                                                    checkboxSelection={false}
-                                                    sx={{
-                                                        '& .MuiDataGrid-row--borderBottom': {
-                                                            background: '#154360 !important',
-                                                            color: '#FFFFFF !important'
-                                                        },
-                                                        '& .MuiCheckbox-root': {
-                                                            color: '#000000'
-                                                        }
-                                                    }}
-                                                    disableRowSelectionOnClick
-                                                    localeText={{
-                                                        MuiTablePagination: {
-                                                            labelRowsPerPage: 'Filas por página'
-                                                        }
-                                                    }}
                                                 />
-                                            </List>
-                                            <Typography className="!text-lg !font-bold !mt-2 !mb-2 !ml-2">
-                                                {openStates[aplicaciones.id_aplicaciones_herbicidas]
-                                                    ? `Valor total: ${totals[aplicaciones.id_aplicaciones_herbicidas]}`
-                                                    : ''}
-                                            </Typography>
-                                        </Collapse>
-                                    </div>
-                                ))}
-                        </List>
-                    </div>
+                                                {openStates[aplicaciones.id_aplicaciones_herbicidas] ? (
+                                                    <ExpandLess />
+                                                ) : (
+                                                    <ExpandMore />
+                                                )}
+                                            </ListItemButton>
+                                            <Collapse
+                                                in={openStates[aplicaciones.id_aplicaciones_herbicidas]}
+                                                timeout="auto"
+                                                unmountOnExit
+                                            >
+                                                <List component="div" disablePadding>
+                                                    <DataGrid
+                                                        rows={
+                                                            aplicaciones?.aplicacionHerbicida?.listTratamientoHerbicida
+                                                                ?.length === 0
+                                                                ? []
+                                                                : aplicaciones?.aplicacionHerbicida?.listTratamientoHerbicida!
+                                                        }
+                                                        columns={getColumns()}
+                                                        disableVirtualization
+                                                        getRowHeight={(params: GridRowHeightParams) => 'auto'}
+                                                        initialState={{
+                                                            pagination: {
+                                                                paginationModel: { page: 0, pageSize: 10 }
+                                                            }
+                                                        }}
+                                                        getRowId={(row: TratamientoHerbicidas) => row.id_trahe}
+                                                        pageSizeOptions={[10, 20]}
+                                                        checkboxSelection={false}
+                                                        sx={{
+                                                            '& .MuiDataGrid-row--borderBottom': {
+                                                                background: '#154360 !important',
+                                                                color: '#FFFFFF !important'
+                                                            },
+                                                            '& .MuiCheckbox-root': {
+                                                                color: '#000000'
+                                                            }
+                                                        }}
+                                                        disableRowSelectionOnClick
+                                                        localeText={{
+                                                            MuiTablePagination: {
+                                                                labelRowsPerPage: 'Filas por página'
+                                                            }
+                                                        }}
+                                                    />
+                                                </List>
+                                                <Typography className="!text-lg !font-bold !mt-2 !mb-2 !ml-2">
+                                                    {openStates[aplicaciones.id_aplicaciones_herbicidas]
+                                                        ? `Valor total: ${getTotalById(aplicaciones.id_aplicaciones_herbicidas)}`
+                                                        : ''}
+                                                </Typography>
+                                            </Collapse>
+                                        </div>
+                                    ))}
+                            </List>
+                        </div>
+                    )}
                 </Grid2>
             </Grid2>
         </>

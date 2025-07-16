@@ -1,19 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Box, Button, Card, CardContent, Grid2, Typography } from '@mui/material';
 import { Riego } from '@interfaces/cultivos/riegos';
 import TablonesTransfer from './TablonesTransfer';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { DataType } from '@interfaces/cultivos/labores';
 
 interface Props {
     riego: Riego;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setFormType: React.Dispatch<React.SetStateAction<DataType>>;
+    setRiegoEdit: React.Dispatch<React.SetStateAction<Riego | undefined>>;
 }
 
-const Riegos: React.FC<Props> = ({ riego }) => {
+const Riegos: React.FC<Props> = ({ riego, setOpenModal, setFormType, setRiegoEdit }) => {
     const { estado } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
-    const { setOpenModalForms, setFormType, setRiegoEdit } = useContext(CultivosContext);
     return (
         <Grid2 size={{ xs: 12, sm: 4 }} p={2}>
             <Box>
@@ -30,7 +32,7 @@ const Riegos: React.FC<Props> = ({ riego }) => {
                                             onClick={() => {
                                                 setRiegoEdit(riego);
                                                 setFormType('delete');
-                                                setOpenModalForms(true);
+                                                setOpenModal(true);
                                             }}
                                             variant="outlined"
                                             color="error"
@@ -53,7 +55,7 @@ const Riegos: React.FC<Props> = ({ riego }) => {
                                             onClick={() => {
                                                 setRiegoEdit(riego);
                                                 setFormType('update');
-                                                setOpenModalForms(true);
+                                                setOpenModal(true);
                                             }}
                                             variant="outlined"
                                             color="error"

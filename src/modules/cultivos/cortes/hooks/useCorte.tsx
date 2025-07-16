@@ -11,6 +11,8 @@ export const useCorte = () => {
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [actualizarCorte] = useMutation<GetActualizarCorteResponse>(ACTUALIZAR_CORTE);
     const { nombre } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
+    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [formType, setFormType] = useState<'create' | 'update'>('create');
     //
     const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -52,6 +54,10 @@ export const useCorte = () => {
 
     return {
         submitting,
+        openModal,
+        formType,
+        setFormType,
+        setOpenModal,
         submitForm
     };
 };

@@ -10,24 +10,28 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Loading from '@components/Loading';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { FormDataRiego, GetRiegoMayorResponse, GetRiegoRegister, GetRiegoUpdate } from '@interfaces/cultivos/riegos';
+import { FormDataRiego, GetRiegoMayorResponse, GetRiegoRegister, GetRiegoUpdate, Riego } from '@interfaces/cultivos/riegos';
 import { ACTUALIZAR_RIEGO, REGISTRAR_RIEGO } from '@graphql/mutations';
 import { OBTENER_RIEGO_MAYOR, OBTENER_RIEGOS_CORTE } from '@graphql/queries';
 import Alert from '@components/Alert';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { DataType } from '@interfaces/cultivos/labores';
 
 const schema = yup.object({
     fecha: yup.string().required('La fecha es requerida')
 });
 
-interface Props {}
+interface Props {
+    riego: Riego | undefined;
+    formType: DataType;
+    handleClose: () => void;
+}
 
-const RiegoRegister: React.FC<Props> = () => {
+const RiegoRegister: React.FC<Props> = ({ riego, formType, handleClose }) => {
     const [submitting, setSubmitting] = useState<boolean>(false);
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { formType, riegoEdit, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } =
-        useContext(CultivosContext);
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const { data, loading, error, refetch } = useQuery<GetRiegoMayorResponse>(OBTENER_RIEGO_MAYOR, {
         variables: { corteId: corte.id_corte }
     });
@@ -39,7 +43,7 @@ const RiegoRegister: React.FC<Props> = () => {
     } = useForm<FormDataRiego>({
         resolver: yupResolver(schema),
         defaultValues: {
-            fecha: formType === 'update' ? dayjs(riegoEdit?.fecha).format('YYYY-MM-DD') : ''
+            fecha: formType === 'update' ? dayjs(riego?.fecha).format('YYYY-MM-DD') : ''
         }
     });
     useEffect(() => {
@@ -69,20 +73,20 @@ const RiegoRegister: React.FC<Props> = () => {
                 await actualizarRiego({
                     variables: {
                         updateRiegoInput: {
-                            id_riego: riegoEdit?.id_riego,
+                            id_riego: riego?.id_riego,
                             fecha: formData.fecha,
-                            corte_id: riegoEdit?.corte_id,
-                            num_riego: riegoEdit?.num_riego
+                            corte_id: riego?.corte_id,
+                            num_riego: riego?.num_riego
                         }
                     },
-                    refetchQueries: [{ query: OBTENER_RIEGOS_CORTE, variables: { corteId: riegoEdit?.corte_id } }]
+                    refetchQueries: [{ query: OBTENER_RIEGOS_CORTE, variables: { corteId: riego?.corte_id } }]
                 });
             }
 
             setMessageType('success');
             setInfoMessage(`El riego se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -110,7 +114,7 @@ const RiegoRegister: React.FC<Props> = () => {
                                 setValue('fecha', newValue);
                             }}
                             format="DD/MM/YYYY"
-                            defaultValue={formType === 'update' ? dayjs(riegoEdit?.fecha, 'YYYY-MM-DD') : undefined}
+                            defaultValue={formType === 'update' ? dayjs(riego?.fecha, 'YYYY-MM-DD') : undefined}
                         />
                         {!!errors.fecha && (
                             <Typography
@@ -140,7 +144,7 @@ const RiegoRegister: React.FC<Props> = () => {
                             variant="contained"
                             onClick={() => {
                                 reset();
-                                setOpenModalForms(false);
+                                handleClose();
                             }}
                         >
                             Cancelar

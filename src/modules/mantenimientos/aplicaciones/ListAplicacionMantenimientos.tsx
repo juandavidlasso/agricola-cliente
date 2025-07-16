@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 import {
@@ -20,21 +20,32 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import { AplicacionMantenimiento } from '@interfaces/mantenimientos/aplicaciones';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 import { GetInsumosResponse } from '@interfaces/insumos';
 import { OBTENER_INSUMOS } from '@graphql/queries';
 import ModalLoading from '@components/Modal';
 import Alert from '@components/Alert';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { FormType } from '@interfaces/maquinaria';
+import { Mantenimiento } from '@interfaces/mantenimientos/mantenimiento';
 
 interface Props {
     aplicacion: AplicacionMantenimiento;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setFormType: React.Dispatch<React.SetStateAction<'create' | 'update' | 'delete'>>;
+    setTypeModal: React.Dispatch<React.SetStateAction<FormType>>;
+    setAplicacionMantenimientoEdit: React.Dispatch<React.SetStateAction<AplicacionMantenimiento | undefined>>;
+    setMantenimientoEdit: React.Dispatch<React.SetStateAction<Mantenimiento | undefined>>;
 }
 
-const ListAplicacionMantenimientos: React.FC<Props> = ({ aplicacion }) => {
-    const { setTitle, setHeight, setType, setFormType, setOpenModal, setAplicacionMantenimientoEdit, setMantenimientoEdit } =
-        useContext(MaquinariaContext);
+const ListAplicacionMantenimientos: React.FC<Props> = ({
+    aplicacion,
+    setOpenModal,
+    setFormType,
+    setTypeModal,
+    setAplicacionMantenimientoEdit,
+    setMantenimientoEdit
+}) => {
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, loading, error } = useQuery<GetInsumosResponse>(OBTENER_INSUMOS);
 
@@ -66,10 +77,8 @@ const ListAplicacionMantenimientos: React.FC<Props> = ({ aplicacion }) => {
                                     color="success"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setTitle('Registrar mantenimiento');
-                                        setHeight(90);
-                                        setType('create');
-                                        setFormType('mantenimiento');
+                                        setTypeModal('mantenimiento');
+                                        setFormType('create');
                                         setAplicacionMantenimientoEdit(aplicacion);
                                         setOpenModal(true);
                                     }}
@@ -82,10 +91,8 @@ const ListAplicacionMantenimientos: React.FC<Props> = ({ aplicacion }) => {
                                     color="warning"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setTitle('Actualizar aplicación mantenimiento');
-                                        setHeight(70);
-                                        setType('update');
-                                        setFormType('aplicacion');
+                                        setTypeModal('aplicacion');
+                                        setFormType('update');
                                         setAplicacionMantenimientoEdit(aplicacion);
                                         setOpenModal(true);
                                     }}
@@ -98,10 +105,8 @@ const ListAplicacionMantenimientos: React.FC<Props> = ({ aplicacion }) => {
                                     color="error"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setTitle('Eliminar aplicación mantenimiento');
-                                        setHeight(50);
-                                        setType('delete');
-                                        setFormType('aplicacion');
+                                        setTypeModal('aplicacion');
+                                        setFormType('delete');
                                         setAplicacionMantenimientoEdit(aplicacion);
                                         setOpenModal(true);
                                     }}
@@ -152,10 +157,8 @@ const ListAplicacionMantenimientos: React.FC<Props> = ({ aplicacion }) => {
                                                                 color="warning"
                                                                 className="!text-sm !border-[1px] !border-solid !border-yellow-600 !p-1"
                                                                 onClick={() => {
-                                                                    setTitle('Actualizar mantenimiento');
-                                                                    setHeight(80);
-                                                                    setType('update');
-                                                                    setFormType('mantenimiento');
+                                                                    setTypeModal('mantenimiento');
+                                                                    setFormType('update');
                                                                     setMantenimientoEdit(mantenimiento);
                                                                     setOpenModal(true);
                                                                 }}
@@ -167,10 +170,8 @@ const ListAplicacionMantenimientos: React.FC<Props> = ({ aplicacion }) => {
                                                                 color="error"
                                                                 className="!text-sm !border-[1px] !border-solid !border-red-600 !p-1"
                                                                 onClick={() => {
-                                                                    setTitle('Eliminar mantenimiento');
-                                                                    setHeight(50);
-                                                                    setType('delete');
-                                                                    setFormType('mantenimiento');
+                                                                    setTypeModal('mantenimiento');
+                                                                    setFormType('delete');
                                                                     setMantenimientoEdit(mantenimiento);
                                                                     setOpenModal(true);
                                                                 }}

@@ -21,16 +21,20 @@ import { IRootState } from '@interfaces/store';
 import CorteUpdatePopover from './CorteUpdatePopover';
 import Alert from '@components/Alert';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { useCosecha } from './hooks/useCosecha';
+import DialogModal from '@components/Dialog';
+import CosechaRegister from './CosechaRegister';
 
 interface Props {}
 
 const ListCosecha: React.FC<Props> = () => {
-    const { validateCosecha, setOpenModalForms, setFormType, setCosechaEdit } = useContext(CultivosContext);
+    const { validateCosecha } = useContext(CultivosContext);
     const { id_corte, fecha_inicio, fecha_corte, estado } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, error, loading } = useQuery<GetCosechaResponse>(OBTENER_COSECHA_CORTE, {
         variables: { idCorte: id_corte }
     });
+    const { cosechaEdit, openModal, formType, setCosechaEdit, setOpenModal, setFormType } = useCosecha();
     // Calcular TCH
     const peso = !error ? data?.obtenerCosechaCorte.peso : 0;
     const area = !error ? data?.obtenerCosechaCorte.cortePadre?.listTablones?.reduce((cur, val) => cur + val.area, 0) : 0;
@@ -46,6 +50,18 @@ const ListCosecha: React.FC<Props> = () => {
 
     return (
         <>
+            {openModal && (
+                <DialogModal
+                    isOpen={true}
+                    handleClose={() => setOpenModal(false)}
+                    title={formType === 'create' ? 'Registrar cosecha' : 'Actualizar cosecha'}
+                    height={85}
+                    width="60%"
+                    id="modal-cosecha"
+                >
+                    <CosechaRegister formType={formType} cosecha={cosechaEdit} handleClose={() => setOpenModal(false)} />
+                </DialogModal>
+            )}
             {validateCosecha && <CorteUpdatePopover />}
             <Grid2 container>
                 {rol === 1 && error && (
@@ -55,7 +71,7 @@ const ListCosecha: React.FC<Props> = () => {
                             className="!mb-5"
                             onClick={() => {
                                 setFormType('create');
-                                setOpenModalForms(true);
+                                setOpenModal(true);
                             }}
                         >
                             Registrar cosecha
@@ -100,7 +116,7 @@ const ListCosecha: React.FC<Props> = () => {
                                                     onClick={() => {
                                                         setFormType('update');
                                                         setCosechaEdit(data?.obtenerCosechaCorte);
-                                                        setOpenModalForms(true);
+                                                        setOpenModal(true);
                                                     }}
                                                     variant="contained"
                                                     sx={{

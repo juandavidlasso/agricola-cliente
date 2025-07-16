@@ -5,17 +5,18 @@ import Loading from '@components/Loading';
 import { ELIMINAR_MANTENIMIENTO } from '@graphql/mutations';
 import { OBTENER_APLICACIONES_MANTENIMIENTO } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';
-import { GetMantenimientoDelete } from '@interfaces/mantenimientos/mantenimiento';
+import { GetMantenimientoDelete, Mantenimiento } from '@interfaces/mantenimientos/mantenimiento';
 import { IRootState } from '@interfaces/store';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 
-interface Props {}
+interface Props {
+    mantenimiento: Mantenimiento | undefined;
+    handleClose: () => void;
+}
 
-const MantenimientoDelete: React.FC<Props> = ({}) => {
+const MantenimientoDelete: React.FC<Props> = ({ mantenimiento, handleClose }) => {
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarMantenimiento] = useMutation<GetMantenimientoDelete>(ELIMINAR_MANTENIMIENTO);
-    const { mantenimientoEdit, setOpenModal } = useContext(MaquinariaContext);
     const { setInfoMessage, setShowMessage, setMessageType } = useContext(CultivosContext);
     const { idMaquinaria } = useAppSelector((state: IRootState) => state.maquinariaReducer.maquinaria);
 
@@ -26,7 +27,7 @@ const MantenimientoDelete: React.FC<Props> = ({}) => {
         try {
             const { data } = await eliminarMantenimiento({
                 variables: {
-                    idMantenimiento: mantenimientoEdit?.idMantenimiento
+                    idMantenimiento: mantenimiento?.idMantenimiento
                 },
                 refetchQueries: [{ query: OBTENER_APLICACIONES_MANTENIMIENTO, variables: { maquinariaId: idMaquinaria } }]
             });
@@ -36,7 +37,7 @@ const MantenimientoDelete: React.FC<Props> = ({}) => {
                 setInfoMessage('El mantenimiento se eliminó exitosamente.');
                 setShowMessage(true);
                 setSubmitting(false);
-                setOpenModal(false);
+                handleClose();
                 return;
             }
 
@@ -44,7 +45,8 @@ const MantenimientoDelete: React.FC<Props> = ({}) => {
             setInfoMessage('No se pudo eliminar el mantenimiento, intente nuevamente en un momento.');
             setShowMessage(true);
             setSubmitting(false);
-            setOpenModal(false);
+            handleClose();
+            return;
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -78,12 +80,7 @@ const MantenimientoDelete: React.FC<Props> = ({}) => {
                 >
                     {submitting ? <Loading /> : 'Eliminar'}
                 </Button>
-                <Button
-                    onClick={() => setOpenModal(false)}
-                    color="primary"
-                    variant="contained"
-                    sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
-                >
+                <Button onClick={handleClose} color="primary" variant="contained" sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}>
                     Cancelar
                 </Button>
             </Grid2>

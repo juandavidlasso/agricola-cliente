@@ -6,8 +6,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Loading from '@components/Loading';
 import { OBTENER_MAQUINARIAS } from '@graphql/queries';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
-import { FormDataMaquinaria, GetMaquinariaRegisterResponse, GetMaquinariaUpdateResponse } from '@interfaces/maquinaria';
+import {
+    FormDataMaquinaria,
+    GetMaquinariaRegisterResponse,
+    GetMaquinariaUpdateResponse,
+    Maquinaria
+} from '@interfaces/maquinaria';
 import { ACTUALIZAR_MAQUINARIA, REGISTRAR_MAQUINARIA } from '@graphql/mutations';
 import { handleKeyDownNumber } from '@utils/validations';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
@@ -20,10 +24,13 @@ const schema = yup.object({
     color: yup.string().required('El color es requerido.')
 });
 
-interface Props {}
+interface Props {
+    maquinaria: Maquinaria | undefined;
+    formType: 'create' | 'update';
+    handleClose: () => void;
+}
 
-const MaquinariaRegister: React.FC<Props> = ({}) => {
-    const { setOpenModal, maquinariaEdit, type } = useContext(MaquinariaContext);
+const MaquinariaRegister: React.FC<Props> = ({ maquinaria, formType, handleClose }) => {
     const { setShowMessage, setInfoMessage, setMessageType } = useContext(CultivosContext);
     const {
         register,
@@ -33,11 +40,11 @@ const MaquinariaRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataMaquinaria>({
         resolver: yupResolver(schema),
         defaultValues: {
-            marca: type === 'update' ? maquinariaEdit?.marca : '',
-            serie: type === 'update' ? maquinariaEdit?.serie : '',
-            modelo: type === 'update' ? maquinariaEdit?.modelo : undefined,
-            potencia: type === 'update' ? maquinariaEdit?.potencia : undefined,
-            color: type === 'update' ? maquinariaEdit?.color : ''
+            marca: formType === 'update' ? maquinaria?.marca : '',
+            serie: formType === 'update' ? maquinaria?.serie : '',
+            modelo: formType === 'update' ? maquinaria?.modelo : undefined,
+            potencia: formType === 'update' ? maquinaria?.potencia : undefined,
+            color: formType === 'update' ? maquinaria?.color : ''
         }
     });
     const [agregarMaquinaria] = useMutation<GetMaquinariaRegisterResponse>(REGISTRAR_MAQUINARIA);
@@ -49,7 +56,7 @@ const MaquinariaRegister: React.FC<Props> = ({}) => {
         setSubmitting(true);
 
         try {
-            if (type === 'create') {
+            if (formType === 'create') {
                 await agregarMaquinaria({
                     variables: {
                         createMaquinariaInput: dataForm
@@ -61,7 +68,7 @@ const MaquinariaRegister: React.FC<Props> = ({}) => {
                     variables: {
                         updateMaquinariaInput: {
                             ...dataForm,
-                            idMaquinaria: maquinariaEdit?.idMaquinaria
+                            idMaquinaria: maquinaria?.idMaquinaria
                         }
                     },
                     refetchQueries: [{ query: OBTENER_MAQUINARIAS }]
@@ -69,9 +76,9 @@ const MaquinariaRegister: React.FC<Props> = ({}) => {
             }
 
             setMessageType('success');
-            setInfoMessage(`La maquinaria se ${type === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(`La maquinaria se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModal(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -145,12 +152,12 @@ const MaquinariaRegister: React.FC<Props> = ({}) => {
                         variant="contained"
                         sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
                     >
-                        {submitting ? <Loading /> : type === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
                     </Button>
                     <Button
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            handleClose();
                         }}
                         color="primary"
                         variant="contained"

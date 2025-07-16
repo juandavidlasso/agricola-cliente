@@ -14,30 +14,21 @@ import CardDetails from './CardDetails';
 import ModalLoading from '@components/Modal';
 import ListButtons from './ListButtons';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import ModalForms from './ModalForms';
-import ModalActions from './ModalActions';
 import ListWorks from './ListWorks';
+import { useCorte } from './hooks/useCorte';
+import CorteActualizar from './CorteActualizar';
+import DialogModal from '@components/Dialog';
 
 interface Props {
     toogleTheme: (theme: ThemeProps) => void;
 }
 
 const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
-    const {
-        typeModal,
-        openModalList,
-        openModal,
-        openModalSuertes,
-        openModalForms,
-        setOpenModalForms,
-        setFormType,
-        setTypeModal,
-        setOpenModalList,
-        setHeader
-    } = useContext(CultivosContext);
+    const { openModalList, setOpenModalList, setTypeModal } = useContext(CultivosContext);
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, loading, error } = useQuery<GetCorteResponse>(OBTENER_CORTE, { variables: { idCorte: corte.id_corte } });
+    const { openModal, formType, setOpenModal, setFormType } = useCorte();
 
     if (error) return <Alert message={error.message} />;
 
@@ -45,9 +36,19 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
 
     return (
         <>
+            {openModal && (
+                <DialogModal
+                    isOpen={true}
+                    handleClose={() => setOpenModal(false)}
+                    title={'Actualizar la fecha de corte'}
+                    height={75}
+                    closeBack={false}
+                    id="modal-corte"
+                >
+                    <CorteActualizar formType={formType} handleClose={() => setOpenModal(false)} />
+                </DialogModal>
+            )}
             {openModalList && <ListWorks />}
-            {openModal && <ModalActions />}
-            {openModalForms && <ModalForms />}
             <Layout toogleTheme={toogleTheme} navItems={routesCultivos}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     <Grid2 container spacing={2}>
@@ -64,8 +65,7 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
                                         color="error"
                                         onClick={() => {
                                             setFormType('update');
-                                            setTypeModal('corte');
-                                            setOpenModalForms(true);
+                                            setOpenModal(true);
                                         }}
                                     >
                                         Editar Corte
@@ -79,7 +79,6 @@ const CorteDetalle: React.FC<Props> = ({ toogleTheme }) => {
                                 color="error"
                                 onClick={() => {
                                     setTypeModal('tablon');
-                                    setHeader('Listado de Tablones');
                                     setOpenModalList(true);
                                 }}
                             >

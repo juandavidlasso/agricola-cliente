@@ -16,15 +16,18 @@ import { saveCorte } from '@store/cultivos/actions';
 import { OBTENER_CORTE, OBTENER_CORTE_ACTUAL, OBTENER_CORTES_POR_SUERTE, OBTENER_CORTES_RENOVADOS } from '@graphql/queries';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {}
+interface Props {
+    formType: 'update' | 'create' | 'delete';
+    handleClose: () => void;
+}
 
-const CorteActualizar: React.FC<Props> = () => {
+const CorteActualizar: React.FC<Props> = ({ formType, handleClose }) => {
     const dispatch = useAppDispatch();
     const {
         corte: { id_corte, numero, fecha_inicio, fecha_siembra },
         suerte
     } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { formType, setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const { handleSubmit, reset, register, setValue } = useForm<FormUpdateCorte>({
         defaultValues: {
             numero: formType === 'create' ? 0 : numero,
@@ -79,7 +82,7 @@ const CorteActualizar: React.FC<Props> = () => {
             setMessageType('success');
             setInfoMessage(`El corte se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -137,7 +140,7 @@ const CorteActualizar: React.FC<Props> = () => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModalForms(false);
+                            handleClose();
                         }}
                     >
                         Cancelar

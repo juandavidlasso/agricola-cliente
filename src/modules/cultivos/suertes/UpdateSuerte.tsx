@@ -14,6 +14,7 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import { saveSuerte } from '@store/cultivos/actions';
 import Loading from '@components/Loading';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { DataType } from '@interfaces/cultivos/labores';
 
 const schema = yup.object({
     nombre: yup.string().required('El nombre es requerido'),
@@ -22,13 +23,16 @@ const schema = yup.object({
     renovada: yup.string().required()
 });
 
-interface Props {}
+interface Props {
+    formType: DataType;
+    handleClose: () => void;
+}
 
-const UpdateSuerte: React.FC<Props> = () => {
+const UpdateSuerte: React.FC<Props> = ({ formType, handleClose }) => {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { nombre, variedad, zona, renovada, id_suerte } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
-    const { formType, setMessageType, setShowMessage, setInfoMessage, setOpenModal } = useContext(CultivosContext);
+    const { setMessageType, setShowMessage, setInfoMessage } = useContext(CultivosContext);
     const {
         register,
         handleSubmit,
@@ -100,7 +104,7 @@ const UpdateSuerte: React.FC<Props> = () => {
                 }`
             );
             setShowMessage(true);
-            setOpenModal(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -160,7 +164,7 @@ const UpdateSuerte: React.FC<Props> = () => {
                     <Button
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            handleClose();
                         }}
                         color="primary"
                         variant="contained"

@@ -15,11 +15,11 @@ import { OBTENER_APLICACIONES_MANTENIMIENTO, OBTENER_INSUMOS } from '@graphql/qu
 import { GetInsumosResponse } from '@interfaces/insumos';
 import { FormDataValidation, GetMantenimientoRegister } from '@interfaces/mantenimientos/mantenimiento';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 import { handleKeyDownNumber } from '@utils/validations';
 import { REGISTRAR_MANTENIMIENTOS } from '@graphql/mutations';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { AplicacionMantenimiento } from '@interfaces/mantenimientos/aplicaciones';
 
 const schema = yup.object({
     mantenimientos: yup.array().of(
@@ -34,11 +34,13 @@ const schema = yup.object({
     )
 });
 
-interface Props {}
+interface Props {
+    aplicacionMantenimiento: AplicacionMantenimiento | undefined;
+    handleClose: () => void;
+}
 
-const MantenimientoRegister: React.FC<Props> = ({}) => {
+const MantenimientoRegister: React.FC<Props> = ({ aplicacionMantenimiento, handleClose }) => {
     const { data, loading, error } = useQuery<GetInsumosResponse>(OBTENER_INSUMOS);
-    const { aplicacionMantenimientoEdit, setOpenModal } = useContext(MaquinariaContext);
     const { setShowMessage, setInfoMessage, setMessageType } = useContext(CultivosContext);
     const { idMaquinaria } = useAppSelector((state: IRootState) => state.maquinariaReducer.maquinaria);
     const {
@@ -65,7 +67,7 @@ const MantenimientoRegister: React.FC<Props> = ({}) => {
         const data = dataForm as FormDataValidation;
         const newData = data.mantenimientos.map((data) => ({
             ...data,
-            ApMantId: aplicacionMantenimientoEdit?.idApMant
+            ApMantId: aplicacionMantenimiento?.idApMant
         }));
 
         try {
@@ -79,13 +81,13 @@ const MantenimientoRegister: React.FC<Props> = ({}) => {
                 setMessageType('success');
                 setInfoMessage('El mantenimiento se registro exitosamente.');
                 setShowMessage(true);
-                setOpenModal(false);
+                handleClose();
                 return;
             }
             setMessageType('error');
             setInfoMessage('No se pudo registrar el mantenimiento.');
             setShowMessage(true);
-            setOpenModal(false);
+            handleClose();
             return;
         } catch (error) {
             if (error instanceof ApolloError) {
@@ -243,7 +245,7 @@ const MantenimientoRegister: React.FC<Props> = ({}) => {
                     <Button
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            handleClose();
                         }}
                         color="primary"
                         variant="contained"

@@ -10,11 +10,9 @@ import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 
 const getColumns = (
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
     setType: React.Dispatch<React.SetStateAction<DataType>>,
     setLluviaEdit: React.Dispatch<React.SetStateAction<Lluvia | undefined>>,
-    setFormType: React.Dispatch<React.SetStateAction<FormTypePluviometro>>,
-    setHeight: React.Dispatch<React.SetStateAction<number>>
+    setFormType: React.Dispatch<React.SetStateAction<FormTypePluviometro>>
 ) => {
     const columns: GridColDef[] = [
         { field: 'fecha', headerName: 'Fecha', flex: 1 },
@@ -38,9 +36,7 @@ const getColumns = (
                     <Button
                         onClick={() => {
                             setType('delete');
-                            setTitle('Eliminar lluvia');
                             setLluviaEdit(param.row);
-                            setHeight(60);
                             setFormType('lluvia');
                         }}
                         variant="contained"
@@ -70,7 +66,7 @@ const getColumns = (
 interface Props {}
 
 const Lluvias: React.FC<Props> = ({}) => {
-    const { setTitle, setType, setFormType, setHeight, setLluviaEdit } = useContext(PluviometroContext);
+    const { setType, setFormType, setLluviaEdit } = useContext(PluviometroContext);
     const { data, error, loading } = useQuery<GetLluviasResponse>(OBTENER_LLUVIAS);
 
     if (error) return <Alert message={error.message} />;
@@ -84,7 +80,7 @@ const Lluvias: React.FC<Props> = ({}) => {
                 ) : (
                     <DataGrid
                         rows={data?.obtenerLluvias}
-                        columns={getColumns(setTitle, setType, setLluviaEdit, setFormType, setHeight)}
+                        columns={getColumns(setType, setLluviaEdit, setFormType)}
                         disableVirtualization
                         initialState={{
                             pagination: {

@@ -4,6 +4,7 @@ export interface AplicacionHerbicidas {
     id_aphe: number;
     fecha: string;
     tipo: string;
+    suertes?: string;
     listTratamientoHerbicida?: TratamientoHerbicidas[];
 }
 

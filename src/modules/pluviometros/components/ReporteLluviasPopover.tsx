@@ -9,7 +9,8 @@ import ReporteLluviasYear from './ReporteLluviasYear';
 interface Props {}
 
 const ReporteLluviasPopover: React.FC<Props> = ({}) => {
-    const { openModalReport, reportType, title, setOpenModalReport } = useContext(PluviometroContext);
+    const { openModalReport, reportType, setOpenModalReport } = useContext(PluviometroContext);
+    const getTitle = () => (reportType === 'mes' ? 'Listado de lluvias por mes y año' : 'Listado de lluvias por año');
     const getComponent = () => {
         if (reportType === 'mes') return <ReporteLluviasMesYear />;
         if (reportType === 'year') return <ReporteLluviasYear />;
@@ -20,7 +21,7 @@ const ReporteLluviasPopover: React.FC<Props> = ({}) => {
             <Grid2 container spacing={2} padding={2}>
                 <Grid2 size={12} marginTop={1} display="flex" justifyContent="center">
                     <Typography variant="h4" component="h4" color="text.primary" textAlign="center" className="max-lg:!mt-16">
-                        {title}
+                        {getTitle()}
                     </Typography>
                     <Button variant="outlined" onClick={() => setOpenModalReport(false)} sx={{ position: 'absolute', right: 5 }}>
                         <CloseIcon />

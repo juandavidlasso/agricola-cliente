@@ -13,7 +13,6 @@ import { ThemeProps } from '@interfaces/theme';
 import { PluviometroProvider } from 'src/context/lluvias/PluviometroContext';
 import { CultivosProvider } from 'src/context/cultivos/CultivosContext';
 import Alert from '@components/Alert';
-import { MaquinariaProvider } from 'src/context/maquinaria/MaquinariaContext';
 
 export default function App({ Component, pageProps }: AppProps) {
     const [theme, setTheme] = useState<Theme>(ligthTheme);
@@ -33,13 +32,11 @@ export default function App({ Component, pageProps }: AppProps) {
                 <ApolloProvider client={client}>
                     <CultivosProvider>
                         <PluviometroProvider>
-                            <MaquinariaProvider>
-                                <ThemeProvider theme={theme}>
-                                    <CssBaseline />
-                                    <Alert />
-                                    <Component {...pageProps} toogleTheme={toogleTheme} />
-                                </ThemeProvider>
-                            </MaquinariaProvider>
+                            <ThemeProvider theme={theme}>
+                                <CssBaseline />
+                                <Alert />
+                                <Component {...pageProps} toogleTheme={toogleTheme} />
+                            </ThemeProvider>
                         </PluviometroProvider>
                     </CultivosProvider>
                 </ApolloProvider>

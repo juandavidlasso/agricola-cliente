@@ -1,21 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { TableRow, TableCell, Button } from '@mui/material';
 import { TablonState } from '@interfaces/cultivos/tablones';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveTablon } from '@store/cultivos/actions';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { DataType } from '@interfaces/cultivos/labores';
 
 interface Props {
     tablon: TablonState;
+    setFormType: React.Dispatch<React.SetStateAction<DataType>>;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Tablon: React.FC<Props> = ({ tablon }) => {
+const Tablon: React.FC<Props> = ({ tablon, setFormType, setOpenModal }) => {
     const dispatch = useAppDispatch();
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { estado } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
-    const { setFormType, setOpenModalForms } = useContext(CultivosContext);
     const { id_tablon, numero, area } = tablon;
     return (
         <TableRow key={id_tablon}>
@@ -32,7 +33,7 @@ const Tablon: React.FC<Props> = ({ tablon }) => {
                         onClick={() => {
                             dispatch(saveTablon(tablon));
                             setFormType('update');
-                            setOpenModalForms(true);
+                            setOpenModal(true);
                         }}
                     >
                         Editar
@@ -44,7 +45,7 @@ const Tablon: React.FC<Props> = ({ tablon }) => {
                         onClick={() => {
                             dispatch(saveTablon(tablon));
                             setFormType('delete');
-                            setOpenModalForms(true);
+                            setOpenModal(true);
                         }}
                     >
                         Eliminar

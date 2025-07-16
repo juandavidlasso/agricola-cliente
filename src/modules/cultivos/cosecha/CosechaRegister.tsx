@@ -5,13 +5,14 @@ import { Button, Grid2, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Loading from '@components/Loading';
-import { FormDataCosecha, GetCosechaRegister, GetCosechaUpdate } from '@interfaces/cultivos/cosechas';
+import { Cosecha, FormDataCosecha, GetCosechaRegister, GetCosechaUpdate } from '@interfaces/cultivos/cosechas';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import { handleKeyDownNumber } from '@utils/validations';
 import { ACTUALIZAR_COSECHA, REGISTRAR_COSECHA } from '@graphql/mutations';
 import { OBTENER_COSECHA_CORTE } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { DataType } from '@interfaces/cultivos/labores';
 
 const schema = yup.object({
     peso: yup.number().required('El peso es requerido.').typeError('El peso es requerido.'),
@@ -21,12 +22,15 @@ const schema = yup.object({
     nota: yup.string().optional()
 });
 
-interface Props {}
+interface Props {
+    cosecha: Cosecha | undefined;
+    formType: DataType;
+    handleClose: () => void;
+}
 
-const CosechaRegister: React.FC<Props> = () => {
+const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose }) => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { formType, cosechaEdit, setInfoMessage, setShowMessage, setMessageType, setOpenModalForms, setValidateCosecha } =
-        useContext(CultivosContext);
+    const { setInfoMessage, setShowMessage, setMessageType, setValidateCosecha } = useContext(CultivosContext);
     const {
         register,
         handleSubmit,
@@ -35,11 +39,11 @@ const CosechaRegister: React.FC<Props> = () => {
     } = useForm<FormDataCosecha>({
         resolver: yupResolver(schema),
         defaultValues: {
-            peso: formType === 'create' ? undefined : cosechaEdit?.peso,
-            rendimiento: formType === 'create' ? undefined : cosechaEdit?.rendimiento,
-            numeroVagones: formType === 'create' ? undefined : cosechaEdit?.numeroVagones,
-            numeroMulas: formType === 'create' ? undefined : cosechaEdit?.numeroMulas,
-            nota: formType === 'create' ? '' : cosechaEdit?.nota
+            peso: formType === 'create' ? undefined : cosecha?.peso,
+            rendimiento: formType === 'create' ? undefined : cosecha?.rendimiento,
+            numeroVagones: formType === 'create' ? undefined : cosecha?.numeroVagones,
+            numeroMulas: formType === 'create' ? undefined : cosecha?.numeroMulas,
+            nota: formType === 'create' ? '' : cosecha?.nota
         }
     });
     const [submitting, setSubmitting] = useState<boolean>(false);
@@ -68,7 +72,7 @@ const CosechaRegister: React.FC<Props> = () => {
                 await actualizarCosecha({
                     variables: {
                         updateCosechaInput: {
-                            id_cosecha: cosechaEdit?.id_cosecha,
+                            id_cosecha: cosecha?.id_cosecha,
                             peso: formData.peso,
                             rendimiento: formData.rendimiento,
                             numeroMulas: formData.numeroMulas,
@@ -84,7 +88,7 @@ const CosechaRegister: React.FC<Props> = () => {
             setMessageType('success');
             setInfoMessage(`La cosecha se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModalForms(false);
+            handleClose();
             if (formType === 'create') return setValidateCosecha(true);
         } catch (error) {
             if (error instanceof ApolloError) {
@@ -158,7 +162,7 @@ const CosechaRegister: React.FC<Props> = () => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModalForms(false);
+                            handleClose();
                         }}
                     >
                         Cancelar

@@ -5,9 +5,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 import Loading from '@components/Loading';
-import { FormDataInsumo, GetInsumoRegister, GetInsumoUpdate } from '@interfaces/insumos';
+import { FormDataInsumo, GetInsumoRegister, GetInsumoUpdate, Insumo } from '@interfaces/insumos';
 import { ACTUALIZAR_INSUMO, REGISTRAR_INSUMO } from '@graphql/mutations';
 import { OBTENER_INSUMOS } from '@graphql/queries';
 
@@ -18,10 +17,13 @@ const schema = yup.object({
     cantidad: yup.string().required('La cantidad es requerida.')
 });
 
-interface Props {}
+interface Props {
+    insumo: Insumo | undefined;
+    formType: 'delete' | 'create' | 'update';
+    handleClose: () => void;
+}
 
-const InsumoRegister: React.FC<Props> = ({}) => {
-    const { setOpenModal, type, insumoEdit } = useContext(MaquinariaContext);
+const InsumoRegister: React.FC<Props> = ({ insumo, formType, handleClose }) => {
     const { setShowMessage, setInfoMessage, setMessageType } = useContext(CultivosContext);
     const {
         register,
@@ -31,10 +33,10 @@ const InsumoRegister: React.FC<Props> = ({}) => {
     } = useForm<FormDataInsumo>({
         resolver: yupResolver(schema),
         defaultValues: {
-            nombre: type === 'update' ? insumoEdit?.nombre : '',
-            referencia: type === 'update' ? insumoEdit?.referencia : '',
-            marca: type === 'update' ? insumoEdit?.marca : '',
-            cantidad: type === 'update' ? insumoEdit?.cantidad : ''
+            nombre: formType === 'update' ? insumo?.nombre : '',
+            referencia: formType === 'update' ? insumo?.referencia : '',
+            marca: formType === 'update' ? insumo?.marca : '',
+            cantidad: formType === 'update' ? insumo?.cantidad : ''
         }
     });
     const [agregarInsumo] = useMutation<GetInsumoRegister>(REGISTRAR_INSUMO);
@@ -46,7 +48,7 @@ const InsumoRegister: React.FC<Props> = ({}) => {
         setSubmitting(true);
 
         try {
-            if (type === 'create') {
+            if (formType === 'create') {
                 await agregarInsumo({
                     variables: {
                         createInsumoInput: dataForm
@@ -58,7 +60,7 @@ const InsumoRegister: React.FC<Props> = ({}) => {
                     variables: {
                         updateInsumoInput: {
                             ...dataForm,
-                            idInsumo: insumoEdit?.idInsumo
+                            idInsumo: insumo?.idInsumo
                         }
                     },
                     refetchQueries: [{ query: OBTENER_INSUMOS }]
@@ -66,9 +68,10 @@ const InsumoRegister: React.FC<Props> = ({}) => {
             }
 
             setMessageType('success');
-            setInfoMessage(`El insumo se ${type === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
+            setInfoMessage(`El insumo se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            setOpenModal(false);
+            handleClose();
+            return;
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -131,12 +134,12 @@ const InsumoRegister: React.FC<Props> = ({}) => {
                         variant="contained"
                         sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
                     >
-                        {submitting ? <Loading /> : type === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
                     </Button>
                     <Button
                         onClick={() => {
                             reset();
-                            setOpenModal(false);
+                            handleClose();
                         }}
                         color="primary"
                         variant="contained"

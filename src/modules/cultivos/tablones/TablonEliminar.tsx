@@ -9,12 +9,14 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 
-interface Props {}
+interface Props {
+    handleClose: () => void;
+}
 
-const TablonEliminar: React.FC<Props> = () => {
+const TablonEliminar: React.FC<Props> = ({ handleClose }) => {
     const { id_tablon, corte_id, numero, area } = useAppSelector((state: IRootState) => state.cultivosReducer.tablon);
     const { id_suerte } = useAppSelector((state: IRootState) => state.cultivosReducer.suerte);
-    const { setOpenModalForms, setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [eliminarTablon] = useMutation<GetEliminarTablon>(ELIMINAR_TABLON);
 
@@ -39,7 +41,7 @@ const TablonEliminar: React.FC<Props> = () => {
                 setInfoMessage('El tablón se eliminó exitosamente.');
                 setShowMessage(true);
                 setSubmitting(false);
-                setOpenModalForms(false);
+                handleClose();
                 return;
             }
 
@@ -47,7 +49,8 @@ const TablonEliminar: React.FC<Props> = () => {
             setInfoMessage('No se pudo eliminar el tablón, intente nuevamente en un momento.');
             setShowMessage(true);
             setSubmitting(false);
-            setOpenModalForms(false);
+            handleClose();
+            return;
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -86,12 +89,7 @@ const TablonEliminar: React.FC<Props> = () => {
                 >
                     {submitting ? <Loading /> : 'Eliminar'}
                 </Button>
-                <Button
-                    onClick={() => setOpenModalForms(false)}
-                    color="primary"
-                    variant="contained"
-                    sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}
-                >
+                <Button onClick={handleClose} color="primary" variant="contained" sx={{ pl: 3, pr: 3, pt: 1, pb: 1 }}>
                     Cancelar
                 </Button>
             </Grid2>

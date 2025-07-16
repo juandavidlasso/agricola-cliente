@@ -11,7 +11,7 @@ interface Props {}
 
 const LluviasDelete: React.FC<Props> = ({}) => {
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const { lluviaEdit, setFormType, setHeight } = useContext(PluviometroContext);
+    const { lluviaEdit, setFormType } = useContext(PluviometroContext);
     const { setMessageType, setShowMessage, setInfoMessage } = useContext(CultivosContext);
     const [eliminarLluvia] = useMutation<boolean>(ELIMINAR_LLUVIA);
     const [eliminarAplicacionLluvia] = useMutation<boolean>(ELIMINAR_APLICACION_LLUVIA);
@@ -49,8 +49,8 @@ const LluviasDelete: React.FC<Props> = ({}) => {
             setInfoMessage('La lluvia se eliminó exitosamente.');
             setShowMessage(true);
             setSubmitting(false);
-            setHeight(80);
             setFormType('');
+            return;
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -82,14 +82,7 @@ const LluviasDelete: React.FC<Props> = ({}) => {
                 </Button>
             </Grid2>
             <Grid2 size={6} display={'flex'} justifyContent={'center'}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        setHeight(80);
-                        setFormType('');
-                    }}
-                >
+                <Button variant="contained" color="primary" onClick={() => setFormType('')}>
                     Cancelar
                 </Button>
             </Grid2>

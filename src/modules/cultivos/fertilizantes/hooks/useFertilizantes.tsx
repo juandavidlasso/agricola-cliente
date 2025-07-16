@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { GridColDef } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
@@ -15,42 +15,25 @@ import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse | undefined, rol: number) => {
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
-    const [totals, setTotals] = useState<{ [key: number]: number }>({});
     const [aplicacionFertilizanteEdit, setAplicacionFertilizanteEdit] = useState<AplicacionesFertilizantes>();
     const [tratamientoFertilizanteEdit, setTratamientoFertilizanteEdit] = useState<TratamientoFertilizante>();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [formType, setFormType] = useState<'create' | 'update' | 'delete'>('create');
     const [typeModal, setTypeModal] = useState<'aplicacion' | 'tratamiento'>('aplicacion');
     const [modalSuertes, setModalSuertes] = useState<boolean>(false);
+    const [openFertilizantes, setOpenFertilizantes] = useState<boolean>(false);
+    const [idFertilizante, setIdFertilizante] = useState<number>();
     const [agregarAplicacionesFertilizantes] = useMutation<GetAplicacionesFertilizantesRegister>(
         REGISTRAR_APLICACIONES_FERTILIZANTES
     );
 
-    useEffect(() => {
-        const trueKey = Object.keys(openStates).filter((key) => openStates[parseInt(key)] === true);
-        if (trueKey.length !== 0) {
-            for (let index = 0; index < trueKey.length; index++) {
-                const tratamientos = data?.obtenerAplicacionesFertilizantesCorte?.find(
-                    (data) => data.id_aplicaciones_fertilizantes === Number(trueKey[index])
-                );
-                const total =
-                    tratamientos?.aplicacionFertilizante?.listTratamientoFertilizante?.reduce(
-                        (acc, cr) => acc + (cr?.valor ?? 0),
-                        0
-                    ) ?? 0;
-                setTotals((prevTotals) => ({
-                    ...prevTotals,
-                    [trueKey[index]]: total.toLocaleString()
-                }));
-            }
-        }
-    }, [openStates]);
+    const getTotalById = (id: number): string => {
+        const item = data?.obtenerAplicacionesFertilizantesCorte?.find((data) => data.id_aplicaciones_fertilizantes === id);
 
-    const handleToggle = (id: number) => {
-        setOpenStates((prevState) => ({
-            ...prevState,
-            [id]: !prevState[id]
-        }));
+        const total =
+            item?.aplicacionFertilizante?.listTratamientoFertilizante?.reduce((acc, curr) => acc + (curr?.valor ?? 0), 0) ?? 0;
+
+        return total.toLocaleString();
     };
 
     const getColumns = () => {
@@ -111,8 +94,8 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
                 variables: {
                     createAplicacionesFertilizanteInput: [
                         {
-                            corte_id: corteId,
-                            apfe_id: aplicacionFertilizanteEdit?.apfe_id
+                            apfe_id: idFertilizante,
+                            corte_id: corteId
                         }
                     ]
                 },
@@ -147,20 +130,24 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
 
     return {
         openStates,
-        totals,
         openModal,
         typeModal,
         formType,
         aplicacionFertilizanteEdit,
         tratamientoFertilizanteEdit,
         modalSuertes,
-        handleToggle,
+        openFertilizantes,
+        idFertilizante,
+        setOpenFertilizantes,
+        setIdFertilizante,
+        setOpenStates,
         setAplicacionFertilizanteEdit,
         setOpenModal,
         setFormType,
         setTypeModal,
         setModalSuertes,
         getColumns,
-        handleSubmitAplicacionesFertilizantes
+        handleSubmitAplicacionesFertilizantes,
+        getTotalById
     };
 };

@@ -11,21 +11,25 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { OBTENER_AREA_SUERTE, OBTENER_TABLONES_CORTE, OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { DataType } from '@interfaces/cultivos/labores';
 
 const schema = yup.object({
     numero: yup.number().typeError('El número es requerido').required(),
     area: yup.number().typeError('El área es requerida').required()
 });
 
-interface Props {}
+interface Props {
+    formType: DataType;
+    handleClose: () => void;
+}
 
-const TablonRegistrar: React.FC<Props> = () => {
+const TablonRegistrar: React.FC<Props> = ({ formType, handleClose }) => {
     const {
         corte: { id_corte },
         tablon: { id_tablon, numero, area, estado },
         suerte: { id_suerte }
     } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { formType, setMessageType, setInfoMessage, setShowMessage, setOpenModalForms } = useContext(CultivosContext);
+    const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const {
         register,
         handleSubmit,
@@ -95,7 +99,7 @@ const TablonRegistrar: React.FC<Props> = () => {
             setShowMessage(true);
             setSubmitting(false);
             reset();
-            if (formType === 'update') return setOpenModalForms(false);
+            if (formType === 'update') return handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -146,7 +150,7 @@ const TablonRegistrar: React.FC<Props> = () => {
                         variant="contained"
                         onClick={() => {
                             reset();
-                            setOpenModalForms(false);
+                            handleClose();
                         }}
                     >
                         Cancelar

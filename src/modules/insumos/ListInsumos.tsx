@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/client';
 import {
     Button,
@@ -13,19 +13,23 @@ import {
     Typography
 } from '@mui/material';
 import SideModal from '@components/Side';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 import { OBTENER_INSUMOS } from '@graphql/queries';
-import { GetInsumosResponse } from '@interfaces/insumos';
+import { GetInsumosResponse, Insumo } from '@interfaces/insumos';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { FormType } from '@interfaces/maquinaria';
 
-interface Props {}
+interface Props {
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setFormType: React.Dispatch<React.SetStateAction<'delete' | 'create' | 'update'>>;
+    setTypeModal: React.Dispatch<React.SetStateAction<FormType>>;
+    setInsumoEdit: React.Dispatch<React.SetStateAction<Insumo | undefined>>;
+    handleClose: () => void;
+}
 
-const ListInsumos: React.FC<Props> = ({}) => {
-    const { openModalInsumos, setOpenModalInsumos, setOpenModal, setTitle, setHeight, setFormType, setType, setInsumoEdit } =
-        useContext(MaquinariaContext);
+const ListInsumos: React.FC<Props> = ({ setOpenModal, setFormType, setTypeModal, setInsumoEdit, handleClose }) => {
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { data, loading, error } = useQuery<GetInsumosResponse>(OBTENER_INSUMOS);
 
@@ -34,7 +38,7 @@ const ListInsumos: React.FC<Props> = ({}) => {
     if (loading) return <ModalLoading isOpen={loading} />;
 
     return (
-        <SideModal isOpen={openModalInsumos} handleClose={() => setOpenModalInsumos(false)} direction={'right'} width={700}>
+        <SideModal isOpen={true} handleClose={handleClose} direction={'right'} width={700}>
             <Grid2 container spacing={2} padding={2}>
                 <Grid2 size={12} marginTop={1}>
                     <Typography variant="h4" component="h4" color="text.primary" textAlign="center">
@@ -47,10 +51,8 @@ const ListInsumos: React.FC<Props> = ({}) => {
                             size="small"
                             variant="outlined"
                             onClick={() => {
-                                setTitle('Registrar Insumo');
-                                setHeight(90);
-                                setFormType('insumo');
-                                setType('create');
+                                setTypeModal('insumo');
+                                setFormType('create');
                                 setOpenModal(true);
                             }}
                         >
@@ -89,10 +91,8 @@ const ListInsumos: React.FC<Props> = ({}) => {
                                                     <Button
                                                         className="!p-0 !border-yellow-600 !border-[1px] !border-solid !text-sm !rounded-md !text-yellow-600 w-fit"
                                                         onClick={() => {
-                                                            setTitle('Actualizar Insumo');
-                                                            setHeight(90);
-                                                            setFormType('insumo');
-                                                            setType('update');
+                                                            setTypeModal('insumo');
+                                                            setFormType('update');
                                                             setInsumoEdit(insumo);
                                                             setOpenModal(true);
                                                         }}
@@ -102,10 +102,8 @@ const ListInsumos: React.FC<Props> = ({}) => {
                                                     <Button
                                                         className="!p-0 !border-red-600 !border-[1px] !border-solid !text-sm !rounded-md !text-red-600 w-fit"
                                                         onClick={() => {
-                                                            setTitle('Eliminar Insumo');
-                                                            setHeight(50);
-                                                            setFormType('insumo');
-                                                            setType('delete');
+                                                            setTypeModal('insumo');
+                                                            setFormType('delete');
                                                             setInsumoEdit(insumo);
                                                             setOpenModal(true);
                                                         }}

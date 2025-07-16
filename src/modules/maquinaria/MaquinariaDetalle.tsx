@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, Card, CardContent, Grid2, Typography } from '@mui/material';
 import Layout from '@modules/layouts/Layout';
@@ -7,7 +7,6 @@ import { ThemeProps } from '@interfaces/theme';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import MaquinariaPopover from './MaquinariaPopover';
-import { MaquinariaContext } from 'src/context/maquinaria/MaquinariaContext';
 import ListInsumos from '@modules/insumos/ListInsumos';
 import ListAplicacionMantenimientos from '@modules/mantenimientos/aplicaciones/ListAplicacionMantenimientos';
 import { useQuery } from '@apollo/client';
@@ -15,6 +14,7 @@ import { GetAplicacionesMantenimientoResponse } from '@interfaces/mantenimientos
 import { OBTENER_APLICACIONES_MANTENIMIENTO } from '@graphql/queries';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
+import { useMaquinaria } from './hooks/useMaquinaria';
 
 interface Props {
     toogleTheme: (theme: ThemeProps) => void;
@@ -26,10 +26,24 @@ const MaquinariaDetalle: React.FC<Props> = ({ toogleTheme }) => {
     const { data, loading, error } = useQuery<GetAplicacionesMantenimientoResponse>(OBTENER_APLICACIONES_MANTENIMIENTO, {
         variables: { maquinariaId: maquinaria.idMaquinaria }
     });
-    const { openModalInsumos, setOpenModalInsumos, setTitle, setHeight, setOpenModal, setType, setFormType } =
-        useContext(MaquinariaContext);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const { marca, color, modelo, potencia, serie } = maquinaria;
+    const {
+        openModal,
+        openModalInsumos,
+        formType,
+        typeModal,
+        insumoEdit,
+        aplicacionMantenimientoEdit,
+        mantenimientoEdit,
+        setOpenModal,
+        setOpenModalInsumos,
+        setFormType,
+        setTypeModal,
+        setInsumoEdit,
+        setAplicacionMantenimientoEdit,
+        setMantenimientoEdit
+    } = useMaquinaria();
 
     if (error) return <Alert message={error.message} />;
 
@@ -37,8 +51,25 @@ const MaquinariaDetalle: React.FC<Props> = ({ toogleTheme }) => {
 
     return (
         <>
-            <MaquinariaPopover />
-            {openModalInsumos && <ListInsumos />}
+            {openModal && (
+                <MaquinariaPopover
+                    aplicacionMantenimiento={aplicacionMantenimientoEdit}
+                    mantenimiento={mantenimientoEdit}
+                    insumo={insumoEdit}
+                    formType={formType}
+                    typeModal={typeModal}
+                    handleClose={() => setOpenModal(false)}
+                />
+            )}
+            {openModalInsumos && (
+                <ListInsumos
+                    setFormType={setFormType}
+                    setInsumoEdit={setInsumoEdit}
+                    setOpenModal={setOpenModal}
+                    setTypeModal={setTypeModal}
+                    handleClose={() => setOpenModalInsumos(false)}
+                />
+            )}
             <Layout toogleTheme={toogleTheme} navItems={routesMaquinaria}>
                 <Box display="flex" justifyContent="center" alignItems="center" className="!p-2">
                     <Grid2 container spacing={2} className="!w-full">
@@ -54,10 +85,8 @@ const MaquinariaDetalle: React.FC<Props> = ({ toogleTheme }) => {
                             {rol === 1 && (
                                 <Button
                                     onClick={() => {
-                                        setTitle('Registrar aplicación mantenimiento');
-                                        setHeight(70);
-                                        setType('create');
-                                        setFormType('aplicacion');
+                                        setTypeModal('aplicacion');
+                                        setFormType('create');
                                         setOpenModal(true);
                                     }}
                                     variant="outlined"
@@ -129,7 +158,15 @@ const MaquinariaDetalle: React.FC<Props> = ({ toogleTheme }) => {
                         {data?.obtenerAplicacionesMantenimiento?.length === 0
                             ? null
                             : data?.obtenerAplicacionesMantenimiento?.map((aplicacion) => (
-                                  <ListAplicacionMantenimientos key={aplicacion.idApMant} aplicacion={aplicacion} />
+                                  <ListAplicacionMantenimientos
+                                      key={aplicacion.idApMant}
+                                      aplicacion={aplicacion}
+                                      setFormType={setFormType}
+                                      setOpenModal={setOpenModal}
+                                      setTypeModal={setTypeModal}
+                                      setMantenimientoEdit={setMantenimientoEdit}
+                                      setAplicacionMantenimientoEdit={setAplicacionMantenimientoEdit}
+                                  />
                               ))}
                     </Grid2>
                 </Box>

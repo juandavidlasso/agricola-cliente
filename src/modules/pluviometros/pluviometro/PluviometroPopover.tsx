@@ -8,7 +8,12 @@ import LluviasDelete from '../lluvias/LluviasDelete';
 interface Props {}
 
 const PluviometroPopover: React.FC<Props> = ({}) => {
-    const { openModal, formType, height, title, type, setOpenModal } = useContext(PluviometroContext);
+    const { openModal, formType, type, setOpenModal } = useContext(PluviometroContext);
+    const getTitle = () => {
+        if (formType === 'pluviometro') return 'Registrar pluviómetro';
+        if (formType === 'lluvia') return 'Eliminar lluvia';
+        return 'Listado de lluvias';
+    };
     const getComponent = () => {
         if (formType === 'pluviometro') {
             if (type === 'create') return <PluviometroRegister />;
@@ -23,8 +28,8 @@ const PluviometroPopover: React.FC<Props> = ({}) => {
             id="modal-lluvias"
             isOpen={openModal}
             handleClose={() => setOpenModal(false)}
-            title={title}
-            height={height}
+            title={getTitle()}
+            height={formType === 'pluviometro' || formType === 'lluvia' ? 60 : 90}
             width={formType === '' ? '70%' : '50%'}
         >
             {getComponent()}
