@@ -36,7 +36,7 @@ interface Props {
     handleClose: () => void;
     tratamientoFertilizante: TratamientoFertilizante;
     aplicacionFertilizanteEdit: AplicacionesFertilizantes;
-    formType: 'delete' | 'update' | 'create';
+    formType: 'delete' | 'update' | 'create' | 'duplicate';
 }
 
 const TratamientoFertilizanteRegister: React.FC<Props> = ({

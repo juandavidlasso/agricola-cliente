@@ -9,7 +9,7 @@ import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamien
 
 interface Props {
     handleClose: () => void;
-    formType: 'delete' | 'update' | 'create';
+    formType: 'delete' | 'update' | 'create' | 'duplicate';
     typeModal: 'aplicacion' | 'tratamiento';
     aplicacionHerbicidaEdit: AplicacionesHerbicidas;
     tratamientoHerbicida: TratamientoHerbicidas;
@@ -26,6 +26,7 @@ const PopoverHerbicida: React.FC<Props> = ({
         if (typeModal === 'aplicacion') {
             if (formType === 'create') return 'Registrar aplicación herbicida';
             if (formType === 'update') return 'Actualizar aplicación herbicida';
+            if (formType === 'duplicate') return 'Duplicar aplicación herbicida';
             return 'Eliminar aplicación herbicida';
         }
         if (formType === 'create') return 'Registrar tratamiento herbicida';

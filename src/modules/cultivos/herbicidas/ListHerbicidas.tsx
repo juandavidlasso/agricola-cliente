@@ -27,13 +27,14 @@ import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
+import { AplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
 
 interface Props {
-    setIdHerbicida: React.Dispatch<React.SetStateAction<number | undefined>>;
-    setModalSuertes: React.Dispatch<React.SetStateAction<boolean>>;
+    copyHerbicida: (id_aphe: number) => void;
+    duplicateHerbicida: (aplicaciones: AplicacionesHerbicidas) => void;
 }
 
-const ListHerbicidas: React.FC<Props> = ({ setIdHerbicida, setModalSuertes }) => {
+const ListHerbicidas: React.FC<Props> = ({ copyHerbicida, duplicateHerbicida }) => {
     const { data, error, loading } = useQuery<GetAplicacionHerbicidaCorteResponse>(OBTENER_APLICACIONES_HERBICIDAS);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
@@ -82,18 +83,35 @@ const ListHerbicidas: React.FC<Props> = ({ setIdHerbicida, setModalSuertes }) =>
                                                         Suertes: {aplicaciones?.suertes}
                                                     </Typography>
                                                     {rol === 1 && (
-                                                        <Button
-                                                            className="!text-sm !normal-case"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setIdHerbicida(aplicaciones?.id_aphe);
-                                                                setModalSuertes(true);
-                                                            }}
-                                                            variant="outlined"
-                                                            color="primary"
-                                                        >
-                                                            Aplicar en otra suerte
-                                                        </Button>
+                                                        <>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    duplicateHerbicida({
+                                                                        aphe_id: 0,
+                                                                        corte_id: 0,
+                                                                        id_aplicaciones_herbicidas: 0,
+                                                                        aplicacionHerbicida: aplicaciones
+                                                                    });
+                                                                }}
+                                                                variant="outlined"
+                                                                color="success"
+                                                            >
+                                                                Duplicar
+                                                            </Button>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    copyHerbicida(aplicaciones?.id_aphe);
+                                                                }}
+                                                                variant="outlined"
+                                                                color="primary"
+                                                            >
+                                                                Aplicar en otra suerte
+                                                            </Button>
+                                                        </>
                                                     )}
                                                 </Box>
                                             }
@@ -124,9 +142,6 @@ const ListHerbicidas: React.FC<Props> = ({ setIdHerbicida, setModalSuertes }) =>
                                                             <TableCell align="center" className="!text-white">
                                                                 Nota
                                                             </TableCell>
-                                                            <TableCell align="center" className="!text-white">
-                                                                Acciones
-                                                            </TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -138,7 +153,6 @@ const ListHerbicidas: React.FC<Props> = ({ setIdHerbicida, setModalSuertes }) =>
                                                                 <TableCell align="center">{row.valor}</TableCell>
                                                                 <TableCell align="center">{row.aplico}</TableCell>
                                                                 <TableCell align="center">{row.nota}</TableCell>
-                                                                <TableCell align="center"></TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>

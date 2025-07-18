@@ -27,13 +27,14 @@ import { GetAplicacionFertilizanteResponse } from '@interfaces/cultivos/fertiliz
 import Alert from '@components/Alert';
 import { IRootState } from '@interfaces/store';
 import ModalLoading from '@components/Modal';
+import { AplicacionesFertilizantes } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 
 interface Props {
-    setIdFertilizante: React.Dispatch<React.SetStateAction<number | undefined>>;
-    setModalSuertes: React.Dispatch<React.SetStateAction<boolean>>;
+    copyFertilizante: (id_apfe: number) => void;
+    duplicateFertilizante: (aplicaciones: AplicacionesFertilizantes) => void;
 }
 
-const ListFertilizantes: React.FC<Props> = ({ setIdFertilizante, setModalSuertes }) => {
+const ListFertilizantes: React.FC<Props> = ({ copyFertilizante, duplicateFertilizante }) => {
     const { data, error, loading } = useQuery<GetAplicacionFertilizanteResponse>(OBTENER_APLICACIONES_FERTILIZANTES);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
@@ -81,18 +82,35 @@ const ListFertilizantes: React.FC<Props> = ({ setIdFertilizante, setModalSuertes
                                                         Suertes: {aplicaciones?.suertes}
                                                     </Typography>
                                                     {rol === 1 && (
-                                                        <Button
-                                                            className="!text-sm !normal-case"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setIdFertilizante(aplicaciones?.id_apfe);
-                                                                setModalSuertes(true);
-                                                            }}
-                                                            variant="outlined"
-                                                            color="primary"
-                                                        >
-                                                            Aplicar en otra suerte
-                                                        </Button>
+                                                        <>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    duplicateFertilizante({
+                                                                        apfe_id: 0,
+                                                                        corte_id: 0,
+                                                                        id_aplicaciones_fertilizantes: 0,
+                                                                        aplicacionFertilizante: aplicaciones
+                                                                    });
+                                                                }}
+                                                                variant="outlined"
+                                                                color="success"
+                                                            >
+                                                                Duplicar
+                                                            </Button>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    copyFertilizante(aplicaciones?.id_apfe);
+                                                                }}
+                                                                variant="outlined"
+                                                                color="primary"
+                                                            >
+                                                                Aplicar en otra suerte
+                                                            </Button>
+                                                        </>
                                                     )}
                                                 </Box>
                                             }
@@ -123,9 +141,6 @@ const ListFertilizantes: React.FC<Props> = ({ setIdFertilizante, setModalSuertes
                                                             <TableCell align="center" className="!text-white">
                                                                 Nota
                                                             </TableCell>
-                                                            <TableCell align="center" className="!text-white">
-                                                                Acciones
-                                                            </TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -137,7 +152,6 @@ const ListFertilizantes: React.FC<Props> = ({ setIdFertilizante, setModalSuertes
                                                                 <TableCell align="center">{row.valor}</TableCell>
                                                                 <TableCell align="center">{row.aplico}</TableCell>
                                                                 <TableCell align="center">{row.nota}</TableCell>
-                                                                <TableCell align="center"></TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>

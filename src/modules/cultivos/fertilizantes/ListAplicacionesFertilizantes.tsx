@@ -48,7 +48,8 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
         handleSubmitAplicacionesFertilizantes,
         getTotalById,
         setOpenFertilizantes,
-        setIdFertilizante
+        copyFertilizante,
+        duplicateFertilizante
     } = useFertilizantes(data, rol);
 
     if (error) return <Alert message={error.message} />;
@@ -91,7 +92,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                     id="modal-fertilizantes"
                     width="95%"
                 >
-                    <ListFertilizantes setIdFertilizante={setIdFertilizante} setModalSuertes={setModalSuertes} />
+                    <ListFertilizantes copyFertilizante={copyFertilizante} duplicateFertilizante={duplicateFertilizante} />
                 </DialogModal>
             )}
             <Grid2 container>
@@ -153,22 +154,24 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                         </Typography>
                                                         {rol === 1 && (
                                                             <Box className="flex gap-2">
-                                                                {/* <Button
-                                                                    className="!text-sm !normal-case"
-                                                                    onClick={() => {}}
-                                                                    variant="outlined"
-                                                                    color="success"
-                                                                >
-                                                                    Duplicar
-                                                                </Button> */}
                                                                 <Button
                                                                     className="!text-sm !normal-case"
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        setIdFertilizante(
+                                                                        duplicateFertilizante(aplicaciones);
+                                                                    }}
+                                                                    variant="outlined"
+                                                                    color="success"
+                                                                >
+                                                                    Duplicar
+                                                                </Button>
+                                                                <Button
+                                                                    className="!text-sm !normal-case"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        copyFertilizante(
                                                                             aplicaciones?.aplicacionFertilizante?.id_apfe
                                                                         );
-                                                                        setModalSuertes(true);
                                                                     }}
                                                                     variant="outlined"
                                                                     color="primary"

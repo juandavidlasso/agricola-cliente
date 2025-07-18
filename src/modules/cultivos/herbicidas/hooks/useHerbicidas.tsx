@@ -18,7 +18,7 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
     const [aplicacionHerbicidaEdit, setAplicacionHerbicidaEdit] = useState<AplicacionesHerbicidas>();
     const [tratamientoHerbicidaEdit, setTratamientoHerbicidaEdit] = useState<TratamientoHerbicidas>();
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const [formType, setFormType] = useState<'create' | 'update' | 'delete'>('create');
+    const [formType, setFormType] = useState<'create' | 'update' | 'delete' | 'duplicate'>('create');
     const [typeModal, setTypeModal] = useState<'aplicacion' | 'tratamiento'>('aplicacion');
     const [modalSuertes, setModalSuertes] = useState<boolean>(false);
     const [openHerbicidas, setOpenHerbicidas] = useState<boolean>(false);
@@ -32,6 +32,18 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
             item?.aplicacionHerbicida?.listTratamientoHerbicida?.reduce((acc, curr) => acc + (curr?.valor ?? 0), 0) ?? 0;
 
         return total.toLocaleString();
+    };
+
+    const copyHerbicida = (id_aphe: number) => {
+        setIdHerbicida(id_aphe);
+        setModalSuertes(true);
+    };
+
+    const duplicateHerbicida = (aplicaciones: AplicacionesHerbicidas) => {
+        setTypeModal('aplicacion');
+        setFormType('duplicate');
+        setAplicacionHerbicidaEdit(aplicaciones);
+        setOpenModal(true);
     };
 
     const getColumns = () => {
@@ -135,7 +147,6 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
         typeModal,
         tratamientoHerbicidaEdit,
         modalSuertes,
-        setIdHerbicida,
         setOpenHerbicidas,
         setAplicacionHerbicidaEdit,
         setOpenStates,
@@ -145,6 +156,8 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
         getColumns,
         setModalSuertes,
         handleSubmitAplicacionHerbicidas,
-        getTotalById
+        getTotalById,
+        copyHerbicida,
+        duplicateHerbicida
     };
 };

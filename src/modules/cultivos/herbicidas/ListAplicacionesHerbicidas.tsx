@@ -35,7 +35,6 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
         typeModal,
         tratamientoHerbicidaEdit,
         modalSuertes,
-        setIdHerbicida,
         setTypeModal,
         setFormType,
         setOpenModal,
@@ -45,7 +44,9 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
         setModalSuertes,
         handleSubmitAplicacionHerbicidas,
         setOpenHerbicidas,
-        getTotalById
+        getTotalById,
+        copyHerbicida,
+        duplicateHerbicida
     } = useHerbicidas(data, rol);
 
     if (error) return <Alert message={error.message} />;
@@ -88,7 +89,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                     id="modal-herbicidas"
                     width="95%"
                 >
-                    <ListHerbicidas setIdHerbicida={setIdHerbicida} setModalSuertes={setModalSuertes} />
+                    <ListHerbicidas copyHerbicida={copyHerbicida} duplicateHerbicida={duplicateHerbicida} />
                 </DialogModal>
             )}
             <Grid2 container>
@@ -149,22 +150,24 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                             </Typography>
                                                             {rol === 1 && (
                                                                 <Box className="flex gap-2">
-                                                                    {/* <Button
-                                                                    className="!text-sm !normal-case"
-                                                                    onClick={() => {}}
-                                                                    variant="outlined"
-                                                                    color="success"
-                                                                >
-                                                                    Duplicar
-                                                                </Button> */}
                                                                     <Button
                                                                         className="!text-sm !normal-case"
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
-                                                                            setIdHerbicida(
+                                                                            duplicateHerbicida(aplicaciones);
+                                                                        }}
+                                                                        variant="outlined"
+                                                                        color="success"
+                                                                    >
+                                                                        Duplicar
+                                                                    </Button>
+                                                                    <Button
+                                                                        className="!text-sm !normal-case"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            copyHerbicida(
                                                                                 aplicaciones?.aplicacionHerbicida?.id_aphe
                                                                             );
-                                                                            setModalSuertes(true);
                                                                         }}
                                                                         variant="outlined"
                                                                         color="primary"

@@ -36,7 +36,7 @@ interface Props {
     tratamientoHerbicida: TratamientoHerbicidas;
     aplicacionesHerbicida: AplicacionesHerbicidas;
     handleClose: () => void;
-    formType: 'delete' | 'update' | 'create';
+    formType: 'delete' | 'update' | 'create' | 'duplicate';
 }
 
 const TratamientoHerbicidaRegister: React.FC<Props> = ({

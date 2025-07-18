@@ -35,7 +35,7 @@ const schema = yup.object({
 
 interface Props {
     handleClose: () => void;
-    formType: 'delete' | 'update' | 'create';
+    formType: 'delete' | 'update' | 'create' | 'duplicate';
     aplicacionFertilizante: AplicacionesFertilizantes;
 }
 
@@ -108,7 +108,7 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({ handleClose, formType
                             id_apfe: aplicacionFertilizante?.aplicacionFertilizante?.id_apfe,
                             tipo: dataForm.tipo,
                             fecha: dataForm.fecha,
-                            duplicate: false // formType === 'duplicar'
+                            duplicate: formType === 'duplicate'
                         }
                     },
                     refetchQueries: [
@@ -188,7 +188,15 @@ const AplicacionFertilizanteRegister: React.FC<Props> = ({ handleClose, formType
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="center" gap={3}>
                     <Button color="primary" variant="contained" type="submit" disabled={submitting}>
-                        {submitting ? <Loading /> : formType === 'create' ? 'Registrar' : 'Actualizar'}
+                        {submitting ? (
+                            <Loading />
+                        ) : formType === 'create' ? (
+                            'Registrar'
+                        ) : formType === 'duplicate' ? (
+                            'Duplicar'
+                        ) : (
+                            'Actualizar'
+                        )}
                     </Button>
                     <Button
                         color="primary"

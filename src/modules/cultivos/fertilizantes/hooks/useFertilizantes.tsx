@@ -18,7 +18,7 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
     const [aplicacionFertilizanteEdit, setAplicacionFertilizanteEdit] = useState<AplicacionesFertilizantes>();
     const [tratamientoFertilizanteEdit, setTratamientoFertilizanteEdit] = useState<TratamientoFertilizante>();
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const [formType, setFormType] = useState<'create' | 'update' | 'delete'>('create');
+    const [formType, setFormType] = useState<'create' | 'update' | 'delete' | 'duplicate'>('create');
     const [typeModal, setTypeModal] = useState<'aplicacion' | 'tratamiento'>('aplicacion');
     const [modalSuertes, setModalSuertes] = useState<boolean>(false);
     const [openFertilizantes, setOpenFertilizantes] = useState<boolean>(false);
@@ -34,6 +34,18 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
             item?.aplicacionFertilizante?.listTratamientoFertilizante?.reduce((acc, curr) => acc + (curr?.valor ?? 0), 0) ?? 0;
 
         return total.toLocaleString();
+    };
+
+    const copyFertilizante = (id_apfe: number) => {
+        setIdFertilizante(id_apfe);
+        setModalSuertes(true);
+    };
+
+    const duplicateFertilizante = (aplicaciones: AplicacionesFertilizantes) => {
+        setTypeModal('aplicacion');
+        setFormType('duplicate');
+        setAplicacionFertilizanteEdit(aplicaciones);
+        setOpenModal(true);
     };
 
     const getColumns = () => {
@@ -139,7 +151,6 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
         openFertilizantes,
         idFertilizante,
         setOpenFertilizantes,
-        setIdFertilizante,
         setOpenStates,
         setAplicacionFertilizanteEdit,
         setOpenModal,
@@ -148,6 +159,8 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
         setModalSuertes,
         getColumns,
         handleSubmitAplicacionesFertilizantes,
-        getTotalById
+        getTotalById,
+        copyFertilizante,
+        duplicateFertilizante
     };
 };

@@ -9,7 +9,7 @@ import TratamientoFertilizanteRegister from './tratamientos/TratamientoFertiliza
 
 interface Props {
     handleClose: () => void;
-    formType: 'delete' | 'update' | 'create';
+    formType: 'delete' | 'update' | 'create' | 'duplicate';
     typeModal: 'aplicacion' | 'tratamiento';
     aplicacionFertilizanteEdit: AplicacionesFertilizantes;
     tratamientoFertilizante: TratamientoFertilizante;
@@ -26,6 +26,7 @@ const PopoverFertilizante: React.FC<Props> = ({
         if (typeModal === 'aplicacion') {
             if (formType === 'create') return 'Registrar aplicación fertilizante';
             if (formType === 'update') return 'Actualizar aplicación fertilizante';
+            if (formType === 'duplicate') return 'Duplicar aplicación fertilizante';
             return 'Eliminar aplicación fertilizante';
         }
         if (formType === 'create') return 'Registrar tratamiento fertilizante';
