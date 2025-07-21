@@ -13,6 +13,7 @@ interface Props {
     typeModal: 'aplicacion' | 'tratamiento';
     aplicacionFertilizanteEdit: AplicacionesFertilizantes;
     tratamientoFertilizante: TratamientoFertilizante;
+    idFertilizante: number | undefined;
 }
 
 const PopoverFertilizante: React.FC<Props> = ({
@@ -20,7 +21,8 @@ const PopoverFertilizante: React.FC<Props> = ({
     formType,
     typeModal,
     aplicacionFertilizanteEdit,
-    tratamientoFertilizante
+    tratamientoFertilizante,
+    idFertilizante
 }) => {
     const getTitle = () => {
         if (typeModal === 'aplicacion') {
@@ -60,7 +62,7 @@ const PopoverFertilizante: React.FC<Props> = ({
         return (
             <TratamientoFertilizanteRegister
                 formType={formType}
-                aplicacionFertilizanteEdit={aplicacionFertilizanteEdit}
+                idFertilizante={idFertilizante}
                 tratamientoFertilizante={tratamientoFertilizante}
                 handleClose={handleClose}
             />

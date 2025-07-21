@@ -32,9 +32,11 @@ import { AplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaci
 interface Props {
     copyHerbicida: (id_aphe: number) => void;
     duplicateHerbicida: (aplicaciones: AplicacionesHerbicidas) => void;
+    updateHerbicida: (aplicaciones: AplicacionesHerbicidas) => void;
+    deleteHerbicida: (aplicaciones: AplicacionesHerbicidas) => void;
 }
 
-const ListHerbicidas: React.FC<Props> = ({ copyHerbicida, duplicateHerbicida }) => {
+const ListHerbicidas: React.FC<Props> = ({ copyHerbicida, duplicateHerbicida, updateHerbicida, deleteHerbicida }) => {
     const { data, error, loading } = useQuery<GetAplicacionHerbicidaCorteResponse>(OBTENER_APLICACIONES_HERBICIDAS);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
@@ -99,6 +101,38 @@ const ListHerbicidas: React.FC<Props> = ({ copyHerbicida, duplicateHerbicida }) 
                                                                 color="success"
                                                             >
                                                                 Duplicar
+                                                            </Button>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                variant="outlined"
+                                                                color="warning"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    updateHerbicida({
+                                                                        aphe_id: 0,
+                                                                        corte_id: 0,
+                                                                        id_aplicaciones_herbicidas: 0,
+                                                                        aplicacionHerbicida: aplicaciones
+                                                                    });
+                                                                }}
+                                                            >
+                                                                Editar
+                                                            </Button>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                variant="outlined"
+                                                                color="error"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    deleteHerbicida({
+                                                                        aphe_id: 0,
+                                                                        corte_id: 0,
+                                                                        id_aplicaciones_herbicidas: 0,
+                                                                        aplicacionHerbicida: aplicaciones
+                                                                    });
+                                                                }}
+                                                            >
+                                                                Eliminar
                                                             </Button>
                                                             <Button
                                                                 className="!text-sm !normal-case"

@@ -19,3 +19,7 @@ export interface GetAplicacionesFertilizantesCorteResponse {
 export interface GetDeleteAplicacionesFertilizantesResponse {
     eliminarAplicacionesFertilizantes: boolean;
 }
+
+export interface GetDeleteAplicacionFertilizanteResponse {
+    eliminarAplicacionFertilizante: boolean;
+}

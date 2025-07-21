@@ -15,7 +15,6 @@ import { ACTUALIZAR_TRATAMIENTO_HERBICIDA, REGISTRAR_TRATAMIENTO_HERBICIDA } fro
 import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
 import { handleKeyDownLetter, handleKeyDownNumber } from '@utils/validations';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { AplicacionesHerbicidas } from '@interfaces/cultivos/herbicidas/aplicaciones_herbicidas';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 
@@ -34,17 +33,12 @@ const schema = yup.object({
 
 interface Props {
     tratamientoHerbicida: TratamientoHerbicidas;
-    aplicacionesHerbicida: AplicacionesHerbicidas;
+    idHerbicida: number | undefined;
     handleClose: () => void;
     formType: 'delete' | 'update' | 'create' | 'duplicate';
 }
 
-const TratamientoHerbicidaRegister: React.FC<Props> = ({
-    tratamientoHerbicida,
-    aplicacionesHerbicida,
-    handleClose,
-    formType
-}) => {
+const TratamientoHerbicidaRegister: React.FC<Props> = ({ tratamientoHerbicida, idHerbicida, handleClose, formType }) => {
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const [agregarTratamientoHerbicida] = useMutation<GetTratamientoHerbicidaRegister>(REGISTRAR_TRATAMIENTO_HERBICIDA);
@@ -75,7 +69,7 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({
                     variables: {
                         createTratamientoHerbicidaInput: {
                             ...data,
-                            aphe_id: aplicacionesHerbicida?.aplicacionHerbicida?.id_aphe
+                            aphe_id: idHerbicida
                         }
                     },
                     refetchQueries: [
@@ -89,7 +83,7 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({
                         updateTratamientoHerbicidaInput: {
                             ...data,
                             id_trahe: tratamientoHerbicida?.id_trahe,
-                            aphe_id: aplicacionesHerbicida?.aplicacionHerbicida?.id_aphe
+                            aphe_id: idHerbicida
                         }
                     },
                     refetchQueries: [
@@ -103,7 +97,7 @@ const TratamientoHerbicidaRegister: React.FC<Props> = ({
             setInfoMessage(`El tratamiento se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
             reset();
-            setSubmitting(false);
+            handleClose();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');

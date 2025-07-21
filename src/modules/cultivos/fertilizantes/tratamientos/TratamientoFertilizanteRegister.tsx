@@ -35,16 +35,11 @@ const schema = yup.object({
 interface Props {
     handleClose: () => void;
     tratamientoFertilizante: TratamientoFertilizante;
-    aplicacionFertilizanteEdit: AplicacionesFertilizantes;
+    idFertilizante: number | undefined;
     formType: 'delete' | 'update' | 'create' | 'duplicate';
 }
 
-const TratamientoFertilizanteRegister: React.FC<Props> = ({
-    handleClose,
-    tratamientoFertilizante,
-    aplicacionFertilizanteEdit,
-    formType
-}) => {
+const TratamientoFertilizanteRegister: React.FC<Props> = ({ handleClose, tratamientoFertilizante, idFertilizante, formType }) => {
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);
     const { id_corte } = useAppSelector((state: IRootState) => state.cultivosReducer.corte);
     const [agregarTratamientoFertilizante] = useMutation<GetTratamientoFertilizanteRegister>(REGISTRAR_TRATAMIENTO_FERTILIZANTE);
@@ -77,7 +72,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({
                     variables: {
                         createTratamientoFertilizanteInput: {
                             ...data,
-                            apfe_id: aplicacionFertilizanteEdit?.aplicacionFertilizante?.id_apfe
+                            apfe_id: idFertilizante
                         }
                     },
                     refetchQueries: [
@@ -93,7 +88,7 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({
                         updateTratamientoFertilizanteInput: {
                             ...data,
                             id_trafe: tratamientoFertilizante?.id_trafe,
-                            apfe_id: aplicacionFertilizanteEdit?.aplicacionFertilizante?.id_apfe
+                            apfe_id: idFertilizante
                         }
                     },
                     refetchQueries: [
@@ -109,7 +104,8 @@ const TratamientoFertilizanteRegister: React.FC<Props> = ({
             setInfoMessage(`El tratamiento se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
             reset();
-            setSubmitting(false);
+            handleClose();
+            return;
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');

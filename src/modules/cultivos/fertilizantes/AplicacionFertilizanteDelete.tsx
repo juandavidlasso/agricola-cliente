@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { Button, Grid2, Typography } from '@mui/material';
-import { ELIMINAR_APLICACIONES_FERTILIZANTES } from '@graphql/mutations';
-import { OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
+import { ELIMINAR_APLICACION_FERTILIZANTE, ELIMINAR_APLICACIONES_FERTILIZANTES } from '@graphql/mutations';
+import { OBTENER_APLICACIONES_FERTILIZANTES, OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 import Loading from '@components/Loading';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
 import {
     AplicacionesFertilizantes,
-    GetDeleteAplicacionesFertilizantesResponse
+    GetDeleteAplicacionesFertilizantesResponse,
+    GetDeleteAplicacionFertilizanteResponse
 } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 
 interface Props {
@@ -21,23 +22,51 @@ const AplicacionFertilizanteDelete: React.FC<Props> = ({ handleClose, aplicacion
     const [eliminarAplicacionesFertilizantes] = useMutation<GetDeleteAplicacionesFertilizantesResponse>(
         ELIMINAR_APLICACIONES_FERTILIZANTES
     );
+    const [eliminarAplicacionFertilizante] =
+        useMutation<GetDeleteAplicacionFertilizanteResponse>(ELIMINAR_APLICACION_FERTILIZANTE);
+
     const submitDelete = async () => {
         try {
-            await eliminarAplicacionesFertilizantes({
-                variables: {
-                    idAplicacionesFertilizantes: aplicacionFertilizante?.id_aplicaciones_fertilizantes
-                },
-                refetchQueries: [
-                    {
-                        query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE,
-                        variables: { corteId: aplicacionFertilizante?.corte_id }
-                    }
-                ]
-            });
-            setMessageType('success');
-            setInfoMessage('La aplicación se eliminó exitosamente.');
+            if (aplicacionFertilizante?.apfe_id !== 0) {
+                const { data } = await eliminarAplicacionesFertilizantes({
+                    variables: {
+                        idAplicacionesFertilizantes: aplicacionFertilizante?.id_aplicaciones_fertilizantes
+                    },
+                    refetchQueries: [
+                        {
+                            query: OBTENER_APLICACIONES_FERTILIZANTES_CORTE,
+                            variables: { corteId: aplicacionFertilizante?.corte_id }
+                        },
+                        { query: OBTENER_APLICACIONES_FERTILIZANTES }
+                    ]
+                });
+                if (data?.eliminarAplicacionesFertilizantes) {
+                    setMessageType('success');
+                    setInfoMessage('La aplicación se eliminó exitosamente.');
+                    setShowMessage(true);
+                    handleClose();
+                    return;
+                }
+            } else {
+                const { data } = await eliminarAplicacionFertilizante({
+                    variables: {
+                        idApfe: aplicacionFertilizante?.aplicacionFertilizante?.id_apfe
+                    },
+                    refetchQueries: [{ query: OBTENER_APLICACIONES_FERTILIZANTES }]
+                });
+                if (data?.eliminarAplicacionFertilizante) {
+                    setMessageType('success');
+                    setInfoMessage('La aplicación se eliminó exitosamente.');
+                    setShowMessage(true);
+                    handleClose();
+                    return;
+                }
+            }
+            setMessageType('error');
+            setInfoMessage('La aplicación no se pudo eliminar. Intente de nuevo en unos minutos.');
             setShowMessage(true);
             handleClose();
+            return;
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');

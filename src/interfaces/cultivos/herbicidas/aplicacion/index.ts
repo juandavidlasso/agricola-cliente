@@ -28,3 +28,7 @@ export interface GetAplicacionHerbicidaDelete {
 export interface GetAplicacionHerbicidaCorteResponse {
     obtenerAplicacionesHerbicidas: AplicacionHerbicidas[];
 }
+
+export interface GetDeleteAplicacionHerbicidaResponse {
+    eliminarAplicacionHerbicida: boolean;
+}

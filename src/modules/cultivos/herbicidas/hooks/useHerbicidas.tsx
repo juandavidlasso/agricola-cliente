@@ -46,6 +46,20 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
         setOpenModal(true);
     };
 
+    const updateHerbicida = (aplicaciones: AplicacionesHerbicidas) => {
+        setTypeModal('aplicacion');
+        setFormType('update');
+        setAplicacionHerbicidaEdit(aplicaciones);
+        setOpenModal(true);
+    };
+
+    const deleteHerbicida = (aplicaciones: AplicacionesHerbicidas) => {
+        setTypeModal('aplicacion');
+        setFormType('delete');
+        setAplicacionHerbicidaEdit(aplicaciones);
+        setOpenModal(true);
+    };
+
     const getColumns = () => {
         const columns: GridColDef[] = [
             { field: 'producto', headerName: 'Producto', flex: 0.1, headerAlign: 'center' },
@@ -69,6 +83,7 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
                                     setTypeModal('tratamiento');
                                     setFormType('update');
                                     setTratamientoHerbicidaEdit(params.row);
+                                    setIdHerbicida(params?.row?.aphe_id);
                                     setOpenModal(true);
                                 }}
                             >
@@ -139,6 +154,7 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
     };
 
     return {
+        idHerbicida,
         openHerbicidas,
         aplicacionHerbicidaEdit,
         openStates,
@@ -158,6 +174,8 @@ export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefine
         handleSubmitAplicacionHerbicidas,
         getTotalById,
         copyHerbicida,
-        duplicateHerbicida
+        duplicateHerbicida,
+        updateHerbicida,
+        deleteHerbicida
     };
 };

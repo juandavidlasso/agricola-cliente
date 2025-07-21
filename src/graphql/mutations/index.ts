@@ -199,6 +199,12 @@ export const ACTUALIZAR_APLICACION_HERBICIDA = gql`
     }
 `;
 
+export const ELIMINAR_APLICACION_HERBICIDA = gql`
+    mutation EliminarAplicacionHerbicida($idAphe: Int!) {
+        eliminarAplicacionHerbicida(id_aphe: $idAphe)
+    }
+`;
+
 /** TRATAMIENTOS HERBICIDA */
 
 export const REGISTRAR_TRATAMIENTO_HERBICIDA = gql`
@@ -284,6 +290,12 @@ export const ACTUALIZAR_APLICACION_FERTILIZANTE = gql`
             fecha
             tipo
         }
+    }
+`;
+
+export const ELIMINAR_APLICACION_FERTILIZANTE = gql`
+    mutation EliminarAplicacionFertilizante($idApfe: Int!) {
+        eliminarAplicacionFertilizante(id_apfe: $idApfe)
     }
 `;
 

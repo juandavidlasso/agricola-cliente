@@ -13,6 +13,7 @@ interface Props {
     typeModal: 'aplicacion' | 'tratamiento';
     aplicacionHerbicidaEdit: AplicacionesHerbicidas;
     tratamientoHerbicida: TratamientoHerbicidas;
+    idHerbicida: number | undefined;
 }
 
 const PopoverHerbicida: React.FC<Props> = ({
@@ -20,7 +21,8 @@ const PopoverHerbicida: React.FC<Props> = ({
     formType,
     typeModal,
     aplicacionHerbicidaEdit,
-    tratamientoHerbicida
+    tratamientoHerbicida,
+    idHerbicida
 }) => {
     const getTitle = () => {
         if (typeModal === 'aplicacion') {
@@ -58,7 +60,7 @@ const PopoverHerbicida: React.FC<Props> = ({
         return (
             <TratamientoHerbicidaRegister
                 tratamientoHerbicida={tratamientoHerbicida!}
-                aplicacionesHerbicida={aplicacionHerbicidaEdit}
+                idHerbicida={idHerbicida}
                 handleClose={handleClose}
                 formType={formType}
             />

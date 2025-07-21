@@ -27,6 +27,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
         variables: { corteId: id_corte }
     });
     const {
+        idHerbicida,
         openHerbicidas,
         openStates,
         aplicacionHerbicidaEdit,
@@ -46,7 +47,9 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
         setOpenHerbicidas,
         getTotalById,
         copyHerbicida,
-        duplicateHerbicida
+        duplicateHerbicida,
+        updateHerbicida,
+        deleteHerbicida
     } = useHerbicidas(data, rol);
 
     if (error) return <Alert message={error.message} />;
@@ -61,6 +64,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                     typeModal={typeModal}
                     aplicacionHerbicidaEdit={aplicacionHerbicidaEdit!}
                     tratamientoHerbicida={tratamientoHerbicidaEdit!}
+                    idHerbicida={idHerbicida}
                     handleClose={() => {
                         setTypeModal('aplicacion');
                         setFormType('create');
@@ -89,7 +93,12 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                     id="modal-herbicidas"
                     width="95%"
                 >
-                    <ListHerbicidas copyHerbicida={copyHerbicida} duplicateHerbicida={duplicateHerbicida} />
+                    <ListHerbicidas
+                        copyHerbicida={copyHerbicida}
+                        duplicateHerbicida={duplicateHerbicida}
+                        updateHerbicida={updateHerbicida}
+                        deleteHerbicida={deleteHerbicida}
+                    />
                 </DialogModal>
             )}
             <Grid2 container>
@@ -180,10 +189,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                                         color="warning"
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
-                                                                            setTypeModal('aplicacion');
-                                                                            setFormType('update');
-                                                                            setAplicacionHerbicidaEdit(aplicaciones);
-                                                                            setOpenModal(true);
+                                                                            updateHerbicida(aplicaciones);
                                                                         }}
                                                                     >
                                                                         Editar
@@ -194,10 +200,7 @@ const ListAplicacionesHerbicidas: React.FC<Props> = ({}) => {
                                                                         color="error"
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
-                                                                            setTypeModal('aplicacion');
-                                                                            setFormType('delete');
-                                                                            setAplicacionHerbicidaEdit(aplicaciones);
-                                                                            setOpenModal(true);
+                                                                            deleteHerbicida(aplicaciones);
                                                                         }}
                                                                     >
                                                                         Eliminar

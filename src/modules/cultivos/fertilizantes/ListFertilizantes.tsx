@@ -32,9 +32,16 @@ import { AplicacionesFertilizantes } from '@interfaces/cultivos/fertilizantes/ap
 interface Props {
     copyFertilizante: (id_apfe: number) => void;
     duplicateFertilizante: (aplicaciones: AplicacionesFertilizantes) => void;
+    updateFertilizante: (aplicaciones: AplicacionesFertilizantes) => void;
+    deleteFertilizante: (aplicaciones: AplicacionesFertilizantes) => void;
 }
 
-const ListFertilizantes: React.FC<Props> = ({ copyFertilizante, duplicateFertilizante }) => {
+const ListFertilizantes: React.FC<Props> = ({
+    copyFertilizante,
+    duplicateFertilizante,
+    updateFertilizante,
+    deleteFertilizante
+}) => {
     const { data, error, loading } = useQuery<GetAplicacionFertilizanteResponse>(OBTENER_APLICACIONES_FERTILIZANTES);
     const { rol } = useAppSelector((state: IRootState) => state.userReducer.user);
     const [openStates, setOpenStates] = useState<{ [key: number]: boolean }>({});
@@ -98,6 +105,38 @@ const ListFertilizantes: React.FC<Props> = ({ copyFertilizante, duplicateFertili
                                                                 color="success"
                                                             >
                                                                 Duplicar
+                                                            </Button>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                variant="outlined"
+                                                                color="warning"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    updateFertilizante({
+                                                                        apfe_id: 0,
+                                                                        corte_id: 0,
+                                                                        id_aplicaciones_fertilizantes: 0,
+                                                                        aplicacionFertilizante: aplicaciones
+                                                                    });
+                                                                }}
+                                                            >
+                                                                Editar
+                                                            </Button>
+                                                            <Button
+                                                                className="!text-sm !normal-case"
+                                                                variant="outlined"
+                                                                color="error"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    deleteFertilizante({
+                                                                        apfe_id: 0,
+                                                                        corte_id: 0,
+                                                                        id_aplicaciones_fertilizantes: 0,
+                                                                        aplicacionFertilizante: aplicaciones
+                                                                    });
+                                                                }}
+                                                            >
+                                                                Eliminar
                                                             </Button>
                                                             <Button
                                                                 className="!text-sm !normal-case"

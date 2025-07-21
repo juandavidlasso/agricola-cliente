@@ -30,6 +30,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
         }
     );
     const {
+        idFertilizante,
         openFertilizantes,
         openStates,
         openModal,
@@ -49,7 +50,9 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
         getTotalById,
         setOpenFertilizantes,
         copyFertilizante,
-        duplicateFertilizante
+        duplicateFertilizante,
+        updateFertilizante,
+        deleteFertilizante
     } = useFertilizantes(data, rol);
 
     if (error) return <Alert message={error.message} />;
@@ -62,6 +65,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                 <PopoverFertilizante
                     formType={formType}
                     typeModal={typeModal}
+                    idFertilizante={idFertilizante}
                     aplicacionFertilizanteEdit={aplicacionFertilizanteEdit!}
                     tratamientoFertilizante={tratamientoFertilizanteEdit!}
                     handleClose={() => {
@@ -92,7 +96,12 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                     id="modal-fertilizantes"
                     width="95%"
                 >
-                    <ListFertilizantes copyFertilizante={copyFertilizante} duplicateFertilizante={duplicateFertilizante} />
+                    <ListFertilizantes
+                        copyFertilizante={copyFertilizante}
+                        duplicateFertilizante={duplicateFertilizante}
+                        updateFertilizante={updateFertilizante}
+                        deleteFertilizante={deleteFertilizante}
+                    />
                 </DialogModal>
             )}
             <Grid2 container>
@@ -184,10 +193,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                                     color="warning"
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        setTypeModal('aplicacion');
-                                                                        setFormType('update');
-                                                                        setAplicacionFertilizanteEdit(aplicaciones);
-                                                                        setOpenModal(true);
+                                                                        updateFertilizante(aplicaciones);
                                                                     }}
                                                                 >
                                                                     Editar
@@ -198,10 +204,7 @@ const ListAplicacionesFertilizantes: React.FC<Props> = ({}) => {
                                                                     color="error"
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        setTypeModal('aplicacion');
-                                                                        setFormType('delete');
-                                                                        setAplicacionFertilizanteEdit(aplicaciones);
-                                                                        setOpenModal(true);
+                                                                        deleteFertilizante(aplicaciones);
                                                                     }}
                                                                 >
                                                                     Eliminar

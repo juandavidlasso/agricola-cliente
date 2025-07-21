@@ -48,6 +48,20 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
         setOpenModal(true);
     };
 
+    const updateFertilizante = (aplicaciones: AplicacionesFertilizantes) => {
+        setTypeModal('aplicacion');
+        setFormType('update');
+        setAplicacionFertilizanteEdit(aplicaciones);
+        setOpenModal(true);
+    };
+
+    const deleteFertilizante = (aplicaciones: AplicacionesFertilizantes) => {
+        setTypeModal('aplicacion');
+        setFormType('delete');
+        setAplicacionFertilizanteEdit(aplicaciones);
+        setOpenModal(true);
+    };
+
     const getColumns = () => {
         const columns: GridColDef[] = [
             { field: 'producto', headerName: 'Producto', flex: 0.1, headerAlign: 'center' },
@@ -71,6 +85,7 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
                                     setTypeModal('tratamiento');
                                     setFormType('update');
                                     setTratamientoFertilizanteEdit(params.row);
+                                    setIdFertilizante(params?.row?.apfe_id);
                                     setOpenModal(true);
                                 }}
                             >
@@ -161,6 +176,8 @@ export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse
         handleSubmitAplicacionesFertilizantes,
         getTotalById,
         copyFertilizante,
-        duplicateFertilizante
+        duplicateFertilizante,
+        updateFertilizante,
+        deleteFertilizante
     };
 };
