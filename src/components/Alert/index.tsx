@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Snackbar, AlertProps } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 
 const AlertModal = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
     return <MuiAlert elevation={1} ref={ref} variant="filled" {...props} />;

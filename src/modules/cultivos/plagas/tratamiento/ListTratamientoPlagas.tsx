@@ -85,6 +85,7 @@ const getColumns = (
                     <Button
                         onClick={() => {
                             setFormType('aplicar');
+							setTratamientoPlagaEdit(param.row);
                             setOpenModal(true);
                         }}
                         variant="outlined"
