@@ -13,6 +13,7 @@ const SuerteRenovada: React.FC<Props> = ({ suerte, handleSubmit }) => {
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+	const cortes = Object.freeze(suerte.listcortes || [])
 
     return (
         <Grid2 size={{ xs: 12, sm: 2.4 }} key={suerte.id_suerte} display={'flex'} justifyContent={'center'}>
@@ -33,9 +34,9 @@ const SuerteRenovada: React.FC<Props> = ({ suerte, handleSubmit }) => {
                     horizontal: 'center'
                 }}
             >
-                {suerte.listcortes?.length === 0
+                {cortes?.length === 0
                     ? null
-                    : suerte.listcortes?.map((corte) => (
+                    : [...cortes]?.sort((a, b) => a.numero - b.numero)?.map((corte) => (
                           <MenuItem
                               key={corte.id_corte}
                               onClick={() => {
