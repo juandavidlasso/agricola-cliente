@@ -67,8 +67,8 @@ const Pluviometros: React.FC<Props> = ({ pluviometro, year, month, DAYS_MONTH })
                                     return (
                                         <span
                                             key={id_lluvia}
-                                            className="!p-[5px] !text-white !bg-blue-700"
-                                            style={{ borderRadius: '7px' }}
+                                            className="!p-[3px] !text-white !bg-blue-700 !text-[12px]"
+                                            style={{ borderRadius: '4px' }}
                                         >
                                             {cantidad}
                                         </span>

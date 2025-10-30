@@ -176,6 +176,11 @@ const ListHerbicidas: React.FC<Props> = ({ copyHerbicida, duplicateHerbicida, up
                                                             <TableCell align="center" className="!text-white">
                                                                 Nota
                                                             </TableCell>
+                                                            {/* {rol === 1 && (
+                                                                <TableCell align="center" className="!text-white">
+                                                                    Acciones
+                                                                </TableCell>
+                                                            )} */}
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -187,6 +192,28 @@ const ListHerbicidas: React.FC<Props> = ({ copyHerbicida, duplicateHerbicida, up
                                                                 <TableCell align="center">{row.valor}</TableCell>
                                                                 <TableCell align="center">{row.aplico}</TableCell>
                                                                 <TableCell align="center">{row.nota}</TableCell>
+                                                                {/* <TableCell align="center">
+                                                                    <Button
+                                                                        className="!text-sm !normal-case !p-0 !rounded-md !mb-1"
+                                                                        variant="outlined"
+                                                                        color="warning"
+                                                                        onClick={() => {
+                                                                            updateHerbicida(aplicaciones);
+                                                                        }}
+                                                                    >
+                                                                        Editar
+                                                                    </Button>
+                                                                    <Button
+                                                                        className="!text-sm !normal-case !p-0 !rounded-md"
+                                                                        variant="outlined"
+                                                                        color="error"
+                                                                        onClick={() => {
+                                                                            deleteHerbicida(aplicaciones);
+                                                                        }}
+                                                                    >
+                                                                        Eliminar
+                                                                    </Button>
+                                                                </TableCell> */}
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>

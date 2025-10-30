@@ -62,7 +62,7 @@ export const useLluviasActuales = () => {
                     stack: [
                         `${data.obtenerPluviometrosYLluvias[index].nombre}`,
                         {
-                            ul: [`Suerte ${data.obtenerPluviometrosYLluvias[index].suertesAsociadas}`]
+                            ul: [{text: `Suerte ${data.obtenerPluviometrosYLluvias[index].suertesAsociadas}`, fontSize: 10}]
                         }
                     ]
                 },

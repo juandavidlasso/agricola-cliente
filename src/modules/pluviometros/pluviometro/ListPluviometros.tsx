@@ -130,7 +130,7 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                                         <TableCell
                                             key={day + 1}
                                             align="left"
-                                            className="!border-r-[0.5px] !bg-blue-400 !min-w-10"
+                                            className="!border-r-[0.5px] !bg-blue-400 !min-w-8 !p-0 !text-center"
                                         >
                                             {day + 1}
                                         </TableCell>
