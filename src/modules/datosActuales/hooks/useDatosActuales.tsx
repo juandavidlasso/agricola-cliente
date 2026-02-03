@@ -101,25 +101,25 @@ export const useDatosActuales = () => {
                     row.listcortes?.[0].listTablones?.length === 0
                         ? 0
                         : row.listcortes?.[0].listTablones?.reduce((acc: any, rc: any) => acc + rc.area, 0);
-                rowData.push(areaActual?.toFixed(2));
+                rowData.push([{text: areaActual?.toFixed(2), alignment: 'center'}]);
             }
-            if (selectedColumns.variedad) rowData.push(row.variedad);
-            if (selectedColumns.zona) rowData.push(row.zona);
+            if (selectedColumns.variedad) rowData.push([{text: row.variedad, alignment: 'center'}]);
+            if (selectedColumns.zona) rowData.push([{text: row.zona, alignment: 'center'}]);
             if (selectedColumns.fecha) rowData.push(row.createdAt);
-            if (selectedColumns.peso) rowData.push(row.area ? row.area.toFixed(2) : 0);
+            if (selectedColumns.peso) rowData.push(row.area ? [{text: row.area.toFixed(2), alignment: 'center'}] : 0);
             if (selectedColumns.tch) {
                 const peso = row.area ? row.area : 0;
                 const areaCorte = Number(row.renovada);
                 const TCH = Number((peso! / areaCorte!).toFixed(1));
-                rowData.push(TCH);
+                rowData.push([{text: TCH, alignment: 'center'}]);
             }
             if (selectedColumns.edad) {
                 const now = dayjs().format('YYYY-MM-DD');
                 const dateStart = dayjs(row.listcortes?.[0].fecha_inicio).format('YYYY-MM-DD');
                 const edadActual = dayjs(now).diff(dayjs(dateStart), 'month', true).toFixed(1);
-                rowData.push(edadActual);
+                rowData.push([{text: edadActual, alignment: 'center'}]);
             }
-            if (selectedColumns.corte) rowData.push(row.listcortes?.[0].numero);
+            if (selectedColumns.corte) rowData.push([{text: row.listcortes?.[0].numero, alignment: 'center'}]);
 
             body.push(rowData);
         });
