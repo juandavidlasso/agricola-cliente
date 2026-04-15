@@ -14,7 +14,7 @@ import {
     GetAplicacionMantenimientoRegister,
     GetAplicacionMantenimientoUpdate
 } from '@interfaces/mantenimientos/aplicaciones';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { ACTUALIZAR_APLICACION_MANTENIMIENTO, REGISTRAR_APLICACION_MANTENIMIENTO } from '@graphql/mutations';

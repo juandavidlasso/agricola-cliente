@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import DialogModal from '@components/Dialog';
 import CorteUpdate from './CorteUpdate';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {}
 

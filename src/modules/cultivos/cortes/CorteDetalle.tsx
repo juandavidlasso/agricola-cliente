@@ -13,7 +13,7 @@ import { IRootState } from '@interfaces/store';
 import CardDetails from './CardDetails';
 import ModalLoading from '@components/Modal';
 import ListButtons from './ListButtons';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import ListWorks from './ListWorks';
 import { useCorte } from './hooks/useCorte';
 import CorteActualizar from './CorteActualizar';

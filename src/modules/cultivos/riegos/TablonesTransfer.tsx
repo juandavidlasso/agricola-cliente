@@ -8,7 +8,7 @@ import { GetResponseTablonesCorte, TablonState } from '@interfaces/cultivos/tabl
 import { Riego } from '@interfaces/cultivos/riegos';
 import { ELIMINAR_APLICACION_RIEGO, REGISTRAR_APLICACION_RIEGO } from '@graphql/mutations';
 import { AplicacionRiegos, GetAplicacionRiegoDelete, GetAplicacionRiegoRegister } from '@interfaces/cultivos/riegos/aplicacion';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 

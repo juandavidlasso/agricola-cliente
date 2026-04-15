@@ -14,7 +14,7 @@ import { ACTUALIZAR_TRATAMIENTO_FERTILIZANTE, REGISTRAR_TRATAMIENTO_FERTILIZANTE
 import { OBTENER_APLICACIONES_FERTILIZANTES, OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 import { handleKeyDownLetter, handleKeyDownLetterAndNumber, handleKeyDownNumber } from '@utils/validations';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { AplicacionesFertilizantes } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';

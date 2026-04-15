@@ -20,7 +20,7 @@ import {
 } from '@interfaces/cultivos/fertilizantes/aplicacion';
 import { OBTENER_APLICACIONES_FERTILIZANTES, OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import {
     AplicacionesFertilizantes,
     GetAplicacionesFertilizantesRegister

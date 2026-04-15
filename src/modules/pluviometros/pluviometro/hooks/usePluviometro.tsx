@@ -3,8 +3,8 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { REGISTRAR_LLUVIA } from '@graphql/mutations';
 import { OBTENER_LLUVIAS, OBTENER_PLUVIOMETROS_Y_LLUVIAS } from '@graphql/queries';
 import { GetLluviaRegister } from '@interfaces/lluvias';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 
 export const usePluviometro = () => {
     const { arrayLluvias, setArrayLluvias, setIsEnabled } = useContext(PluviometroContext);

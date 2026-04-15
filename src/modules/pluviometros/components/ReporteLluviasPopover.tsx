@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Grid2, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SideModal from '@components/Side';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 import ReporteLluviasMesYear from './ReporteLluviasMesYear';
 import ReporteLluviasYear from './ReporteLluviasYear';
 

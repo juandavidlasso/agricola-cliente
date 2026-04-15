@@ -10,8 +10,8 @@ import { darkTheme, ligthTheme } from '@themes/index';
 import '../styles/globals.css';
 import { persistor, store } from '@store/store';
 import { ThemeProps } from '@interfaces/theme';
-import { PluviometroProvider } from 'src/context/lluvias/PluviometroContext';
-import { CultivosProvider } from 'src/context/cultivos/CultivosContext';
+import { PluviometroProvider } from '@context/lluvias/PluviometroContext';
+import { CultivosProvider } from '@context/cultivos/CultivosContext';
 import Alert from '@components/Alert';
 
 export default function App({ Component, pageProps }: AppProps) {

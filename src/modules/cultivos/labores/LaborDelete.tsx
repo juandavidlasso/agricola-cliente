@@ -5,7 +5,7 @@ import Loading from '@components/Loading';
 import { ELIMINAR_APLICACION_LABOR } from '@graphql/mutations';
 import { OBTENER_APLICACIONES_LABORES } from '@graphql/queries';
 import { AplicacionLabores, GetDeleteAplicacionLaboresResponse } from '@interfaces/cultivos/labores';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     labor: AplicacionLabores | undefined;

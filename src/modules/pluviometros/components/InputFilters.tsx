@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { FormControl, Grid2, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { meses, years } from '../constants/constants';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 
 interface Props {}
 

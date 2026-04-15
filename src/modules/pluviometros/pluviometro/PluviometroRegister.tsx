@@ -22,11 +22,11 @@ import { GetSuertesRenovadasResponse } from '@interfaces/cultivos/suerte';
 import { OBTENER_PLUVIOMETROS_Y_LLUVIAS, OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
 import ModalLoading from '@components/Modal';
 import Alert from '@components/Alert';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 import { REGISTRAR_PLUVIOMETRO } from '@graphql/mutations';
 import Loading from '@components/Loading';
 import { handleKeyDownNumber } from '@utils/validations';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 const schema = yup.object({
     nombre: yup.number().required('El nombre es requerido').typeError('El nombre es requerido'),

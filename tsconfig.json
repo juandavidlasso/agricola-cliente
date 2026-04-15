@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
-        "target": "es5",
+        "target": "es2023",
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
         "skipLibCheck": true,
@@ -15,14 +14,15 @@
         "jsx": "preserve",
         "incremental": true,
         "paths": {
-            "@themes/*": ["src/themes/*"],
-            "@modules/*": ["src/modules/*"],
-            "@interfaces/*": ["src/interfaces/*"],
-            "@graphql/*": ["src/graphql/*"],
-            "@components/*": ["src/components/*"],
-            "@store/*": ["src/redux/*"],
-            "@hooks/*": ["src/hooks/*"],
-            "@utils/*": ["src/utils/*"]
+            "@components/*": ["./src/components/*"],
+            "@context/*": ["./src/context/*"],
+            "@graphql/*": ["./src/graphql/*"],
+            "@hooks/*": ["./src/hooks/*"],
+            "@interfaces/*": ["./src/interfaces/*"],
+            "@modules/*": ["./src/modules/*"],
+            "@store/*": ["./src/redux/*"],
+            "@themes/*": ["./src/themes/*"],
+            "@utils/*": ["./src/utils/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

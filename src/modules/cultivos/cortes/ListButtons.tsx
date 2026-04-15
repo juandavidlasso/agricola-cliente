@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Button, Grid2 } from '@mui/material';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {}
 

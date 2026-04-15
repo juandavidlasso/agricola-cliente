@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import DialogModal from '@components/Dialog';
 import SuerteForm from './SuerteForm';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     isOpen: boolean;

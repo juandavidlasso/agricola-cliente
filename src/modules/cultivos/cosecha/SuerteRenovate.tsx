@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { FormDataSuerte, GetRenovarSuerteResponse } from '@interfaces/cultivos/suerte';
 import { OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import Loading from '@components/Loading';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';

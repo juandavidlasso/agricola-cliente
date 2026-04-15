@@ -11,7 +11,7 @@ import Loading from '@components/Loading';
 import { useRouter } from 'next/router';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveUser } from '@store/user/actions';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 const schema = yup.object({
     email: yup.string().required('El email es requerido').email('El email no tiene el formato correcto'),

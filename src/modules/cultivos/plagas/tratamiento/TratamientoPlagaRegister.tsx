@@ -14,7 +14,7 @@ import Loading from '@components/Loading';
 import { ApolloError, useMutation } from '@apollo/client';
 import { ACTUALIZAR_TRATAMIENTO_PLAGAS, REGISTRAR_TRATAMIENTO_PLAGAS } from '@graphql/mutations';
 import { OBTENER_TRATAMIENTO_PLAGAS } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 const schema = yup.object({
     producto: yup.string().required('El producto es requerido.'),

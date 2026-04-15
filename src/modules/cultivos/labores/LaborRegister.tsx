@@ -19,7 +19,7 @@ import {
 import Loading from '@components/Loading';
 import { ACTUALIZAR_LABOR, REGISTRAR_LABOR, REGISTRAR_LABORES_CORTES } from '@graphql/mutations';
 import { OBTENER_APLICACIONES_LABORES, OBTENER_LABORES } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 

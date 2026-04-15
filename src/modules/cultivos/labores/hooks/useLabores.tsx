@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { REGISTRAR_LABORES_CORTES } from '@graphql/mutations';
 import { AplicacionLabores, DataType, GetRegisterAplicacionLabor, Labores } from '@interfaces/cultivos/labores';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { OBTENER_APLICACIONES_LABORES } from '@graphql/queries';
 
 export const useLabores = () => {

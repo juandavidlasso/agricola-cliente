@@ -4,7 +4,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import Loading from '@components/Loading';
 import { ELIMINAR_APLICACION_HERBICIDA, ELIMINAR_APLICACIONES_HERBICIDAS } from '@graphql/mutations';
 import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import {
     AplicacionesHerbicidas,
     GetDeleteAplicacionesHerbicidasResponse

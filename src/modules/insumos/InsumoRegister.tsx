@@ -4,7 +4,7 @@ import { Button, Grid2, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import Loading from '@components/Loading';
 import { FormDataInsumo, GetInsumoRegister, GetInsumoUpdate, Insumo } from '@interfaces/insumos';
 import { ACTUALIZAR_INSUMO, REGISTRAR_INSUMO } from '@graphql/mutations';

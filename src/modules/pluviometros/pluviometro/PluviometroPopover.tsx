@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import DialogModal from '@components/Dialog';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 import PluviometroRegister from './PluviometroRegister';
 import Lluvias from './Lluvias';
 import LluviasDelete from '../lluvias/LluviasDelete';

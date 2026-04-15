@@ -4,7 +4,7 @@ import { Button, Grid2, Typography } from '@mui/material';
 import { ELIMINAR_APLICACION_FERTILIZANTE, ELIMINAR_APLICACIONES_FERTILIZANTES } from '@graphql/mutations';
 import { OBTENER_APLICACIONES_FERTILIZANTES, OBTENER_APLICACIONES_FERTILIZANTES_CORTE } from '@graphql/queries';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import {
     AplicacionesFertilizantes,
     GetDeleteAplicacionesFertilizantesResponse,

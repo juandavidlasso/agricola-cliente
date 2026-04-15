@@ -14,7 +14,7 @@ import ModalLoading from '@components/Modal';
 import { OBTENER_APLICACIONES_MANTENIMIENTO, OBTENER_INSUMOS } from '@graphql/queries';
 import { GetInsumosResponse } from '@interfaces/insumos';
 import { FormDataValidation, GetMantenimientoRegister } from '@interfaces/mantenimientos/mantenimiento';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { handleKeyDownNumber } from '@utils/validations';
 import { REGISTRAR_MANTENIMIENTOS } from '@graphql/mutations';
 import useAppSelector from '@hooks/useAppSelector';

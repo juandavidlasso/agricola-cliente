@@ -9,7 +9,7 @@ import Loading from '@components/Loading';
 import { ACTUALIZAR_APLICACION_PLAGA } from '@graphql/mutations';
 import { OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
 import { AplicacionPlaga, GetAplicacionPlagaUpdate } from '@interfaces/cultivos/plagas/aplicacion';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     handleClose: () => void;

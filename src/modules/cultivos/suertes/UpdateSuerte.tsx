@@ -13,7 +13,7 @@ import { OBTENER_SUERTE, OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveSuerte } from '@store/cultivos/actions';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { DataType } from '@interfaces/cultivos/labores';
 
 const schema = yup.object({

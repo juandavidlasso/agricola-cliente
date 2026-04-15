@@ -5,7 +5,7 @@ import { ThemeProps } from '@interfaces/theme';
 import Layout from '@modules/layouts/Layout';
 import { routesCultivos } from '@utils/routesCultivos';
 import ListPluviometros from './pluviometro/ListPluviometros';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 import PluviometroPopover from './pluviometro/PluviometroPopover';
 import InputFilters from './components/InputFilters';
 import Alert from '@components/Alert';

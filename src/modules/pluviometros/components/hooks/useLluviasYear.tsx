@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-// import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
 import { FormDataFilters, meses } from '@modules/pluviometros/constants/constants';
 // import { GetTotalPromedioLluviasYearResponse } from '@interfaces/lluvias';
 

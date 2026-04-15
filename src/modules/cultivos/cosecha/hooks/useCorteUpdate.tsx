@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { ACTUALIZAR_CORTE, REGISTRAR_CORTE } from '@graphql/mutations';
 import {
     OBTENER_CORTE,

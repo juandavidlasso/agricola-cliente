@@ -18,7 +18,7 @@ import { handleKeyDownNumber } from '@utils/validations';
 import { ACTUALIZAR_MANTENIMIENTO } from '@graphql/mutations';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 const schema = yup.object({
     insumoId: yup.number().required('El insumo es requerido.'),

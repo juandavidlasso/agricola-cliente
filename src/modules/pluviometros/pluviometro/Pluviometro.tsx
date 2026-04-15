@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { TableCell, TableRow, TextField } from '@mui/material';
 import { Pluviometro } from '@interfaces/pluviometros';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 
 interface Props {
     pluviometro: Pluviometro;

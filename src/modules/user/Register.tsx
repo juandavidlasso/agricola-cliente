@@ -10,7 +10,7 @@ import Layout from '@modules/layouts/Layout';
 import { routesCultivos } from '@utils/routesCultivos';
 import { FormDataRegister, UserRegisterResponse } from '@interfaces/user';
 import { USER_REGISTER } from '@graphql/mutations';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 const schema = yup.object({
     nombre: yup.string().required('El nombre es requerido'),

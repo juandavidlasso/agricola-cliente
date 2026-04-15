@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { Button, Grid2, Typography } from '@mui/material';
 import { ELIMINAR_APLICACION_LLUVIA, ELIMINAR_LLUVIA } from '@graphql/mutations';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 import { OBTENER_LLUVIAS, OBTENER_PLUVIOMETROS_Y_LLUVIAS } from '@graphql/queries';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {}
 

@@ -8,7 +8,7 @@ import ListAplicacionesFertilizantes from '../fertilizantes/ListAplicacionesFert
 import ListPlagas from '../plagas/ListPlagas';
 import ListRiegos from '../riegos/ListRiegos';
 import ListCosecha from '../cosecha/ListCosecha';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import ListTablones from '../tablones/ListTablones';
 
 interface Props {}

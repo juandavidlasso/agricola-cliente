@@ -20,7 +20,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import CorteUpdatePopover from './CorteUpdatePopover';
 import Alert from '@components/Alert';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { useCosecha } from './hooks/useCosecha';
 import DialogModal from '@components/Dialog';
 import CosechaRegister from './CosechaRegister';

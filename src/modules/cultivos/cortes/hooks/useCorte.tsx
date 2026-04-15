@@ -3,7 +3,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { ACTUALIZAR_CORTE } from '@graphql/mutations';
 import { GetActualizarCorteResponse } from '@interfaces/cultivos/cortes';
 import { OBTENER_CORTE, OBTENER_CORTES_RENOVADOS } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 

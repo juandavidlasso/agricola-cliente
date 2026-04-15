@@ -14,7 +14,7 @@ import { ACTUALIZAR_CORTE, REGISTRAR_CORTE } from '@graphql/mutations';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveCorte } from '@store/cultivos/actions';
 import { OBTENER_CORTE, OBTENER_CORTE_ACTUAL, OBTENER_CORTES_POR_SUERTE, OBTENER_CORTES_RENOVADOS } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     formType: 'update' | 'create' | 'delete';

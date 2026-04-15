@@ -4,7 +4,7 @@ import { Button, Grid2, Typography } from '@mui/material';
 import Loading from '@components/Loading';
 import { ELIMINAR_APLICACION_MANTENIMIENTO } from '@graphql/mutations';
 import { AplicacionMantenimiento, GetAplicacionMantenimientoDelete } from '@interfaces/mantenimientos/aplicaciones';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { OBTENER_APLICACIONES_MANTENIMIENTO } from '@graphql/queries';

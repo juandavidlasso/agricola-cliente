@@ -7,7 +7,7 @@ import { GetEliminarTablon } from '@interfaces/cultivos/tablones';
 import { OBTENER_AREA_SUERTE, OBTENER_TABLONES_CORTE, OBTENER_TABLONES_SUERTE } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     handleClose: () => void;

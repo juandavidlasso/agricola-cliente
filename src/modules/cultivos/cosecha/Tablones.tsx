@@ -7,7 +7,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { GetRegistrarTablon, GetResponseTablonesCorte, TablonState } from '@interfaces/cultivos/tablones';
 import { IRootState } from '@interfaces/store';
 import { handleKeyDownNumber } from '@utils/validations';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { REGISTRAR_TABLON } from '@graphql/mutations';
 
 interface Props {

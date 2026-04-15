@@ -18,7 +18,7 @@ import { UPDATE_USER } from '@graphql/mutations';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { saveUser } from '@store/user/actions';
 import { useRouter } from 'next/router';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 const schema = yup.object({
     nombre: yup.string().required('El nombre es requerido'),

@@ -9,7 +9,7 @@ import { GetAplicacionPlagaRegister, SuertesCortesTablones } from '@interfaces/c
 import { REGISTRAR_APLICACION_PLAGA } from '@graphql/mutations';
 import { OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
 
 interface Props {

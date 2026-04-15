@@ -4,7 +4,7 @@ import { Button, Grid2, Typography } from '@mui/material';
 import Loading from '@components/Loading';
 import { ELIMINAR_TRATAMIENTO_HERBICIDA } from '@graphql/mutations';
 import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';

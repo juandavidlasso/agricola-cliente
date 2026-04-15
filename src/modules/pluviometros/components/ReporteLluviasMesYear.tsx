@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 import { meses } from '../constants/constants';
 import { OBTENER_PLUVIOMETROS_Y_LLUVIAS } from '@graphql/queries';
 import { GetPluviometrosYLuviasResponse } from '@interfaces/pluviometros';

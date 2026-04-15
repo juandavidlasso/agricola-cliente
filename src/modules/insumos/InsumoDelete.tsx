@@ -5,7 +5,7 @@ import Loading from '@components/Loading';
 import { ELIMINAR_INSUMO } from '@graphql/mutations';
 import { OBTENER_INSUMOS } from '@graphql/queries';
 import { GetDeleteInsumo, Insumo } from '@interfaces/insumos';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     insumo: Insumo | undefined;

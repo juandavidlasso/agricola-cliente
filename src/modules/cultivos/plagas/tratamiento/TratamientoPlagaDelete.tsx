@@ -4,7 +4,7 @@ import { Button, Grid2, Typography } from '@mui/material';
 import Loading from '@components/Loading';
 import { ELIMINAR_TRATAMIENTO_PLAGAS } from '@graphql/mutations';
 import { OBTENER_TRATAMIENTO_PLAGAS } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { TratamientoPlaga } from '@interfaces/cultivos/plagas/tratamiento';
 
 interface Props {

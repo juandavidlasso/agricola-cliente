@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Loading from '@components/Loading';
 import { Cosecha, FormDataCosecha, GetCosechaRegister, GetCosechaUpdate } from '@interfaces/cultivos/cosechas';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { handleKeyDownNumber } from '@utils/validations';
 import { ACTUALIZAR_COSECHA, REGISTRAR_COSECHA } from '@graphql/mutations';
 import { OBTENER_COSECHA_CORTE } from '@graphql/queries';

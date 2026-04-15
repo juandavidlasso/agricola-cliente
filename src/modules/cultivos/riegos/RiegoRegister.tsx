@@ -9,7 +9,7 @@ import { Button, Grid2, Typography } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { FormDataRiego, GetRiegoMayorResponse, GetRiegoRegister, GetRiegoUpdate, Riego } from '@interfaces/cultivos/riegos';
 import { ACTUALIZAR_RIEGO, REGISTRAR_RIEGO } from '@graphql/mutations';
 import { OBTENER_RIEGO_MAYOR, OBTENER_RIEGOS_CORTE } from '@graphql/queries';

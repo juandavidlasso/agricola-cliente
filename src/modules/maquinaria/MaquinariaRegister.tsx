@@ -14,7 +14,7 @@ import {
 } from '@interfaces/maquinaria';
 import { ACTUALIZAR_MAQUINARIA, REGISTRAR_MAQUINARIA } from '@graphql/mutations';
 import { handleKeyDownNumber } from '@utils/validations';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 const schema = yup.object({
     marca: yup.string().required('La marca es requerida.'),

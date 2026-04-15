@@ -8,7 +8,7 @@ import { IRootState } from '@interfaces/store';
 import { GetEliminarSuerteResponse } from '@interfaces/cultivos/suerte';
 import { ELIMINAR_SUERTE } from '@graphql/mutations';
 import { OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     handleClose: () => void;

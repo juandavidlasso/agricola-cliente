@@ -7,7 +7,7 @@ import { OBTENER_APLICACIONES_MANTENIMIENTO } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';
 import { GetMantenimientoDelete, Mantenimiento } from '@interfaces/mantenimientos/mantenimiento';
 import { IRootState } from '@interfaces/store';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
     mantenimiento: Mantenimiento | undefined;

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 import { Button, Grid2, Typography } from '@mui/material';
 import Loading from '@components/Loading';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { ELIMINAR_RIEGO } from '@graphql/mutations';
 import { OBTENER_RIEGOS_CORTE } from '@graphql/queries';
 import useAppSelector from '@hooks/useAppSelector';

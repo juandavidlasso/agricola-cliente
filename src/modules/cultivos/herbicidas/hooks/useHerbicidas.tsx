@@ -9,7 +9,7 @@ import { Box, Button } from '@mui/material';
 import { TratamientoHerbicidas } from '@interfaces/cultivos/herbicidas/tratamientos';
 import { ApolloError, useMutation } from '@apollo/client';
 import { REGISTRAR_APLICACIONES_HERBICIDAS } from '@graphql/mutations';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { OBTENER_APLICACIONES_HERBICIDAS, OBTENER_APLICACIONES_HERBICIDAS_CORTE } from '@graphql/queries';
 
 export const useHerbicidas = (data: GetAplicacionesHerbicidasResponse | undefined, rol: number) => {

@@ -10,7 +10,7 @@ import {
     GetAplicacionesFertilizantesRegister
 } from '@interfaces/cultivos/fertilizantes/aplicaciones_fertilizantes';
 import { TratamientoFertilizante } from '@interfaces/cultivos/fertilizantes/tratamientos';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 export const useFertilizantes = (data: GetAplicacionesFertilizantesCorteResponse | undefined, rol: number) => {
     const { setMessageType, setInfoMessage, setShowMessage } = useContext(CultivosContext);

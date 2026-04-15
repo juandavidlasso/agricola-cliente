@@ -20,7 +20,7 @@ import { GetPluviometrosYLuviasResponse } from '@interfaces/pluviometros';
 import Alert from '@components/Alert';
 import ModalLoading from '@components/Modal';
 import Pluviometro from './Pluviometro';
-import { PluviometroContext } from 'src/context/lluvias/PluviometroContext';
+import { PluviometroContext } from '@context/lluvias/PluviometroContext';
 import { usePluviometro } from './hooks/usePluviometro';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';

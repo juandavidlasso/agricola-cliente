@@ -10,7 +10,7 @@ import { ACTUALIZAR_TABLON, REGISTRAR_TABLON } from '@graphql/mutations';
 import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { OBTENER_AREA_SUERTE, OBTENER_TABLONES_CORTE, OBTENER_TABLONES_CORTE_Y_APLICACIONES_PLAGAS } from '@graphql/queries';
-import { CultivosContext } from 'src/context/cultivos/CultivosContext';
+import { CultivosContext } from '@context/cultivos/CultivosContext';
 import { DataType } from '@interfaces/cultivos/labores';
 
 const schema = yup.object({
