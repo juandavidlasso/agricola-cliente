@@ -659,3 +659,32 @@ export const ELIMINAR_MANTENIMIENTO = gql`
         eliminarMantenimiento(idMantenimiento: $idMantenimiento)
     }
 `;
+
+/** NOTAS */
+export const AGREGAR_NOTA = gql`
+    mutation AgregarNota($createNoteInput: CreateNoteInput!) {
+        agregarNota(createNoteInput: $createNoteInput) {
+            id_note
+            date
+            description
+            cost
+        }
+    }
+`;
+
+export const ACTUALIZAR_NOTA = gql`
+    mutation Mutation($updateNoteInput: UpdateNoteInput!) {
+        actualizarNota(updateNoteInput: $updateNoteInput) {
+            id_note
+            date
+            description
+            cost
+        }
+    }
+`;
+
+export const ELIMINAR_NOTA = gql`
+    mutation EliminarNota($idNote: Int!) {
+        eliminarNota(id_note: $idNote)
+    }
+`;

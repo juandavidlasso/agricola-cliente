@@ -577,3 +577,15 @@ export const OBTENER_APLICACIONES_MANTENIMIENTO = gql`
         }
     }
 `;
+
+/** NOTAS */
+export const OBTENER_NOTAS = gql`
+    query ObtenerNotas {
+        obtenerNotas {
+            id_note
+            date
+            description
+            cost
+        }
+    }
+`;

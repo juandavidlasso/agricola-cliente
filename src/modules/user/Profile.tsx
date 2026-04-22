@@ -24,17 +24,15 @@ const ProfileView: React.FC<Props> = ({ toogleTheme }) => {
                 {modules.map((item) => (
                     <Grid2
                         key={item.id}
-                        size={{ xs: 12, sm: 4 }}
+                        size={{ xs: 12, sm: 6 }}
                         display="flex"
                         justifyContent="center"
                         alignItems="center"
                         sx={{
-                            height: { md: '80vh' },
-                            paddingBottom: { xs: 5, md: 0 },
-                            marginTop: { xs: 5, md: 0 }
+                            p: 2
                         }}
                     >
-                        <div className="w-[80%] max-w-[80%] cursor-pointer" onClick={() => navigateTo(item.onclick)}>
+                        <div className="w-[60%] max-w-[60%] max-lg:w-full max-lg:max-w-full cursor-pointer" onClick={() => navigateTo(item.onclick)}>
                             <Card
                                 className="pt-10 pb-10 w-full hover:bg-[#1F618D]"
                                 sx={{ background: '#1C2833', borderRadius: '30px' }}
