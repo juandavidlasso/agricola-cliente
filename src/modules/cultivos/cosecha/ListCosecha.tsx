@@ -36,19 +36,20 @@ const ListCosecha: React.FC<Props> = () => {
     });
     const { cosechaEdit, openModal, formType, setCosechaEdit, setOpenModal, setFormType } = useCosecha();
     // Calcular TCH
-    const peso = !error ? data?.obtenerCosechaCorte.peso : 0;
-    const area = !error ? data?.obtenerCosechaCorte.cortePadre?.listTablones?.reduce((cur, val) => cur + val.area, 0) : 0;
-    const TCH = !error ? Number((peso! / area!).toFixed(1)) : 0;
+    const peso = data && data?.obtenerCosechaCorte ? data?.obtenerCosechaCorte.peso : 0;
+    const area =
+        data && data?.obtenerCosechaCorte
+            ? data?.obtenerCosechaCorte.cortePadre?.listTablones?.reduce((cur, val) => cur + val.area, 0)
+            : 0;
+    const TCH = data && data?.obtenerCosechaCorte ? Number((peso! / area!).toFixed(1)) : 0;
     // Calcular TCHN
-    const finicio = !error ? moment(fecha_inicio) : moment();
-    const fcorte = !error ? moment(fecha_corte) : moment();
-    const edadCorte = !error ? fcorte.diff(finicio, 'months', true).toFixed(1) : 0;
-    const TCHM = !error ? Number((Number((peso! / area!).toFixed(1)) / Number(edadCorte)).toFixed(1)) : 0;
-    const errorMessage = 'No hay cosecha registrada';
+    const finicio = data && data?.obtenerCosechaCorte ? moment(fecha_inicio) : moment();
+    const fcorte = data && data?.obtenerCosechaCorte ? moment(fecha_corte) : moment();
+    const edadCorte = data && data?.obtenerCosechaCorte ? fcorte.diff(finicio, 'months', true).toFixed(1) : 0;
+    const TCHM =
+        data && data?.obtenerCosechaCorte ? Number((Number((peso! / area!).toFixed(1)) / Number(edadCorte)).toFixed(1)) : 0;
 
-    if (error && error.message !== errorMessage) {
-        <Alert message={error.message} />;
-    }
+    if (error) return <Alert message={error.message} />;
     if (loading) return <ModalLoading isOpen={loading} />;
 
     return (
@@ -67,7 +68,7 @@ const ListCosecha: React.FC<Props> = () => {
             )}
             {validateCosecha && <CorteUpdatePopover />}
             <Grid2 container>
-                {rol === 1 && error?.message === errorMessage && (
+                {rol === 1 && (!data || !data?.obtenerCosechaCorte) && (
                     <Grid2 size={12}>
                         <Button
                             variant="contained"
@@ -82,7 +83,7 @@ const ListCosecha: React.FC<Props> = () => {
                     </Grid2>
                 )}
                 <Grid2 size={12}>
-                    {error && error?.message === errorMessage ? (
+                    {!data || !data?.obtenerCosechaCorte ? (
                         <Typography>No hay cosecha registrada</Typography>
                     ) : (
                         <TableContainer component={Paper}>
