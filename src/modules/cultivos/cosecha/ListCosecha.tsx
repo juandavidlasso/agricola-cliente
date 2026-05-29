@@ -44,8 +44,11 @@ const ListCosecha: React.FC<Props> = () => {
     const fcorte = !error ? moment(fecha_corte) : moment();
     const edadCorte = !error ? fcorte.diff(finicio, 'months', true).toFixed(1) : 0;
     const TCHM = !error ? Number((Number((peso! / area!).toFixed(1)) / Number(edadCorte)).toFixed(1)) : 0;
+    const errorMessage = 'No hay cosecha registrada';
 
-    if (error && error.message !== 'Error: No hay cosecha registrada') return <Alert message={error.message} />;
+    if (error && error.message !== errorMessage) {
+        <Alert message={error.message} />;
+    }
     if (loading) return <ModalLoading isOpen={loading} />;
 
     return (
@@ -64,7 +67,7 @@ const ListCosecha: React.FC<Props> = () => {
             )}
             {validateCosecha && <CorteUpdatePopover />}
             <Grid2 container>
-                {rol === 1 && error && (
+                {rol === 1 && error?.message === errorMessage && (
                     <Grid2 size={12}>
                         <Button
                             variant="contained"
@@ -79,7 +82,7 @@ const ListCosecha: React.FC<Props> = () => {
                     </Grid2>
                 )}
                 <Grid2 size={12}>
-                    {error && error.message === 'Error: No hay cosecha registrada' ? (
+                    {error && error?.message === errorMessage ? (
                         <Typography>No hay cosecha registrada</Typography>
                     ) : (
                         <TableContainer component={Paper}>
