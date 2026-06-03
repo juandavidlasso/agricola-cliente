@@ -19,7 +19,8 @@ type ColumnKey =
     | 'peso'
     | 'rendimiento'
     | 'vagones'
-    | 'mulas';
+    | 'mulas'
+    | 'tablon';
 
 export const useProntuario = () => {
     const [imageBase64, setImageBase64] = useState<string>('');
@@ -38,7 +39,8 @@ export const useProntuario = () => {
         peso: false,
         rendimiento: false,
         vagones: false,
-        mulas: false
+        mulas: false,
+        tablon: false
     });
 
     useEffect(() => {
@@ -81,7 +83,8 @@ export const useProntuario = () => {
             peso: true,
             rendimiento: true,
             vagones: true,
-            mulas: true
+            mulas: true,
+            tablon: true
         });
     };
 
@@ -100,7 +103,8 @@ export const useProntuario = () => {
             peso: false,
             rendimiento: false,
             vagones: false,
-            mulas: false
+            mulas: false,
+            tablon: false
         });
     };
 
@@ -123,6 +127,7 @@ export const useProntuario = () => {
         if (selectedColumns.rendimiento) columns.push('Rendimiento %');
         if (selectedColumns.vagones) columns.push('Número Vagones');
         if (selectedColumns.mulas) columns.push('Número Mulas');
+        if (selectedColumns.tablon) columns.push('Número Tablones');
 
         const numColumns = columns.length;
 
@@ -176,6 +181,7 @@ export const useProntuario = () => {
             if (selectedColumns.rendimiento) rowData.push(row.rendimiento);
             if (selectedColumns.vagones) rowData.push(row.numeroVagones ?? null);
             if (selectedColumns.mulas) rowData.push(row.numeroMulas ?? null);
+            if (selectedColumns.tablon) rowData.push(row.numeroSuerte ?? null);
 
             body.push(rowData);
         });

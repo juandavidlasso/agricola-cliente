@@ -7,7 +7,6 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IRootState } from '@interfaces/store';
 import { GetEliminarSuerteResponse } from '@interfaces/cultivos/suerte';
 import { ELIMINAR_SUERTE } from '@graphql/mutations';
-import { OBTENER_SUERTES_RENOVADAS } from '@graphql/queries';
 import { CultivosContext } from '@context/cultivos/CultivosContext';
 
 interface Props {
@@ -29,8 +28,7 @@ const DeleteSuerte: React.FC<Props> = ({ handleClose }) => {
             const { data } = await eliminarSuerte({
                 variables: {
                     idSuerte: id_suerte
-                },
-                refetchQueries: [{ query: OBTENER_SUERTES_RENOVADAS }]
+                }
             });
 
             if (data?.eliminarSuerte) {
@@ -38,8 +36,7 @@ const DeleteSuerte: React.FC<Props> = ({ handleClose }) => {
                 setInfoMessage('La suerte se eliminó exitosamente.');
                 setShowMessage(true);
                 setSubmitting(false);
-                router.replace('/suerte');
-                return;
+                window.location.href = '/suerte';
             }
 
             setMessageType('error');

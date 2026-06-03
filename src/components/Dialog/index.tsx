@@ -38,7 +38,7 @@ const DialogModal: React.FC<Props> = ({
                 '& .MuiPaper-root': {
                     width: { xs: '90%', sm: width },
                     maxWidth: { xs: '90%', sm: width },
-                    height: `${height}%`,
+                    height: 'fit-content',
                     maxHeight: `${height}%`,
                     overflowY: 'auto',
                     borderRadius: 5

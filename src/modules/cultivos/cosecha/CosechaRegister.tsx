@@ -17,20 +17,28 @@ import { DataType } from '@interfaces/cultivos/labores';
 const schema = yup.object({
     peso: yup.number().required('El peso es requerido.').typeError('El peso es requerido.'),
     rendimiento: yup.number().optional(),
-    numeroVagones: yup.number().optional(),
-    numeroMulas: yup.number().optional(),
-    nota: yup.string().optional()
+    numeroVagones: yup
+        .number()
+        .transform((value) => (Number.isNaN(value) ? undefined : value))
+        .optional(),
+    numeroMulas: yup
+        .number()
+        .transform((value) => (Number.isNaN(value) ? undefined : value))
+        .optional(),
+    nota: yup.string().optional(),
+    numeroSuerte: yup.string().optional()
 });
 
 interface Props {
     cosecha: Cosecha | undefined;
     formType: DataType;
     handleClose: () => void;
+    nextStep: () => void;
 }
 
-const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose }) => {
+const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose, nextStep }) => {
     const { corte } = useAppSelector((state: IRootState) => state.cultivosReducer);
-    const { setInfoMessage, setShowMessage, setMessageType, setValidateCosecha } = useContext(CultivosContext);
+    const { setInfoMessage, setShowMessage, setMessageType } = useContext(CultivosContext);
     const {
         register,
         handleSubmit,
@@ -43,7 +51,8 @@ const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose }) =>
             rendimiento: formType === 'create' ? undefined : cosecha?.rendimiento,
             numeroVagones: formType === 'create' ? undefined : cosecha?.numeroVagones,
             numeroMulas: formType === 'create' ? undefined : cosecha?.numeroMulas,
-            nota: formType === 'create' ? '' : cosecha?.nota
+            nota: formType === 'create' ? '' : cosecha?.nota,
+            numeroSuerte: formType === 'create' ? '' : cosecha?.numeroSuerte
         }
     });
     const [submitting, setSubmitting] = useState<boolean>(false);
@@ -63,6 +72,7 @@ const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose }) =>
                             numeroMulas: formData.numeroMulas,
                             numeroVagones: formData.numeroVagones,
                             nota: formData.nota,
+                            numeroSuerte: formData.numeroSuerte,
                             corte_id: corte.id_corte
                         }
                     },
@@ -78,6 +88,7 @@ const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose }) =>
                             numeroMulas: formData.numeroMulas,
                             numeroVagones: formData.numeroVagones,
                             nota: formData.nota,
+                            numeroSuerte: formData.numeroSuerte,
                             corte_id: corte.id_corte
                         }
                     },
@@ -88,8 +99,8 @@ const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose }) =>
             setMessageType('success');
             setInfoMessage(`La cosecha se ${formType === 'create' ? 'registro' : 'actualizo'} exitosamente.`);
             setShowMessage(true);
-            handleClose();
-            if (formType === 'create') return setValidateCosecha(true);
+            if (formType === 'update') return handleClose();
+            if (formType === 'create') return nextStep();
         } catch (error) {
             if (error instanceof ApolloError) {
                 setMessageType('error');
@@ -108,6 +119,9 @@ const CosechaRegister: React.FC<Props> = ({ cosecha, formType, handleClose }) =>
     return (
         <form onSubmit={handleSubmit(submitForm)}>
             <Grid2 container spacing={2}>
+                <Grid2 size={12}>
+                    <TextField fullWidth size="small" type="text" label="# tablón" {...register('numeroSuerte')} />
+                </Grid2>
                 <Grid2 size={12}>
                     <TextField
                         fullWidth

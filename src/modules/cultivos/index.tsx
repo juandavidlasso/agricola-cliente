@@ -28,7 +28,7 @@ const Main: React.FC<Props> = ({ toogleTheme }) => {
                             <CardContent>
                                 <Typography className="!text-3xl !mb-2">Caña de azúcar</Typography>
                                 <Typography className="!text-3xl">
-                                    {data?.obtenerTotalHectareasSuertes.area?.toFixed(2)}
+                                    {data?.obtenerTotalHectareasSuertes ? data?.obtenerTotalHectareasSuertes.area?.toFixed(2) : 0}
                                 </Typography>
                             </CardContent>
                             <Divider />

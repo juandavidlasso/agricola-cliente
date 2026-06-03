@@ -7,6 +7,7 @@ export interface Cosecha {
     numeroVagones?: number;
     numeroMulas?: number;
     nota?: string;
+    numeroSuerte?: string;
     corte_id: number;
     cortePadre?: Corte;
 }
@@ -17,6 +18,7 @@ export interface FormDataCosecha {
     numeroVagones?: number;
     numeroMulas?: number;
     nota?: string;
+    numeroSuerte?: string;
 }
 
 export interface GetCosechaRegister {
@@ -28,5 +30,5 @@ export interface GetCosechaUpdate {
 }
 
 export interface GetCosechaResponse {
-    obtenerCosechaCorte: Cosecha;
+    obtenerCosechaCorte: Cosecha[];
 }

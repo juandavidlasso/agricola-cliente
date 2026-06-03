@@ -235,6 +235,28 @@ const Results: React.FC<Props> = ({ filters, setIsValid }) => {
                                                 control={
                                                     <Checkbox
                                                         sx={{ color: '#000000' }}
+                                                        checked={selectedColumns.peso}
+                                                        onChange={() => handleColumnChange('peso')}
+                                                    />
+                                                }
+                                                label="Peso"
+                                                labelPlacement="bottom"
+                                            />
+                                        </FormGroup>
+                                    </TableCell>
+                                    <TableCell align="left" className="!pt-0 !align-top">
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                className="!m-0"
+                                                sx={{
+                                                    '& .MuiTypography-root': {
+                                                        fontSize: '14px !important',
+                                                        textAlign: 'center'
+                                                    }
+                                                }}
+                                                control={
+                                                    <Checkbox
+                                                        sx={{ color: '#000000' }}
                                                         checked={selectedColumns.tch}
                                                         onChange={() => handleColumnChange('tch')}
                                                     />
@@ -262,28 +284,6 @@ const Results: React.FC<Props> = ({ filters, setIsValid }) => {
                                                     />
                                                 }
                                                 label="TCHM"
-                                                labelPlacement="bottom"
-                                            />
-                                        </FormGroup>
-                                    </TableCell>
-                                    <TableCell align="left" className="!pt-0 !align-top">
-                                        <FormGroup>
-                                            <FormControlLabel
-                                                className="!m-0"
-                                                sx={{
-                                                    '& .MuiTypography-root': {
-                                                        fontSize: '14px !important',
-                                                        textAlign: 'center'
-                                                    }
-                                                }}
-                                                control={
-                                                    <Checkbox
-                                                        sx={{ color: '#000000' }}
-                                                        checked={selectedColumns.peso}
-                                                        onChange={() => handleColumnChange('peso')}
-                                                    />
-                                                }
-                                                label="Peso"
                                                 labelPlacement="bottom"
                                             />
                                         </FormGroup>
@@ -354,6 +354,28 @@ const Results: React.FC<Props> = ({ filters, setIsValid }) => {
                                             />
                                         </FormGroup>
                                     </TableCell>
+                                    <TableCell align="left" className="!pt-0 !align-top">
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                className="!m-0"
+                                                sx={{
+                                                    '& .MuiTypography-root': {
+                                                        fontSize: '14px !important',
+                                                        textAlign: 'center'
+                                                    }
+                                                }}
+                                                control={
+                                                    <Checkbox
+                                                        sx={{ color: '#000000' }}
+                                                        checked={selectedColumns?.tablon}
+                                                        onChange={() => handleColumnChange('tablon')}
+                                                    />
+                                                }
+                                                label="# Tablón"
+                                                labelPlacement="bottom"
+                                            />
+                                        </FormGroup>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -377,22 +399,23 @@ const Results: React.FC<Props> = ({ filters, setIsValid }) => {
                                             <TableCell align="left">
                                                 {row.cortePadre?.area ? row.cortePadre.area.toFixed(2) : 0}
                                             </TableCell>
-                                            <TableCell align="left">{row.cortePadre?.suertePadre?.variedad}</TableCell>
-                                            <TableCell align="left">{row.cortePadre?.numero}</TableCell>
-                                            <TableCell align="left">{row.cortePadre?.fecha_siembra}</TableCell>
-                                            <TableCell align="left">{row.cortePadre?.fecha_corte}</TableCell>
+                                            <TableCell align="left">{row?.cortePadre?.suertePadre?.variedad}</TableCell>
+                                            <TableCell align="left">{row?.cortePadre?.numero}</TableCell>
+                                            <TableCell align="left">{row?.cortePadre?.fecha_siembra}</TableCell>
+                                            <TableCell align="left">{row?.cortePadre?.fecha_corte}</TableCell>
                                             <TableCell align="left">{edadCorte}</TableCell>
+                                            <TableCell align="left">{row?.peso}</TableCell>
                                             <TableCell align="left">{TCH}</TableCell>
                                             <TableCell align="left">{TCHM}</TableCell>
-                                            <TableCell align="left">{row.peso}</TableCell>
-                                            <TableCell align="left">{row.rendimiento}</TableCell>
-                                            <TableCell align="left">{row.numeroVagones ?? null}</TableCell>
-                                            <TableCell align="left">{row.numeroMulas ?? null}</TableCell>
+                                            <TableCell align="left">{row?.rendimiento}</TableCell>
+                                            <TableCell align="left">{row?.numeroVagones || null}</TableCell>
+                                            <TableCell align="left">{row?.numeroMulas || null}</TableCell>
+                                            <TableCell align="left">{row?.numeroSuerte || null}</TableCell>
                                         </TableRow>
                                     );
                                 })}
                                 <TableRow>
-                                    <TableCell colSpan={10}>
+                                    <TableCell colSpan={8}>
                                         <span className="text-lg font-bold">Total Peso:</span>
                                         <span className="float-end text-lg font-bold">{pesoTotal?.toFixed(2)}</span>
                                     </TableCell>
