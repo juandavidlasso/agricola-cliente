@@ -55,16 +55,25 @@ const ListPluviometros: React.FC<Props> = ({}) => {
     if (loading) return <ModalLoading isOpen={loading} />;
 
     const handleBack = () => {
-        setFiltersDate((prevState) => ({
-            ...prevState,
-            month: prevState.month - 1 === 0 ? 12 : prevState.month - 1
-        }));
+        setFiltersDate((prev) => {
+            const isJanuary = prev.month === 1;
+
+            return {
+                year: isJanuary ? prev.year - 1 : prev.year,
+                month: isJanuary ? 12 : prev.month - 1
+            };
+        });
     };
+
     const handleNext = () => {
-        setFiltersDate((prevState) => ({
-            ...prevState,
-            month: prevState.month + 1
-        }));
+        setFiltersDate((prev) => {
+            const isDecember = prev.month === 12;
+
+            return {
+                year: isDecember ? prev.year + 1 : prev.year,
+                month: isDecember ? 1 : prev.month + 1
+            };
+        });
     };
 
     return (
@@ -104,7 +113,7 @@ const ListPluviometros: React.FC<Props> = ({}) => {
                                                 </Button>
                                             )}
                                             <Box className="!flex">
-                                                <Button className="!mt-2" onClick={handleBack} disabled={filtersDate.month === 1}>
+                                                <Button className="!mt-2" onClick={handleBack}>
                                                     <ArrowBackIosNewOutlinedIcon />
                                                 </Button>
                                                 <Button

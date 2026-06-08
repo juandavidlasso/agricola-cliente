@@ -125,12 +125,14 @@ const ListCosecha: React.FC<Props> = () => {
                                 </TableHead>
                                 <TableBody>
                                     {data?.obtenerCosechaCorte?.length > 0
-                                        ? data?.obtenerCosechaCorte?.map((cosecha) => {
+                                        ? data?.obtenerCosechaCorte?.map((cosecha, idx) => {
                                               // Calcular TCH
                                               const peso = cosecha?.peso;
                                               const area =
-                                                  data &&
-                                                  cosecha?.cortePadre?.listTablones?.reduce((cur, val) => cur + val.area, 0);
+                                                  data?.obtenerCosechaCorte?.length === 1
+                                                      ? data &&
+                                                        cosecha?.cortePadre?.listTablones?.reduce((cur, val) => cur + val.area, 0)
+                                                      : cosecha?.cortePadre?.listTablones?.[idx].area!;
                                               const TCH = Number((peso! / area!).toFixed(1));
                                               // Calcular TCHN
                                               const finicio = moment(fecha_inicio);
