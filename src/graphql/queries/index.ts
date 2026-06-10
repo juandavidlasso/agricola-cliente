@@ -329,8 +329,8 @@ export const OBTENER_PLUVIOMETROS_Y_LLUVIAS = gql`
 `;
 
 export const OBTENER_LLUVIAS_YEAR = gql`
-    query ObtenerLluviasYear($year: Float!) {
-        obtenerLluviasYear(year: $year) {
+    query ObtenerLluviasYear($filterLluviasYearInput: FilterLluviasYearInput!) {
+        obtenerLluviasYear(filterLluviasYearInput: $filterLluviasYearInput) {
             id_pluviometro
             nombre
             suertesAsociadas
@@ -453,8 +453,8 @@ export const OBTENER_LLUVIAS = gql`
 /** REPORTES LLUVIAS */
 
 export const OBTENER_RESUMEN_LLUVIAS_YEAR = gql`
-    query ObtenerResumenLluviasYear($year: Int!) {
-        obtenerResumenLluviasYear(year: $year) {
+    query ObtenerResumenLluviasYear($filterLluviasYearInput: FilterLluviasYearInput!) {
+        obtenerResumenLluviasYear(filterLluviasYearInput: $filterLluviasYearInput) {
             pluviometro_id
             fecha
             cantidad
@@ -463,8 +463,8 @@ export const OBTENER_RESUMEN_LLUVIAS_YEAR = gql`
 `;
 
 export const OBTENER_PROMEDIO_LLUVIAS_YEAR = gql`
-    query ObtenerPromedioLluvias($year: Int!) {
-        obtenerPromedioLluvias(year: $year) {
+    query ObtenerPromedioLluvias($filterLluviasYearInput: FilterLluviasYearInput!) {
+        obtenerPromedioLluvias(filterLluviasYearInput: $filterLluviasYearInput) {
             fecha
             cantidad
         }

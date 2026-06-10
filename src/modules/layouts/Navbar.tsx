@@ -15,7 +15,7 @@ const NavbarView: React.FC<Props> = ({ toogleTheme }) => {
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1 }}>
-                        <Image src="/logo.png" alt="Logo" width={80} height={80} priority />
+                        <Image src="/logo.png" alt="Logo" width={80} height={80} priority className="w-20 h-20" />
                     </Box>
                     <Box
                         sx={{

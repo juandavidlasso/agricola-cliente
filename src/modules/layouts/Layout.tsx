@@ -47,7 +47,7 @@ const Layout: React.FC<Props> = ({ children, toogleTheme, navItems }) => {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-            <Image src="/logo.png" alt="Logo" width={70} height={70} className="mt-4 ml-4 mb-3" />
+            <Image src="/logo.png" alt="Logo" width={70} height={70} className="mt-4 ml-4 mb-3 w-20 h-20" />
             <Divider />
             <List>
                 {navItems.map((item, index) => {

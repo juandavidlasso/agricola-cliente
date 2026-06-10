@@ -23,7 +23,7 @@ const ReporteLluviasYear: React.FC<Props> = ({}) => {
         error,
         refetch: refetch
     } = useQuery<GetLluviasYearResponse>(OBTENER_LLUVIAS_YEAR, {
-        variables: { year: filtersLluvia?.year }
+        variables: { filterLluviasYearInput: { year: filtersLluvia?.year, months: filtersLluvia?.month } }
     });
     const {
         data: data1,
@@ -31,7 +31,7 @@ const ReporteLluviasYear: React.FC<Props> = ({}) => {
         error: error1,
         refetch: refetch1
     } = useQuery<GetLluviasYearReportResponse>(OBTENER_RESUMEN_LLUVIAS_YEAR, {
-        variables: { year: filtersLluvia?.year }
+        variables: { filterLluviasYearInput: { year: filtersLluvia?.year, months: filtersLluvia?.month } }
     });
     const {
         data: dataPromedio,
@@ -39,7 +39,7 @@ const ReporteLluviasYear: React.FC<Props> = ({}) => {
         error: errorPromedio,
         refetch: refetch2
     } = useQuery<GetTotalPromedioLluviasYearResponse>(OBTENER_PROMEDIO_LLUVIAS_YEAR, {
-        variables: { year: filtersLluvia?.year }
+        variables: { filterLluviasYearInput: { year: filtersLluvia?.year, months: filtersLluvia?.month } }
     });
     useEffect(() => {
         refetch();

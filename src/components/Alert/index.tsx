@@ -10,12 +10,14 @@ const AlertModal = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(p
 
 interface Props {
     message?: string;
+    onUnmount?: () => void;
 }
 
-export const Alert: React.FC<Props> = ({ message }) => {
+export const Alert: React.FC<Props> = ({ message, onUnmount }) => {
     const { showMessage, infoMessage, messageType, setShowMessage } = useContext(CultivosContext);
     const [showError, setShowError] = useState<boolean>(true);
     const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        onUnmount?.();
         if (reason === 'clickaway') {
             return;
         }

@@ -66,7 +66,7 @@ export const PluviometroProvider = ({ children }: { children: JSX.Element }) => 
     const [lluviaEdit, setLluviaEdit] = useState<Lluvia>();
     const [aplicacionLluviaEdit, setAplicacionLluviaEdit] = useState<AplicacionLluvia>();
     const [filtersLluvia, setFiltersLluvia] = useState<FormDataFilters>({
-        month: 0,
+        month: [],
         year: 0
     });
     const [reportType, setReportType] = useState<FormTypeReport>('mes');

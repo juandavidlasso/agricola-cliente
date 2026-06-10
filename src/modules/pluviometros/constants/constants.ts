@@ -1,5 +1,5 @@
 export interface FormDataFilters {
-    month?: number;
+    month?: number[];
     year: number;
 }
 

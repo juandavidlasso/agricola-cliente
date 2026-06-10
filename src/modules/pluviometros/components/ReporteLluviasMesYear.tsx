@@ -29,7 +29,7 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
     const { data, loading, error, refetch } = useQuery<GetPluviometrosYLuviasResponse>(OBTENER_PLUVIOMETROS_Y_LLUVIAS, {
         variables: {
             filterLluviasInput: {
-                month: filtersLluvia?.month,
+                month: filtersLluvia?.month?.[0],
                 year: filtersLluvia?.year
             }
         }
@@ -41,8 +41,9 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
 
     if (loading) return <ModalLoading isOpen={loading} />;
 
+    const month = filtersLluvia?.month?.[0] || 0;
     function getDaysActualMonth(): number {
-        const actualDate = new Date(filtersLluvia!.year, filtersLluvia!.month!, 0);
+        const actualDate = new Date(filtersLluvia!.year, month, 0);
         return actualDate.getDate();
     }
     return (
@@ -63,7 +64,7 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
                                         className="!capitalize !font-bold !text-lg !bg-blue-200"
                                         colSpan={getDaysActualMonth()}
                                     >
-                                        {meses[filtersLluvia?.month! - 1].label} - {filtersLluvia?.year}
+                                        {meses[month - 1].label} - {filtersLluvia?.year}
                                     </TableCell>
                                     <TableCell align="left" rowSpan={2} className="!border-l-[0.5px] !bg-blue-200">
                                         Total mes
@@ -122,13 +123,7 @@ const ReporteLluviasMesYear: React.FC<Props> = ({}) => {
                     <Button
                         variant="contained"
                         onClick={() =>
-                            generarPDF(
-                                filtersLluvia!.year,
-                                meses[filtersLluvia!.month! - 1].label,
-                                getDaysActualMonth(),
-                                data!,
-                                setIsLoading
-                            )
+                            generarPDF(filtersLluvia!.year, meses[month - 1].label, getDaysActualMonth(), data!, setIsLoading)
                         }
                         disabled={isLoading}
                     >

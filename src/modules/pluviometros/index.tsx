@@ -43,7 +43,15 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
     }, []);
     return (
         <>
-            {showError && <Alert message={errorMessage} />}
+            {showError && (
+                <Alert
+                    message={errorMessage}
+                    onUnmount={() => {
+                        setErrorMessage('');
+                        setShowError(false);
+                    }}
+                />
+            )}
             <PluviometroPopover />
             {openModalReport && <LazyReporteLluviasPopover />}
             <Layout toogleTheme={toogleTheme} navItems={routesCultivos}>
@@ -75,7 +83,7 @@ const PluviometrosView: React.FC<Props> = ({ toogleTheme }) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => {
-                                    if (filtersLluvia?.month === 0 && filtersLluvia?.year === 0) {
+                                    if (filtersLluvia?.month?.length === 0 || filtersLluvia?.year === 0) {
                                         setErrorMessage('Debe seleccionar el mes y el año');
                                         setShowError(true);
                                     } else {
